@@ -27,13 +27,13 @@ Then go grab a coffee (or maybe two). The helper will download and compile all F
 Once done, you should get a static system-independent FFmpeg binary in the `build/bin` directory.
 
     $ ./build/bin/ffmpeg
-    ffmpeg version N-31627-g9c2651a, Copyright (c) 2000-2011 the FFmpeg developers
-      built on Jul 23 2011 19:37:59 with gcc 4.5.2
-      libavutil    51. 11. 0 / 51. 11. 0
-      libavcodec   53.  9. 0 / 53.  9. 0
-      libavformat  53.  6. 0 / 53.  6. 0
-      libavfilter   2. 27. 3 /  2. 27. 3
-      libswscale    2.  0. 0 /  2.  0. 0
+    ffmpeg version git-2011-09-16-7297e76, Copyright (c) 2000-2011 the FFmpeg developers
+      built on Sep 16 2011 11:42:20 with gcc 4.5.2
+      libavutil    51. 16. 0 / 51. 16. 0
+      libavcodec   53. 15. 0 / 53. 15. 0
+      libavformat  53. 12. 0 / 53. 12. 0
+      libavfilter   2. 40. 0 /  2. 40. 0
+      libswscale    2.  1. 0 /  2.  1. 0
       libpostproc  51.  2. 0 / 51.  2. 0
     Hyper fast Audio and Video encoder
     usage: ffmpeg [options] [[infile options] -i infile]... {[outfile options] outfile}...

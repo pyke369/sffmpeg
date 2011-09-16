@@ -14,7 +14,7 @@ EXTERNALPROJECT_ADD(
 )
 EXTERNALPROJECT_ADD(
   openssl
-  URL http://www.openssl.org/source/openssl-1.0.0d.tar.gz
+  URL http://www.openssl.org/source/openssl-1.0.0e.tar.gz
   CONFIGURE_COMMAND ./config no-shared no-idea no-mdc2 no-rc5 --prefix=${CMAKE_BINARY_DIR}
   BUILD_COMMAND make depend && make
   BUILD_IN_SOURCE 1
@@ -39,7 +39,7 @@ EXTERNALPROJECT_ADD(
 )
 EXTERNALPROJECT_ADD(
   ogg
-  URL http://downloads.xiph.org/releases/ogg/libogg-1.2.2.tar.gz
+  URL http://downloads.xiph.org/releases/ogg/libogg-1.3.0.tar.gz
   CONFIGURE_COMMAND ./configure --prefix=${CMAKE_BINARY_DIR} --disable-shared
   BUILD_IN_SOURCE 1
 )
@@ -80,15 +80,15 @@ EXTERNALPROJECT_ADD(
 )
 EXTERNALPROJECT_ADD(
   vpx
-  URL http://webm.googlecode.com/files/libvpx-v0.9.6.tar.bz2
+  URL http://webm.googlecode.com/files/libvpx-v0.9.7-p1.tar.bz2
   CONFIGURE_COMMAND ./configure --prefix=${CMAKE_BINARY_DIR} --disable-shared
   BUILD_IN_SOURCE 1
 )
 EXTERNALPROJECT_ADD(
   rtmp
   DEPENDS z openssl
-  URL http://rtmpdump.mplayerhq.hu/download/rtmpdump-2.3.tgz
-  PATCH_COMMAND patch -p1 < ${CMAKE_SOURCE_DIR}/vendor/rtmpdump-2.3-prefix.patch
+  GIT_REPOSITORY git://git.ffmpeg.org/rtmpdump
+  PATCH_COMMAND patch -p1 < ${CMAKE_SOURCE_DIR}/vendor/rtmpdump-2.4-prefix.patch
   CONFIGURE_COMMAND ""
   BUILD_COMMAND make PREFIX=${CMAKE_BINARY_DIR} SHARED= XCFLAGS=-I${CMAKE_BINARY_DIR}/include XLDFLAGS=-L${CMAKE_BINARY_DIR}/lib XLIBS=-ldl
   INSTALL_COMMAND make PREFIX=${CMAKE_BINARY_DIR} SHARED= install
@@ -97,7 +97,7 @@ EXTERNALPROJECT_ADD(
 EXTERNALPROJECT_ADD(
   ffmpeg
   DEPENDS opencore faac mp3lame ogg speex vorbis theora xvidcore x264 vpx rtmp
-  URL http://www.ffmpeg.org/releases/ffmpeg-snapshot-git.tar.bz2
+  URL http://www.ffmpeg.org/releases/ffmpeg-snapshot.tar.bz2
   CONFIGURE_COMMAND PKG_CONFIG_PATH=${CMAKE_BINARY_DIR}/lib/pkgconfig ./configure --prefix=${CMAKE_BINARY_DIR} --datadir=${CMAKE_BINARY_DIR}/etc --disable-shared --enable-static --enable-gpl --enable-version3 --enable-nonfree --disable-doc --disable-debug --disable-ffplay --disable-ffserver --disable-avdevice --disable-indevs --disable-outdevs --enable-runtime-cpudetect --enable-memalign-hack --extra-cflags=-I${CMAKE_BINARY_DIR}/include\ --static --extra-ldflags=-L${CMAKE_BINARY_DIR}/lib\ -static --enable-libopencore-amrnb --enable-libopencore-amrwb --enable-libfaac --enable-libmp3lame --enable-libspeex --enable-libtheora --enable-libvorbis --enable-libx264 --enable-libxvid --enable-libvpx --enable-librtmp
   BUILD_IN_SOURCE 1
 )
