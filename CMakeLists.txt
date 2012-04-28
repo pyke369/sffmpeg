@@ -7,8 +7,7 @@ LINK_DIRECTORIES(${CMAKE_BINARY_DIR}/lib)
 
 EXTERNALPROJECT_ADD(
   z
-  URL http://zlib.net/zlib-1.2.5.tar.gz
-  PATCH_COMMAND patch Makefile.in ${CMAKE_SOURCE_DIR}/vendor/zlib-1.2.5-static.patch
+  URL http://zlib.net/zlib-1.2.6.tar.gz
   CONFIGURE_COMMAND ./configure --prefix=${CMAKE_BINARY_DIR} --static
   BUILD_IN_SOURCE 1
 )
