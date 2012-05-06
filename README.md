@@ -27,18 +27,19 @@ Then go grab a coffee (or maybe two). The helper will download and compile all F
 Once done, you should get a static system-independent FFmpeg binary in the `build/bin` directory.
 
     $ ./build/bin/ffmpeg
-    ffmpeg version git-2011-09-16-7297e76, Copyright (c) 2000-2011 the FFmpeg developers
-      built on Sep 16 2011 11:42:20 with gcc 4.5.2
-      libavutil    51. 16. 0 / 51. 16. 0
-      libavcodec   53. 15. 0 / 53. 15. 0
-      libavformat  53. 12. 0 / 53. 12. 0
-      libavfilter   2. 40. 0 /  2. 40. 0
-      libswscale    2.  1. 0 /  2.  1. 0
-      libpostproc  51.  2. 0 / 51.  2. 0
+    ffmpeg version git-2012-05-05-0e4c36d Copyright (c) 2000-2012 the FFmpeg developers
+      built on May  5 2012 14:09:36 with gcc 4.5.2
+      libavutil      51. 49.100 / 51. 49.100
+      libavcodec     54. 19.100 / 54. 19.100
+      libavformat    54.  4.100 / 54.  4.100
+      libavfilter     2. 72.104 /  2. 72.104
+      libswscale      2.  1.100 /  2.  1.100
+      libswresample   0. 11.100 /  0. 11.100
+      libpostproc    52.  0.100 / 52.  0.100
     Hyper fast Audio and Video encoder
     usage: ffmpeg [options] [[infile options] -i infile]... {[outfile options] outfile}...
 
-    $ ldd ./build/bin/ffmpeg 
+    $ ldd ./build/bin/ffmpeg
     not a dynamic executable
 
 From there, you may use the binary immediately or build a Debian package for later deployment (see below).
@@ -52,8 +53,7 @@ You may optionally build a Debian package by typing the following command at the
 
 All binaries and support files will be installed by the package in the `/usr/local` directory.
 
-    $ sudo dpkg -i sffmpeg_1.0.0_amd64.deb 
+    $ sudo dpkg -i sffmpeg_1.0.2_amd64.deb
     Selecting previously deselected package sffmpeg.
-    (Reading database ... 60348 files and directories currently installed.)
-    Unpacking sffmpeg (from sffmpeg_1.0.0_amd64.deb) ...
-    Setting up sffmpeg (1.0.0) ...
+    Unpacking sffmpeg (from sffmpeg_1.0.2_amd64.deb) ...
+    Setting up sffmpeg (1.0.2) ...
