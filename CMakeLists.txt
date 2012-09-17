@@ -13,7 +13,7 @@ EXTERNALPROJECT_ADD(
 )
 EXTERNALPROJECT_ADD(
   openssl
-  URL http://www.openssl.org/source/openssl-1.0.1b.tar.gz
+  URL http://www.openssl.org/source/openssl-1.0.1c.tar.gz
   CONFIGURE_COMMAND ./config no-shared no-idea no-mdc2 no-rc5 --prefix=${CMAKE_BINARY_DIR}
   BUILD_COMMAND make depend && make
   BUILD_IN_SOURCE 1
@@ -58,7 +58,7 @@ EXTERNALPROJECT_ADD(
 EXTERNALPROJECT_ADD(
   vorbis
   DEPENDS ogg
-  URL http://downloads.xiph.org/releases/vorbis/libvorbis-1.3.2.tar.gz
+  URL http://downloads.xiph.org/releases/vorbis/libvorbis-1.3.3.tar.gz
   CONFIGURE_COMMAND ./configure --prefix=${CMAKE_BINARY_DIR} --disable-shared --disable-oggtest
   BUILD_IN_SOURCE 1
 )
@@ -86,7 +86,7 @@ EXTERNALPROJECT_ADD(
 )
 EXTERNALPROJECT_ADD(
   vpx
-  URL http://webm.googlecode.com/files/libvpx-v1.0.0.tar.bz2
+  URL http://webm.googlecode.com/files/libvpx-v1.1.0.tar.bz2
   CONFIGURE_COMMAND ./configure --prefix=${CMAKE_BINARY_DIR} --disable-shared
   BUILD_IN_SOURCE 1
 )
