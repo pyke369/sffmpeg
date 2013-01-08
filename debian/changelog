@@ -1,3 +1,9 @@
+sffmpeg (1.1.0) stable; urgency=low
+
+  * force ffmpeg 1.1 and align sffmpeg package version
+
+ -- Pierre-Yves Kerembellec <py.kerembellec@gmail.com>  Tue, 08 Jan 2013 11:46:27 +0100
+
 sffmpeg (1.0.3) stable; urgency=low
 
   * re-enable indevs
