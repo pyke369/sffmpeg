@@ -10,7 +10,7 @@ Requirements
 `sffmpeg` requires:
 
 - a POSIX-compliant system (virtually any system today).
-- recent versions of [gcc](http://gcc.gnu.org/) and [yasm](http://yasm.tortall.net/) (1.1+).
+- recent versions of [gcc](http://gcc.gnu.org/) and [yasm](http://yasm.tortall.net/) (1.2+).
 - a recent version of [cmake](http://www.cmake.org/) (2.8.1+).
 - the [autoconf](http://www.gnu.org/software/autoconf/) and [libtool](http://www.gnu.org/software/libtool/) utilities.
 - the [pkg-config](http://www.freedesktop.org/wiki/Software/pkg-config) utility.
