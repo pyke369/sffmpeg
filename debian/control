@@ -1,6 +1,9 @@
 Source: sffmpeg
 Priority: optional
 Maintainer: Pierre-Yves Kerembellec <py.kerembellec@gmail.com>
+Build-Depends: debhelper (>= 7), yasm (>= 1.2.0), cmake (>= 2.8.2),
+               pkg-config, autoconf, automake, libtool,
+               git-core, unzip, curl
 Standards-Version: 3.7.2
 
 Package: sffmpeg
