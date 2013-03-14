@@ -2,3 +2,6 @@
 
 %:
 	dh $@
+
+override_dh_auto_clean:
+	dh_clean
