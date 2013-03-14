@@ -1,0 +1,2 @@
+build/bin/ffmpeg /usr/bin
+build/bin/ffprobe /usr/bin
