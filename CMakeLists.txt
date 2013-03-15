@@ -13,7 +13,7 @@ EXTERNALPROJECT_ADD(
 )
 EXTERNALPROJECT_ADD(
   openssl
-  URL http://www.openssl.org/source/openssl-1.0.1c.tar.gz
+  URL http://www.openssl.org/source/openssl-1.0.1e.tar.gz
   CONFIGURE_COMMAND ./config no-shared no-idea no-mdc2 no-rc5 --prefix=${CMAKE_BINARY_DIR}
   BUILD_COMMAND make depend && make
   BUILD_IN_SOURCE 1
@@ -103,7 +103,7 @@ EXTERNALPROJECT_ADD(
 EXTERNALPROJECT_ADD(
   ffmpeg
   DEPENDS opencore faac aacplus mp3lame ogg speex vorbis theora xvidcore x264 vpx rtmp
-  URL http://www.ffmpeg.org/releases/ffmpeg-1.1.3.tar.bz2
+  URL http://www.ffmpeg.org/releases/ffmpeg-1.2.tar.bz2
   CONFIGURE_COMMAND PKG_CONFIG_PATH=${CMAKE_BINARY_DIR}/lib/pkgconfig ./configure --prefix=${CMAKE_BINARY_DIR} --datadir=${CMAKE_BINARY_DIR}/etc --disable-shared --enable-static --enable-gpl --enable-version3 --enable-nonfree --disable-doc --disable-debug --disable-ffplay --disable-ffserver --disable-avdevice --disable-outdevs --enable-runtime-cpudetect --enable-memalign-hack --extra-cflags=-I${CMAKE_BINARY_DIR}/include\ --static --extra-ldflags=-L${CMAKE_BINARY_DIR}/lib\ -static --extra-libs=-ldl --enable-libopencore-amrnb --enable-libopencore-amrwb --enable-libfaac --enable-libaacplus --enable-libmp3lame --enable-libspeex --enable-libtheora --enable-libvorbis --enable-libx264 --enable-libxvid --enable-libvpx --enable-librtmp
   BUILD_IN_SOURCE 1
 )

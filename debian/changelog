@@ -1,6 +1,12 @@
+sffmpeg (1.2) stable; urgency=low
+
+  * upgrade to ffmpeg 1.2
+
+ -- Pierre-Yves Kerembellec <py.kerembellec@gmail.com>  Fri, 15 Mar 2013 15:13:55 +0100
+
 sffmpeg (1.1.3) stable; urgency=low
 
-  * Upgrade to ffmpeg 1.1.3.
+  * upgrade to ffmpeg 1.1.3.
 
  -- Vincent Bernat <bernat@debian.org>  Tue, 12 Mar 2013 14:14:05 +0100
 
