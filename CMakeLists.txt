@@ -101,9 +101,15 @@ EXTERNALPROJECT_ADD(
   BUILD_IN_SOURCE 1
 )
 EXTERNALPROJECT_ADD(
+  freetype
+  URL http://download.savannah.gnu.org/releases/freetype/freetype-2.4.11.tar.gz
+  CONFIGURE_COMMAND ./configure --prefix=${CMAKE_BINARY_DIR} --disable-shared --enable-static
+  BUILD_IN_SOURCE 1
+)
+EXTERNALPROJECT_ADD(
   ffmpeg
-  DEPENDS opencore faac aacplus mp3lame ogg speex vorbis theora xvidcore x264 vpx rtmp
+  DEPENDS opencore faac aacplus mp3lame ogg speex vorbis theora xvidcore x264 vpx rtmp freetype
   URL http://www.ffmpeg.org/releases/ffmpeg-1.2.tar.bz2
-  CONFIGURE_COMMAND PKG_CONFIG_PATH=${CMAKE_BINARY_DIR}/lib/pkgconfig ./configure --prefix=${CMAKE_BINARY_DIR} --datadir=${CMAKE_BINARY_DIR}/etc --disable-shared --enable-static --enable-gpl --enable-version3 --enable-nonfree --disable-doc --disable-debug --disable-ffplay --disable-ffserver --disable-avdevice --disable-outdevs --enable-runtime-cpudetect --enable-memalign-hack --extra-cflags=-I${CMAKE_BINARY_DIR}/include\ --static --extra-ldflags=-L${CMAKE_BINARY_DIR}/lib\ -static --extra-libs=-ldl --enable-libopencore-amrnb --enable-libopencore-amrwb --enable-libfaac --enable-libaacplus --enable-libmp3lame --enable-libspeex --enable-libtheora --enable-libvorbis --enable-libx264 --enable-libxvid --enable-libvpx --enable-librtmp
+  CONFIGURE_COMMAND PKG_CONFIG_PATH=${CMAKE_BINARY_DIR}/lib/pkgconfig ./configure --prefix=${CMAKE_BINARY_DIR} --datadir=${CMAKE_BINARY_DIR}/etc --disable-shared --enable-static --enable-gpl --enable-version3 --enable-nonfree --disable-doc --disable-debug --disable-ffplay --disable-ffserver --disable-avdevice --disable-outdevs --enable-runtime-cpudetect --enable-memalign-hack --extra-cflags=-I${CMAKE_BINARY_DIR}/include\ --static --extra-ldflags=-L${CMAKE_BINARY_DIR}/lib\ -static --extra-libs=-ldl --enable-libopencore-amrnb --enable-libopencore-amrwb --enable-libfaac --enable-libaacplus --enable-libmp3lame --enable-libspeex --enable-libtheora --enable-libvorbis --enable-libx264 --enable-libxvid --enable-libvpx --enable-librtmp --enable-libfreetype
   BUILD_IN_SOURCE 1
 )
