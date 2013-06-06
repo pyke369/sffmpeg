@@ -94,6 +94,7 @@ EXTERNALPROJECT_ADD(
   rtmp
   DEPENDS z openssl
   GIT_REPOSITORY git://git.ffmpeg.org/rtmpdump
+  UPDATE_COMMAND ""
   PATCH_COMMAND patch -p1 < ${CMAKE_SOURCE_DIR}/vendor/rtmpdump-2.4-prefix.patch
   CONFIGURE_COMMAND ""
   BUILD_COMMAND make PREFIX=${CMAKE_BINARY_DIR} SHARED= XCFLAGS=-I${CMAKE_BINARY_DIR}/include XLDFLAGS=-L${CMAKE_BINARY_DIR}/lib XLIBS=-ldl
