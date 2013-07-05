@@ -20,7 +20,7 @@ Usage
 
 Just type the following commands at the shell prompt:
 
-    $ git clone git@github.com:pyke369/sffmpeg
+    $ git clone https://github.com/pyke369/sffmpeg
     $ cd sffmpeg
     $ make
 
