@@ -1,3 +1,9 @@
+sffmpeg (2.0) stable; urgency=low
+
+  * upgrade to ffmpeg 2.0
+
+ -- Pierre-Yves Kerembellec <py.kerembellec@gmail.com>  Thu, 11 Jul 2013 17:49:44 +0200
+
 sffmpeg (1.2) stable; urgency=low
 
   * upgrade to ffmpeg 1.2
