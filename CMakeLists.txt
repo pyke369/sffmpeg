@@ -79,7 +79,10 @@ EXTERNALPROJECT_ADD(
 )
 EXTERNALPROJECT_ADD(
   x264
-  URL ftp://ftp.videolan.org/pub/x264/snapshots/last_x264.tar.bz2
+  # URL ftp://ftp.videolan.org/pub/x264/snapshots/last_x264.tar.bz2
+  GIT_REPOSITORY git://git.videolan.org/x264.git
+  GIT_TAG a3ac64b
+  UPDATE_COMMAND ""
   # PATCH_COMMAND patch -p1 < ${CMAKE_SOURCE_DIR}/vendor/x264-anonymize.patch
   CONFIGURE_COMMAND ./configure --prefix=${CMAKE_BINARY_DIR} --enable-static
   BUILD_IN_SOURCE 1
