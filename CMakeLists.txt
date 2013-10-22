@@ -67,7 +67,7 @@ EXTERNALPROJECT_ADD(
   theora
   DEPENDS ogg
   URL http://downloads.xiph.org/releases/theora/libtheora-1.2.0alpha1.tar.gz
-  CONFIGURE_COMMAND ./configure --prefix=${CMAKE_BINARY_DIR} --disable-shared --disable-oggtest --disable-examples --with-ogg=${CMAKE_BINARY_DIR}
+  CONFIGURE_COMMAND ./configure --prefix=${CMAKE_BINARY_DIR} --disable-shared --enable-sse --disable-oggtest --disable-examples --with-ogg=${CMAKE_BINARY_DIR}
   BUILD_IN_SOURCE 1
 )
 EXTERNALPROJECT_ADD(
@@ -80,17 +80,17 @@ EXTERNALPROJECT_ADD(
 )
 EXTERNALPROJECT_ADD(
   x264
-  # URL ftp://ftp.videolan.org/pub/x264/snapshots/last_x264.tar.bz2
-  GIT_REPOSITORY git://git.videolan.org/x264.git
-  GIT_TAG a3ac64b
+  URL ftp://ftp.videolan.org/pub/x264/snapshots/last_stable_x264.tar.bz2
+  # GIT_REPOSITORY git://git.videolan.org/x264.git
+  # GIT_TAG -------
   UPDATE_COMMAND ""
-  # PATCH_COMMAND patch -p1 < ${CMAKE_SOURCE_DIR}/vendor/x264-anonymize.patch
+  PATCH_COMMAND patch -p1 < ${CMAKE_SOURCE_DIR}/vendor/x264-anonymize.patch
   CONFIGURE_COMMAND ./configure --prefix=${CMAKE_BINARY_DIR} --enable-static
   BUILD_IN_SOURCE 1
 )
 EXTERNALPROJECT_ADD(
   vpx
-  URL http://webm.googlecode.com/files/libvpx-v1.1.0.tar.bz2
+  URL http://webm.googlecode.com/files/libvpx-v1.2.0.tar.bz2
   CONFIGURE_COMMAND ./configure --prefix=${CMAKE_BINARY_DIR} --disable-shared
   BUILD_IN_SOURCE 1
 )
@@ -107,14 +107,14 @@ EXTERNALPROJECT_ADD(
 )
 EXTERNALPROJECT_ADD(
   freetype
-  URL http://download.savannah.gnu.org/releases/freetype/freetype-2.4.11.tar.gz
-  CONFIGURE_COMMAND ./configure --prefix=${CMAKE_BINARY_DIR} --disable-shared --enable-static
+  URL http://download.savannah.gnu.org/releases/freetype/freetype-2.5.0.1.tar.gz
+  CONFIGURE_COMMAND ./configure --prefix=${CMAKE_BINARY_DIR} --disable-shared --enable-static --without-png
   BUILD_IN_SOURCE 1
 )
 EXTERNALPROJECT_ADD(
   ffmpeg
   DEPENDS opencore faac aacplus mp3lame ogg speex vorbis theora xvidcore x264 vpx rtmp freetype
-  URL http://www.ffmpeg.org/releases/ffmpeg-1.2.tar.bz2
+  URL http://www.ffmpeg.org/releases/ffmpeg-2.0.tar.bz2
   CONFIGURE_COMMAND PKG_CONFIG_PATH=${CMAKE_BINARY_DIR}/lib/pkgconfig ./configure --prefix=${CMAKE_BINARY_DIR} --datadir=${CMAKE_BINARY_DIR}/etc --disable-shared --enable-static --enable-gpl --enable-version3 --enable-nonfree --disable-doc --disable-debug --disable-ffplay --disable-ffserver --disable-avdevice --disable-outdevs --enable-runtime-cpudetect --enable-memalign-hack --extra-cflags=-I${CMAKE_BINARY_DIR}/include\ --static --extra-ldflags=-L${CMAKE_BINARY_DIR}/lib\ -static --extra-libs=-ldl --enable-libopencore-amrnb --enable-libopencore-amrwb --enable-libfaac --enable-libaacplus --enable-libmp3lame --enable-libspeex --enable-libtheora --enable-libvorbis --enable-libx264 --enable-libxvid --enable-libvpx --enable-librtmp --enable-libfreetype
   BUILD_IN_SOURCE 1
 )
