@@ -1,3 +1,15 @@
+sffmpeg (2.0.3) stable; urgency=low
+
+  * compile yasm along with sffmpeg (one less external dependency)
+
+ -- Pierre-Yves Kerembellec <py.kerembellec@gmail.com>  Tue, 12 Nov 2013 09:27:47 +0100
+
+sffmpeg (2.0.2) stable; urgency=low
+
+  * upgrade to latest vendor libraries versions
+
+ -- Pierre-Yves Kerembellec <py.kerembellec@gmail.com>  Tue, 29 Oct 2013 15:45:32 +0100
+
 sffmpeg (2.0.1) stable; urgency=low
 
   * downgrade to ffmpeg 1.2 for now (2.0 triggers CPU lockups on Intel cores)
