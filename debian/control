@@ -6,7 +6,7 @@ Build-Depends: debhelper (>= 7), yasm (>= 1.2.0), cmake (>= 2.8.2), pkg-config, 
 Standards-Version: 3.7.2
 
 Package: sffmpeg
-Architecture: any
+Architecture: all
 Description: Static build of the latest FFmpeg binaries
 Provides: ffmpeg
 Conflicts: ffmpeg
