@@ -1,3 +1,9 @@
+sffmpeg (2.1) precise; urgency=low
+
+  * upgrade to ffmpeg 2.1
+
+ -- Pierre-Yves Kerembellec <py.kerembellec@gmail.com>  Mon, 23 Dec 2013 11:22:01 +0100
+
 sffmpeg (2.0.3) stable; urgency=low
 
   * compile yasm along with sffmpeg (one less external dependency)
