@@ -1,3 +1,9 @@
+sffmpeg (2.1.1) precise; urgency=low
+
+  * use latest vendor libraries
+
+ -- Pierre-Yves Kerembellec <py.kerembellec@gmail.com>  Tue, 07 Jan 2014 15:45:56 +0100
+
 sffmpeg (2.1) precise; urgency=low
 
   * upgrade to ffmpeg 2.1

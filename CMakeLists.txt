@@ -20,7 +20,7 @@ EXTERNALPROJECT_ADD(
 )
 EXTERNALPROJECT_ADD(
   openssl
-  URL http://www.openssl.org/source/openssl-1.0.1e.tar.gz
+  URL http://www.openssl.org/source/openssl-1.0.1f.tar.gz
   CONFIGURE_COMMAND ./config no-shared no-idea no-mdc2 no-rc5 --prefix=${CMAKE_BINARY_DIR}
   BUILD_COMMAND make depend && make
   BUILD_IN_SOURCE 1
@@ -52,7 +52,7 @@ EXTERNALPROJECT_ADD(
 )
 EXTERNALPROJECT_ADD(
   ogg
-  URL http://downloads.xiph.org/releases/ogg/libogg-1.3.0.tar.gz
+  URL http://downloads.xiph.org/releases/ogg/libogg-1.3.1.tar.gz
   CONFIGURE_COMMAND ./configure --prefix=${CMAKE_BINARY_DIR} --disable-shared
   BUILD_IN_SOURCE 1
 )
@@ -90,7 +90,7 @@ EXTERNALPROJECT_ADD(
   x264
   DEPENDS yasm
   GIT_REPOSITORY git://git.videolan.org/x264.git
-  GIT_TAG 585324fe
+  # GIT_TAG 585324fe
   UPDATE_COMMAND ""
   PATCH_COMMAND patch -p1 < ${CMAKE_SOURCE_DIR}/vendor/x264-anonymize.patch
   CONFIGURE_COMMAND PATH=$ENV{PATH} ./configure --prefix=${CMAKE_BINARY_DIR} --enable-static
@@ -118,8 +118,9 @@ EXTERNALPROJECT_ADD(
 )
 EXTERNALPROJECT_ADD(
   freetype
-  URL http://download.savannah.gnu.org/releases/freetype/freetype-2.5.0.1.tar.gz
+  URL http://download.savannah.gnu.org/releases/freetype/freetype-2.5.2.tar.gz
   CONFIGURE_COMMAND ./configure --prefix=${CMAKE_BINARY_DIR} --disable-shared --enable-static --without-png
+  INSTALL_COMMAND make install && ln -s ${CMAKE_BINARY_DIR}/include/freetype2 ${CMAKE_BINARY_DIR}/include/freetype2/freetype
   BUILD_IN_SOURCE 1
 )
 EXTERNALPROJECT_ADD(
