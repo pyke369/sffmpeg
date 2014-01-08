@@ -1,3 +1,11 @@
+sffmpeg (2.1.2) precise; urgency=low
+
+  * reverse upstream "fix" (actually doing more harm than good)
+
+  (leading to ignored (b/c considered invalid) AAC audio tracks in ISO files)
+
+ -- Pierre-Yves Kerembellec <py.kerembellec@gmail.com>  Wed, 08 Jan 2014 22:05:31 +0100
+
 sffmpeg (2.1.1) precise; urgency=low
 
   * use latest vendor libraries
