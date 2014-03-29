@@ -1,9 +1,8 @@
-diff -Naur libaacplus-2.0.2/patches/0011-limit_nrg_range.patch libaacplus-2.0.2-patched/patches/0011-limit_nrg_range.patch
---- libaacplus-2.0.2/patches/0011-limit_nrg_range.patch	1970-01-01 01:00:00.000000000 +0100
-+++ libaacplus-2.0.2-patched/patches/0011-limit_nrg_range.patch	2013-09-16 17:00:24.000000000 +0200
+--- a/patches/0011-limit_nrg_range.patch	1970-01-01 01:00:00.000000000 +0100
++++ b/patches/0011-limit_nrg_range.patch	2013-09-16 17:00:24.000000000 +0200
 @@ -0,0 +1,46 @@
-+--- ../libaacplus-src-unpatched/code_env.c	2013-09-16 15:49:54.000000000 +0200
-++++ src/code_env.c	2013-09-16 16:58:52.000000000 +0200
++--- src.p10/code_env.c	2013-09-16 15:49:54.000000000 +0200
+++++ src.p11/code_env.c	2013-09-16 16:58:52.000000000 +0200
 +@@ -567,37 +567,21 @@
 +       
 +     if ( coupling && channel == 1 ) {

@@ -9,6 +9,7 @@ SET(ENV{PATH} $ENV{PATH}:${CMAKE_BINARY_DIR}/bin)
 EXTERNALPROJECT_ADD(
   yasm
   URL http://www.tortall.net/projects/yasm/releases/yasm-1.2.0.tar.gz
+  PATCH_COMMAND patch -p1 < ${CMAKE_SOURCE_DIR}/vendor/yasm-performance.patch
   CONFIGURE_COMMAND ./configure --prefix=${CMAKE_BINARY_DIR}
   BUILD_IN_SOURCE 1
 )
@@ -45,6 +46,13 @@ EXTERNALPROJECT_ADD(
   BUILD_IN_SOURCE 1
 )
 EXTERNALPROJECT_ADD(
+  fdkaac
+  URL http://downloads.sourceforge.net/project/opencore-amr/fdk-aac/fdk-aac-0.1.3.tar.gz
+  PATCH_COMMAND sh ${CMAKE_SOURCE_DIR}/vendor/libaacplus-fdkaac-unclash.sh
+  CONFIGURE_COMMAND ./configure --prefix=${CMAKE_BINARY_DIR} --disable-shared --enable-static
+  BUILD_IN_SOURCE 1
+)
+EXTERNALPROJECT_ADD(
   mp3lame
   URL http://downloads.sourceforge.net/project/lame/lame/3.99/lame-3.99.5.tar.gz
   CONFIGURE_COMMAND ./configure --prefix=${CMAKE_BINARY_DIR} --disable-shared
@@ -66,7 +74,7 @@ EXTERNALPROJECT_ADD(
 EXTERNALPROJECT_ADD(
   vorbis
   DEPENDS ogg
-  URL http://downloads.xiph.org/releases/vorbis/libvorbis-1.3.3.tar.gz
+  URL http://downloads.xiph.org/releases/vorbis/libvorbis-1.3.4.tar.gz
   CONFIGURE_COMMAND ./configure --prefix=${CMAKE_BINARY_DIR} --disable-shared --disable-oggtest
   BUILD_IN_SOURCE 1
 )
@@ -90,17 +98,26 @@ EXTERNALPROJECT_ADD(
   x264
   DEPENDS yasm
   GIT_REPOSITORY git://git.videolan.org/x264.git
-  # GIT_TAG 585324fe
   UPDATE_COMMAND ""
-  PATCH_COMMAND patch -p1 < ${CMAKE_SOURCE_DIR}/vendor/x264-anonymize.patch
+  # PATCH_COMMAND patch -p1 < ${CMAKE_SOURCE_DIR}/vendor/x264-watermark.patch
   CONFIGURE_COMMAND PATH=$ENV{PATH} ./configure --prefix=${CMAKE_BINARY_DIR} --enable-static
   BUILD_COMMAND PATH=$ENV{PATH} make
   BUILD_IN_SOURCE 1
 )
 EXTERNALPROJECT_ADD(
+  x265
+  DEPENDS yasm
+  DOWNLOAD_COMMAND hg clone https://bitbucket.org/multicoreware/x265
+  UPDATE_COMMAND ""
+  CONFIGURE_COMMAND cd build/linux && PATH=$ENV{PATH} cmake -G "Unix Makefiles" -D CMAKE_INSTALL_PREFIX:PATH=${CMAKE_BINARY_DIR} -D ENABLE_CLI:BOOL=OFF -D ENABLE_SHARED:BOOL=OFF ../../source
+  BUILD_COMMAND cd build/linux && PATH=$ENV{PATH} make
+  INSTALL_COMMAND cd build/linux && PATH=$ENV{PATH} make install
+  BUILD_IN_SOURCE 1
+)
+EXTERNALPROJECT_ADD(
   vpx
   DEPENDS yasm
-  URL http://webm.googlecode.com/files/libvpx-v1.2.0.tar.bz2
+  URL http://webm.googlecode.com/files/libvpx-v1.3.0.tar.bz2
   CONFIGURE_COMMAND PATH=$ENV{PATH} ./configure --prefix=${CMAKE_BINARY_DIR} --disable-shared
   BUILD_COMMAND PATH=$ENV{PATH} make
   BUILD_IN_SOURCE 1
@@ -125,10 +142,10 @@ EXTERNALPROJECT_ADD(
 )
 EXTERNALPROJECT_ADD(
   ffmpeg
-  DEPENDS yasm opencore faac aacplus mp3lame ogg speex vorbis theora xvidcore x264 vpx rtmp freetype
-  URL http://www.ffmpeg.org/releases/ffmpeg-2.1.tar.bz2
-  PATCH_COMMAND patch -p1 < ${CMAKE_SOURCE_DIR}/vendor/libavformat-mov-audio-demux.patch
-  CONFIGURE_COMMAND PATH=$ENV{PATH} PKG_CONFIG_PATH=${CMAKE_BINARY_DIR}/lib/pkgconfig ./configure --prefix=${CMAKE_BINARY_DIR} --datadir=${CMAKE_BINARY_DIR}/etc --disable-shared --enable-static --enable-gpl --enable-version3 --enable-nonfree --disable-doc --disable-debug --disable-ffplay --disable-ffserver --disable-avdevice --disable-outdevs --enable-runtime-cpudetect --enable-memalign-hack --extra-cflags=-I${CMAKE_BINARY_DIR}/include\ --static --extra-ldflags=-L${CMAKE_BINARY_DIR}/lib\ -static --extra-libs=-ldl --enable-libopencore-amrnb --enable-libopencore-amrwb --enable-libfaac --enable-libaacplus --enable-libmp3lame --enable-libspeex --enable-libtheora --enable-libvorbis --enable-libx264 --enable-libxvid --enable-libvpx --enable-librtmp --enable-libfreetype
+  DEPENDS yasm opencore faac aacplus fdkaac mp3lame ogg speex vorbis theora xvidcore x264 x265 vpx rtmp freetype
+  URL http://www.ffmpeg.org/releases/ffmpeg-2.2.tar.bz2
+  PATCH_COMMAND patch -p1 < ${CMAKE_SOURCE_DIR}/vendor/ffmpeg-libx265-apichange.patch
+  CONFIGURE_COMMAND PATH=$ENV{PATH} PKG_CONFIG_PATH=${CMAKE_BINARY_DIR}/lib/pkgconfig ./configure --prefix=${CMAKE_BINARY_DIR} --datadir=${CMAKE_BINARY_DIR}/etc --disable-shared --enable-static --enable-gpl --enable-version3 --enable-nonfree --disable-doc --disable-debug --disable-ffplay --disable-ffserver --disable-avdevice --disable-outdevs --enable-runtime-cpudetect --enable-memalign-hack --extra-cflags=-I${CMAKE_BINARY_DIR}/include\ --static --extra-ldflags=-L${CMAKE_BINARY_DIR}/lib\ -static --extra-libs=-lstdc++\ -ldl --enable-libopencore-amrnb --enable-libopencore-amrwb --enable-libfaac --enable-libfdk-aac --enable-libaacplus --enable-libmp3lame --enable-libspeex --enable-libtheora --enable-libvorbis --enable-libx264 --enable-libx265 --enable-libxvid --enable-libvpx --enable-librtmp --enable-libfreetype
   BUILD_COMMAND PATH=$ENV{PATH} make
   BUILD_IN_SOURCE 1
 )

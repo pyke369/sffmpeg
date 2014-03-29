@@ -10,8 +10,8 @@ Requirements
 `sffmpeg` requires:
 
 - a POSIX-compliant system (virtually any system today).
-- recent versions of [gcc](http://gcc.gnu.org/) and [yasm](http://yasm.tortall.net/) (1.2+).
-- a recent version of [cmake](http://www.cmake.org/) (2.8.2+).
+- a recent version of [gcc](http://gcc.gnu.org/).
+- a recent version of [cmake](http://www.cmake.org/) (2.8.8+, with proper git and mercurial bindings).
 - the [autoconf](http://www.gnu.org/software/autoconf/) and [libtool](http://www.gnu.org/software/libtool/) utilities.
 - the [pkg-config](http://www.freedesktop.org/wiki/Software/pkg-config) utility.
 
@@ -28,20 +28,20 @@ Then go grab a coffee (or maybe two). The helper will download and compile all F
 Once done, you should get a static system-independent FFmpeg binary in the `build/bin` directory.
 
     $ ./build/bin/ffmpeg
-    ffmpeg version 1.2 Copyright (c) 2000-2013 the FFmpeg developers
-      built on Jun  6 2013 12:48:53 with gcc 4.6 (Ubuntu/Linaro 4.6.3-1ubuntu5)
-      libavutil      52. 18.100 / 52. 18.100
-      libavcodec     54. 92.100 / 54. 92.100
-      libavformat    54. 63.104 / 54. 63.104
-      libavfilter     3. 42.103 /  3. 42.103
-      libswscale      2.  2.100 /  2.  2.100
-      libswresample   0. 17.102 /  0. 17.102
-      libpostproc    52.  2.100 / 52.  2.100
+    ffmpeg version 2.2 Copyright (c) 2000-2014 the FFmpeg developers
+      built on Mar 29 2014 16:09:43 with gcc 4.6 (Ubuntu/Linaro 4.6.3-1ubuntu5)
+      libavutil      52. 66.100 / 52. 66.100
+      libavcodec     55. 52.102 / 55. 52.102
+      libavformat    55. 33.100 / 55. 33.100
+      libavfilter     4.  2.100 /  4.  2.100
+      libswscale      2.  5.102 /  2.  5.102
+      libswresample   0. 18.100 /  0. 18.100
+      libpostproc    52.  3.100 / 52.  3.100
     Hyper fast Audio and Video encoder
     usage: ffmpeg [options] [[infile options] -i infile]... {[outfile options] outfile}...
 
     $ ldd ./build/bin/ffmpeg
-    ELF 64-bit LSB executable, x86-64, version 1 (SYSV), statically linked
+    not a dynamic executable
 
 From there, you may use the binary immediately or build a Debian package for later deployment (see below).
 
@@ -52,9 +52,9 @@ You may optionally build a Debian package by typing the following command at the
 
     $ make deb
 
-All binaries and support files will be installed by the package in the `/usr/local` directory.
+The `ffmpeg` and i`ffprobe` static binaries will be installed by the package in the `/usr/bin` directory.
 
-    $ sudo dpkg -i sffmpeg_1.2_amd64.deb
-    Selecting previously deselected package sffmpeg.
-    Unpacking sffmpeg (from sffmpeg_1.2_amd64.deb) ...
-    Setting up sffmpeg (1.2) ...
+    $ sudo dpkg -i sffmpeg_2.2_all.deb
+    Selecting previously unselected package sffmpeg.
+    Unpacking sffmpeg (from sffmpeg_2.2_all.deb) ...
+    Setting up sffmpeg (2.2) ...
