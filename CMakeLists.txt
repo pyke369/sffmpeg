@@ -21,7 +21,7 @@ EXTERNALPROJECT_ADD(
 )
 EXTERNALPROJECT_ADD(
   openssl
-  URL http://www.openssl.org/source/openssl-1.0.1f.tar.gz
+  URL http://www.openssl.org/source/openssl-1.0.1g.tar.gz
   CONFIGURE_COMMAND ./config no-shared no-idea no-mdc2 no-rc5 --prefix=${CMAKE_BINARY_DIR}
   BUILD_COMMAND make depend && make
   BUILD_IN_SOURCE 1
