@@ -98,6 +98,7 @@ EXTERNALPROJECT_ADD(
   x264
   DEPENDS yasm
   GIT_REPOSITORY git://git.videolan.org/x264.git
+  GIT_TAG d6b4e63d2ed8d444b77c11b36c1d646ee5549276 # known good version
   UPDATE_COMMAND ""
   # PATCH_COMMAND patch -p1 < ${CMAKE_SOURCE_DIR}/vendor/x264-watermark.patch
   CONFIGURE_COMMAND PATH=$ENV{PATH} ./configure --prefix=${CMAKE_BINARY_DIR} --enable-static
@@ -126,6 +127,7 @@ EXTERNALPROJECT_ADD(
   rtmp
   DEPENDS z openssl
   GIT_REPOSITORY git://git.ffmpeg.org/rtmpdump
+  GIT_TAG 79459a2b43f41ac44a2ec001139bcb7b1b8f7497 # known good version
   UPDATE_COMMAND ""
   PATCH_COMMAND patch -p1 < ${CMAKE_SOURCE_DIR}/vendor/rtmpdump-2.4-prefix.patch
   CONFIGURE_COMMAND ""
