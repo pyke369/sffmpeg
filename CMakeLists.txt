@@ -108,7 +108,7 @@ EXTERNALPROJECT_ADD(
 EXTERNALPROJECT_ADD(
   x265
   DEPENDS yasm
-  DOWNLOAD_COMMAND hg clone https://bitbucket.org/multicoreware/x265
+  DOWNLOAD_COMMAND hg clone https://bitbucket.org/multicoreware/x265 && cd x265 && hg checkout 0.9
   UPDATE_COMMAND ""
   CONFIGURE_COMMAND cd build/linux && PATH=$ENV{PATH} cmake -G "Unix Makefiles" -D CMAKE_INSTALL_PREFIX:PATH=${CMAKE_BINARY_DIR} -D ENABLE_CLI:BOOL=OFF -D ENABLE_SHARED:BOOL=OFF ../../source
   BUILD_COMMAND cd build/linux && PATH=$ENV{PATH} make
