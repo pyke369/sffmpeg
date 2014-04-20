@@ -1,3 +1,9 @@
+sffmpeg (2.2.1) trusty; urgency=medium
+
+  * upgrade to ffmpeg 2.2.1
+
+ -- Pierre-Yves Kerembellec <py.kerembellec@gmail.com>  Sun, 20 Apr 2014 22:01:44 +0200
+
 sffmpeg (2.2) precise; urgency=low
 
   * upgrade to ffmpeg 2.2
