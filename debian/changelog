@@ -1,10 +1,17 @@
-sffmpeg (2.2.1) trusty; urgency=medium
+sffmpeg (2.2.2) stable; urgency=low
+
+  * use latest vendor libraries
+  * add ISM offset patch
+
+ -- Pierre-Yves Kerembellec <py.kerembellec@gmail.com>  Sat, 26 Apr 2014 19:18:49 +0200
+
+sffmpeg (2.2.1) stable; urgency=low
 
   * upgrade to ffmpeg 2.2.1
 
  -- Pierre-Yves Kerembellec <py.kerembellec@gmail.com>  Sun, 20 Apr 2014 22:01:44 +0200
 
-sffmpeg (2.2) precise; urgency=low
+sffmpeg (2.2) stable; urgency=low
 
   * upgrade to ffmpeg 2.2
   * add HEVC/libx265 encoding support (with API change patch)
@@ -13,7 +20,7 @@ sffmpeg (2.2) precise; urgency=low
 
  -- Pierre-Yves Kerembellec <py.kerembellec@gmail.com>  Fri, 28 Mar 2014 14:06:36 +0100
 
-sffmpeg (2.1.2) precise; urgency=low
+sffmpeg (2.1.2) stable; urgency=low
 
   * reverse upstream "fix" (actually doing more harm than good)
 
@@ -21,13 +28,13 @@ sffmpeg (2.1.2) precise; urgency=low
 
  -- Pierre-Yves Kerembellec <py.kerembellec@gmail.com>  Wed, 08 Jan 2014 22:05:31 +0100
 
-sffmpeg (2.1.1) precise; urgency=low
+sffmpeg (2.1.1) stable; urgency=low
 
   * use latest vendor libraries
 
  -- Pierre-Yves Kerembellec <py.kerembellec@gmail.com>  Tue, 07 Jan 2014 15:45:56 +0100
 
-sffmpeg (2.1) precise; urgency=low
+sffmpeg (2.1) stable; urgency=low
 
   * upgrade to ffmpeg 2.1
 
@@ -83,12 +90,12 @@ sffmpeg (1.0.3) stable; urgency=low
 
 sffmpeg (1.0.1) stable; urgency=low
 
-  * Update vendors libraries
+  * update vendors libraries
 
  -- Pierre-Yves Kerembellec <py.kerembellec@gmail.com>  Sat, 28 Apr 2012 15:25:57 +0200
 
 sffmpeg (1.0.0) stable; urgency=low
 
-  * Initial package
+  * initial package
 
  -- Pierre-Yves Kerembellec <py.kerembellec@gmail.com>  Sat, 16 Jul 2011 21:42:31 +0200
