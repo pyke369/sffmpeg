@@ -14,4 +14,3 @@ deb:
 
 debclean:
 	@debuild clean
-

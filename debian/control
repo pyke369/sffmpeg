@@ -8,6 +8,6 @@ Standards-Version: 3.7.2
 Package: sffmpeg
 Architecture: any
 Description: Static build of the latest FFmpeg binaries
-Provides: ffmpeg
-Conflicts: ffmpeg
-Replaces: ffmpeg
+Provides: ffmpeg, frmxtract
+Conflicts: ffmpeg, frmxtract
+Replaces: ffmpeg, frmxtract

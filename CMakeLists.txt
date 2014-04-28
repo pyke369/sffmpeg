@@ -183,3 +183,17 @@ EXTERNALPROJECT_ADD(
   BUILD_COMMAND PATH=$ENV{PATH} make
   BUILD_IN_SOURCE 1
 )
+EXTERNALPROJECT_ADD(
+  png
+  DEPENDS z
+  URL http://download.sourceforge.net/libpng/libpng-1.6.16.tar.gz
+  CONFIGURE_COMMAND CFLAGS=-I${CMAKE_BINARY_DIR}/include CPPFLAGS=-I${CMAKE_BINARY_DIR}/include LDFLAGS=-L${CMAKE_BINARY_DIR}/lib ./configure --prefix=${CMAKE_BINARY_DIR} --disable-shared --enable-static
+  BUILD_IN_SOURCE 1
+)
+EXTERNALPROJECT_ADD(
+  frmxtract
+  DEPENDS ffmpeg png
+  URL ${CMAKE_SOURCE_DIR}/vendor/frmxtract-2.5.4.tar.gz
+  CONFIGURE_COMMAND CC=${CMAKE_C_COMPILER} PKG_CONFIG_PATH=$ENV{PKG_CONFIG_PATH} ./configure --prefix=${CMAKE_BINARY_DIR}
+  BUILD_IN_SOURCE 1
+)
