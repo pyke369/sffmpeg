@@ -6,7 +6,7 @@ Build-Depends: debhelper (>= 7), cmake (>= 2.8.8), pkg-config, autoconf, automak
 Standards-Version: 3.7.2
 
 Package: sffmpeg
-Architecture: all
+Architecture: any
 Description: Static build of the latest FFmpeg binaries
 Provides: ffmpeg
 Conflicts: ffmpeg
