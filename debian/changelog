@@ -1,3 +1,9 @@
+sffmpeg (2.3) stable; urgency=medium
+
+  * upgrade to ffmpeg 2.3
+
+ -- Pierre-Yves Kerembellec <py.kerembellec@gmail.com>  Fri, 18 Jul 2014 12:12:15 +0200
+
 sffmpeg (2.2.5) stable; urgency=low
 
   * add libass (Advanced SSA) support
