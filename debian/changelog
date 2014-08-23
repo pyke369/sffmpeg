@@ -1,8 +1,9 @@
 sffmpeg (2.3) stable; urgency=medium
 
-  * upgrade to ffmpeg 2.3
+  * upgrade to ffmpeg 2.3.3
+  * optimize stuff
 
- -- Pierre-Yves Kerembellec <py.kerembellec@gmail.com>  Fri, 18 Jul 2014 12:12:15 +0200
+ -- Pierre-Yves Kerembellec <py.kerembellec@gmail.com>  Fri, 23 Aug 2014 17:29:47 +0200
 
 sffmpeg (2.2.5) stable; urgency=low
 

@@ -1,7 +1,7 @@
 #!/bin/sh
 
 EXTRE='-r'
-sed -r < /dev/null
+sed -r 's/this/that/' < /dev/null
 if [ $? -ne 0 ]; then
     EXTRE='-E'
 fi
