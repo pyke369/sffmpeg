@@ -41,7 +41,7 @@ EXTERNALPROJECT_ADD(
 )
 EXTERNALPROJECT_ADD(
   aacplus
-  URL http://217.20.164.161/~tipok/aacplus/libaacplus-2.0.2.tar.gz
+  URL http://tipok.org.ua/downloads/media/aacplus/libaacplus/libaacplus-2.0.2.tar.gz
   PATCH_COMMAND patch -p1 < ${CMAKE_SOURCE_DIR}/vendor/libaacplus-limit-nrg-range.patch
   CONFIGURE_COMMAND ./autogen.sh && ./configure --prefix=${CMAKE_BINARY_DIR} --disable-shared
   BUILD_IN_SOURCE 1
