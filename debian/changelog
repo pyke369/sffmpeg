@@ -1,3 +1,9 @@
+sffmpeg (2.4.3) stable; urgency=medium
+
+  * upgrade to ffmpeg 2.4.3
+
+ -- Pierre-Yves Kerembellec <py.kerembellec@gmail.com>  Mon, 03 Nov 2014 14:10:02 +0100
+
 sffmpeg (2.4.2) stable; urgency=medium
 
   * upgrade to ffmpeg 2.4.2
