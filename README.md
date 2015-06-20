@@ -50,6 +50,7 @@ From there, you may use the binary immediately or build a Debian package for lat
 
 Packaging
 ---------
+Requires devscripts package
 
 You may optionally build a Debian package by typing the following command at the shell prompt:
 
