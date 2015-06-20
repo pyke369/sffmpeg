@@ -1,3 +1,10 @@
+sffmpeg (2.7.1) stable; urgency=medium
+
+  * upgrade to ffmpeg 2.7.1
+  * use latest vendor libraries
+
+ -- Pierre-Yves Kerembellec <py.kerembellec@gmail.com>  Sat, 20 Jun 2015 22:25:33 +0200
+
 sffmpeg (2.6.1) stable; urgency=medium
 
   * upgrade to ffmpeg 2.6.1
