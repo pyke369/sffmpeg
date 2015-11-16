@@ -68,7 +68,7 @@ EXTERNALPROJECT_ADD(
 EXTERNALPROJECT_ADD(
   speex
   DEPENDS ogg
-  URL http://downloads.xiph.org/releases/speex/speex-1.2rc1.tar.gz
+  URL http://downloads.xiph.org/releases/speex/speex-1.2rc2.tar.gz
   CONFIGURE_COMMAND ./configure --prefix=${CMAKE_BINARY_DIR} --disable-shared --enable-sse  --disable-oggtest --with-ogg=${CMAKE_BINARY_DIR}
   BUILD_IN_SOURCE 1
 )
@@ -88,14 +88,14 @@ EXTERNALPROJECT_ADD(
 )
 EXTERNALPROJECT_ADD(
   opus
-  URL http://downloads.xiph.org/releases/opus/opus-1.1.1-beta.tar.gz
+  URL http://downloads.xiph.org/releases/opus/opus-1.1.1-rc.tar.gz
   CONFIGURE_COMMAND ./configure --prefix=${CMAKE_BINARY_DIR} --disable-shared --disable-doc
   BUILD_IN_SOURCE 1
 )
 EXTERNALPROJECT_ADD(
   xvidcore
   DEPENDS yasm
-  URL http://downloads.xvid.org/downloads/xvidcore-1.3.3.tar.gz
+  URL http://downloads.xvid.org/downloads/xvidcore-1.3.4.tar.gz
   CONFIGURE_COMMAND cd build/generic && PATH=$ENV{PATH} ./configure --prefix=${CMAKE_BINARY_DIR}
   BUILD_COMMAND cd build/generic && PATH=$ENV{PATH} make
   INSTALL_COMMAND cd build/generic && make install
@@ -142,14 +142,14 @@ EXTERNALPROJECT_ADD(
 )
 EXTERNALPROJECT_ADD(
   freetype
-  URL http://download.savannah.gnu.org/releases/freetype/freetype-2.6.tar.gz
+  URL http://download.savannah.gnu.org/releases/freetype/freetype-2.6.1.tar.gz
   CONFIGURE_COMMAND ./configure --prefix=${CMAKE_BINARY_DIR} --disable-shared --enable-static --without-png
   INSTALL_COMMAND make install && ln -s ${CMAKE_BINARY_DIR}/include/freetype2 ${CMAKE_BINARY_DIR}/include/freetype2/freetype
   BUILD_IN_SOURCE 1
 )
 EXTERNALPROJECT_ADD(
   fribidi
-  URL http://fribidi.org/download/fribidi-0.19.6.tar.bz2
+  URL http://fribidi.org/download/fribidi-0.19.7.tar.bz2
   CONFIGURE_COMMAND ./configure --prefix=${CMAKE_BINARY_DIR} --disable-shared --enable-static
   BUILD_IN_SOURCE 1
 )
@@ -162,14 +162,14 @@ EXTERNALPROJECT_ADD(
 EXTERNALPROJECT_ADD(
   fontconfig
   DEPENDS freetype expat
-  URL http://www.freedesktop.org/software/fontconfig/release/fontconfig-2.11.1.tar.bz2
+  URL http://www.freedesktop.org/software/fontconfig/release/fontconfig-2.11.94.tar.bz2
   CONFIGURE_COMMAND PKG_CONFIG_PATH=$ENV{PKG_CONFIG_PATH} ./configure --prefix=${CMAKE_BINARY_DIR} --disable-shared --enable-static
   BUILD_IN_SOURCE 1
 )
 EXTERNALPROJECT_ADD(
   ass
   DEPENDS yasm freetype fribidi fontconfig
-  URL https://github.com/libass/libass/releases/download/0.12.2/libass-0.12.2.tar.gz
+  URL https://github.com/libass/libass/releases/download/0.13.0/libass-0.13.0.tar.gz
   CONFIGURE_COMMAND PATH=$ENV{PATH} PKG_CONFIG_PATH=$ENV{PKG_CONFIG_PATH} ./configure --prefix=${CMAKE_BINARY_DIR} --disable-shared --enable-static
   BUILD_COMMAND PATH=$ENV{PATH} make
   BUILD_IN_SOURCE 1
@@ -177,7 +177,7 @@ EXTERNALPROJECT_ADD(
 EXTERNALPROJECT_ADD(
   ffmpeg
   DEPENDS yasm opencore faac aacplus fdkaac mp3lame ogg speex vorbis theora opus xvidcore x264 x265 vpx rtmp freetype ass
-  URL http://www.ffmpeg.org/releases/ffmpeg-2.8.1.tar.bz2
+  URL http://www.ffmpeg.org/releases/ffmpeg-2.8.2.tar.bz2
   PATCH_COMMAND patch -p1 < ${CMAKE_SOURCE_DIR}/vendor/ffmpeg-ism-offset.patch
   CONFIGURE_COMMAND PATH=$ENV{PATH} PKG_CONFIG_PATH=$ENV{PKG_CONFIG_PATH} ./configure --prefix=${CMAKE_BINARY_DIR} --datadir=${CMAKE_BINARY_DIR}/etc --disable-shared --enable-static --enable-gpl --enable-version3 --enable-nonfree --disable-doc --disable-debug --disable-ffplay --disable-ffserver --disable-outdevs --enable-runtime-cpudetect --enable-memalign-hack --extra-cflags=-I${CMAKE_BINARY_DIR}/include\ --static --extra-ldflags=-L${CMAKE_BINARY_DIR}/lib\ -static --extra-libs=-lstdc++\ -lexpat\ -ldl --enable-libopencore-amrnb --enable-libopencore-amrwb --enable-libfaac --enable-libfdk-aac --enable-libaacplus --enable-libmp3lame --enable-libspeex --enable-libtheora --enable-libvorbis --enable-libx264 --enable-libx265 --enable-libxvid --enable-libvpx --enable-libopus --enable-librtmp --enable-libfreetype --enable-libass
   BUILD_COMMAND PATH=$ENV{PATH} make
@@ -186,7 +186,7 @@ EXTERNALPROJECT_ADD(
 EXTERNALPROJECT_ADD(
   png
   DEPENDS z
-  URL http://download.sourceforge.net/libpng/libpng-1.6.17.tar.gz
+  URL http://download.sourceforge.net/libpng/libpng-1.6.19.tar.gz
   CONFIGURE_COMMAND CFLAGS=-I${CMAKE_BINARY_DIR}/include CPPFLAGS=-I${CMAKE_BINARY_DIR}/include LDFLAGS=-L${CMAKE_BINARY_DIR}/lib ./configure --prefix=${CMAKE_BINARY_DIR} --disable-shared --enable-static
   BUILD_IN_SOURCE 1
 )
