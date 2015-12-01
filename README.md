@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/pyke369/sffmpeg.svg?branch=master)](https://travis-ci.org/pyke369/sffmpeg)
+
 `sffmpeg` is a simple cmake-based full-featured FFmpeg static build helper.
 
 It currently works on Linux, OpenBSD, FreeBSD, and MacOSX. It has been tested the most heavily on Linux/x86_64 (Ubuntu 14.04).
