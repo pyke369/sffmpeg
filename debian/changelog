@@ -1,4 +1,4 @@
-sffmpeg (3.0.2) stable; urgency=medium
+qsv-sffmpeg (3.0.2) stable; urgency=medium
 
   * upgrade to ffmpeg 3.0.2
   * upgrade dependencies if needed
