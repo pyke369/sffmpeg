@@ -1,0 +1,688 @@
+--- a/libavfilter/Makefile
++++ b/libavfilter/Makefile
+@@ -256,6 +256,7 @@
+ OBJS-$(CONFIG_USPP_FILTER)                   += vf_uspp.o
+ OBJS-$(CONFIG_VECTORSCOPE_FILTER)            += vf_vectorscope.o
+ OBJS-$(CONFIG_VFLIP_FILTER)                  += vf_vflip.o
++OBJS-$(CONFIG_VPP_FILTER)                    += vf_vpp.o
+ OBJS-$(CONFIG_VIDSTABDETECT_FILTER)          += vidstabutils.o vf_vidstabdetect.o
+ OBJS-$(CONFIG_VIDSTABTRANSFORM_FILTER)       += vidstabutils.o vf_vidstabtransform.o
+ OBJS-$(CONFIG_VIGNETTE_FILTER)               += vf_vignette.o
+
+--- a/libavfilter/allfilters.c
++++ b/libavfilter/allfilters.c
+@@ -280,6 +280,7 @@
+     REGISTER_FILTER(VIDSTABTRANSFORM, vidstabtransform, vf);
+     REGISTER_FILTER(VIGNETTE,       vignette,       vf);
+     REGISTER_FILTER(VSTACK,         vstack,         vf);
++    REGISTER_FILTER(VPP,            vpp,            vf);
+     REGISTER_FILTER(W3FDIF,         w3fdif,         vf);
+     REGISTER_FILTER(WAVEFORM,       waveform,       vf);
+     REGISTER_FILTER(XBR,            xbr,            vf);
+
+--- a/libavfilter/vf_vpp.c
++++ b/libavfilter/vf_vpp.c
+@@ -0,0 +1,663 @@
++/*
++ * Intel MediaSDK Quick Sync Video VPP filter
++ *
++ * copyright (c) 2015 Sven Dueking
++ *
++ * This file is part of Libav.
++ *
++ * Libav is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU Lesser General Public
++ * License as published by the Free Software Foundation; either
++ * version 2.1 of the License, or (at your option) any later version.
++ *
++ * Libav is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++ * Lesser General Public License for more details.
++ *
++ * You should have received a copy of the GNU Lesser General Public
++ * License along with Libav; if not, write to the Free Software
++ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
++ */
++
++#include <mfx/mfxvideo.h>
++#include <mfx/mfxplugin.h>
++
++#include "avfilter.h"
++#include "internal.h"
++
++#include "libavutil/avassert.h"
++#include "libavutil/opt.h"
++#include "libavutil/time.h"
++#include "libavutil/avstring.h"
++#include "libavutil/error.h"
++#include "libavcodec/avcodec.h"
++#include "libavcodec/qsv_internal.h"
++
++
++/**
++ * ToDo :
++ *
++ * - double check surface pointers for different fourccs
++ * - handle empty extbuffers
++ * - cropping
++ * - use AV_PIX_FMT_QSV to pass surfaces to encoder
++ * - deinterlace check settings etc.
++ * - allocate number of surfaces depending modules and number of b frames
++ */
++
++#define VPP_ZERO_MEMORY(VAR)        { memset(&VAR, 0, sizeof(VAR)); }
++#define VPP_ALIGN16(value)          (((value + 15) >> 4) << 4)          // round up to a multiple of 16
++#define VPP_ALIGN32(value)          (((value + 31) >> 5) << 5)          // round up to a multiple of 32
++#define VPP_CHECK_POINTER(P, ...)   {if (!(P)) {return __VA_ARGS__;}}
++
++// number of video enhancement filters (denoise, procamp, detail, video_analysis, image stab)
++#define ENH_FILTERS_COUNT           5
++
++typedef struct {
++    const AVClass *class;
++
++    AVFilterContext *ctx;
++
++    mfxSession session;
++    QSVSession internal_qs;
++
++    AVRational framerate;                           // target framerate
++
++    mfxFrameSurface1 **in_surface;
++    mfxFrameSurface1 **out_surface;
++
++    mfxFrameAllocRequest req[2];                    // [0] - in, [1] - out
++
++    int num_surfaces_in;                            // input surfaces
++    int num_surfaces_out;                           // output surfaces
++
++    unsigned char * surface_buffers_out;            // output surface buffer
++
++    char *load_plugins;
++
++    mfxVideoParam*      pVppParam;
++
++    /* VPP extension */
++    mfxExtBuffer*       pExtBuf[1+ENH_FILTERS_COUNT];
++    mfxExtVppAuxData    extVPPAuxData;
++
++    /* Video Enhancement Algorithms */
++    mfxExtVPPDeinterlacing  deinterlace_conf;
++    mfxExtVPPFrameRateConversion frc_conf;
++    mfxExtVPPDenoise denoise_conf;
++    mfxExtVPPDetail detail_conf;
++
++    int out_width;
++    int out_height;
++
++    int dpic;                   // destination picture structure
++                                // -1 = unkown
++                                // 0 = interlaced top field first
++                                // 1 = progressive
++                                // 2 = interlaced bottom field first
++
++    int deinterlace;            // deinterlace mode : 0=off, 1=bob, 2=advanced
++    int denoise;                // Enable Denoise algorithm. Level is the optional value from the interval [0; 100]
++    int detail;                 // Enable Detail Enhancement algorithm.
++                                // Level is the optional value from the interval [0; 100]
++    int async_depth;            // async dept used by encoder
++    int max_b_frames;           // maxiumum number of b frames used by encoder
++
++    int cur_out_idx;            // current surface in index
++
++    int frame_number;
++
++    int use_frc;                // use framerate conversion
++
++} VPPContext;
++
++#define OFFSET(x) offsetof(VPPContext, x)
++#define FLAGS AV_OPT_FLAG_VIDEO_PARAM|AV_OPT_FLAG_FILTERING_PARAM
++
++static const AVOption vpp_options[] = {
++    { "deinterlace", "deinterlace mode: 0=off, 1=bob, 2=advanced",             OFFSET(deinterlace),  AV_OPT_TYPE_INT, {.i64=0}, 0, MFX_DEINTERLACING_ADVANCED, .flags = FLAGS },
++    { "denoise",     "denoise level [0, 100]",                                 OFFSET(denoise),      AV_OPT_TYPE_INT, {.i64=0}, 0, 100, .flags = FLAGS },
++    { "detail",      "detail enhancement level [0, 100]",                      OFFSET(detail),       AV_OPT_TYPE_INT, {.i64=0}, 0, 100, .flags = FLAGS },
++    { "w",           "Output video width",                                     OFFSET(out_width),    AV_OPT_TYPE_INT, {.i64=0}, 0, 4096, .flags = FLAGS },
++    { "width",       "Output video width",                                     OFFSET(out_width),    AV_OPT_TYPE_INT, {.i64=0}, 0, 4096, .flags = FLAGS },
++    { "h",           "Output video height",                                    OFFSET(out_height),   AV_OPT_TYPE_INT, {.i64=0}, 0, 2304, .flags = FLAGS },
++    { "height",      "Output video height : ",                                 OFFSET(out_height),   AV_OPT_TYPE_INT, {.i64=0}, 0, 2304, .flags = FLAGS },
++    { "dpic",        "dest pic struct: 0=tff, 1=progressive [default], 2=bff", OFFSET(dpic),         AV_OPT_TYPE_INT, {.i64 = 1 }, 0, 2, .flags = FLAGS },
++    { "fps",         "A string describing desired output framerate",           OFFSET(framerate),    AV_OPT_TYPE_VIDEO_RATE, { .str = "25" }, .flags = FLAGS },
++    { "async_depth", "Maximum processing parallelism [default = 4]",           OFFSET(async_depth),  AV_OPT_TYPE_INT, { .i64 = ASYNC_DEPTH_DEFAULT }, 0, INT_MAX, .flags = FLAGS },
++    { "max_b_frames","Maximum number of b frames  [default = 3]",              OFFSET(max_b_frames), AV_OPT_TYPE_INT, { .i64 = 3 }, 0, INT_MAX, .flags = FLAGS },
++    { NULL }
++};
++
++AVFILTER_DEFINE_CLASS(vpp);
++
++static int get_bpp(unsigned int fourcc)
++{
++    switch (fourcc) {
++    case MFX_FOURCC_YUY2:
++        return 16;
++    case MFX_FOURCC_RGB4:
++        return 32;
++    default:
++        return 12;
++    }
++    return 12;
++}
++
++static int option_id_to_mfx_pic_struct(int id)
++{
++    switch (id) {
++    case 0:
++        return MFX_PICSTRUCT_FIELD_TFF;
++    case 1:
++        return MFX_PICSTRUCT_PROGRESSIVE;
++    case 2:
++    return MFX_PICSTRUCT_FIELD_BFF;
++    default:
++    return MFX_PICSTRUCT_UNKNOWN;
++        break;
++    }
++    return MFX_PICSTRUCT_UNKNOWN;
++}
++
++static int get_chroma_fourcc(unsigned int fourcc)
++{
++    switch (fourcc) {
++    case MFX_FOURCC_YUY2:
++        return MFX_CHROMAFORMAT_YUV422;
++    case MFX_FOURCC_RGB4:
++        return MFX_CHROMAFORMAT_YUV444;
++    default:
++        return MFX_CHROMAFORMAT_YUV420;
++    }
++    return MFX_CHROMAFORMAT_YUV420;
++}
++
++static int avframe_id_to_mfx_pic_struct(AVFrame * pic)
++{
++    if (pic->interlaced_frame == 0)
++        return MFX_PICSTRUCT_PROGRESSIVE;
++
++    if (pic->top_field_first == 1)
++        return MFX_PICSTRUCT_FIELD_TFF;
++
++    return MFX_PICSTRUCT_FIELD_BFF;
++}
++
++static int query_formats(AVFilterContext *ctx)
++{
++    static const enum AVPixelFormat pix_fmts[] = {
++        AV_PIX_FMT_YUV420P,
++        AV_PIX_FMT_NV12,
++        AV_PIX_FMT_YUYV422,
++        AV_PIX_FMT_RGB32 ,
++        AV_PIX_FMT_NONE
++    };
++
++    ff_set_common_formats(ctx, ff_make_format_list(pix_fmts));
++    return 0;
++}
++
++static int init_vpp_param(AVFilterLink *inlink , AVFrame * pic)
++{
++    AVFilterContext *ctx = inlink->dst;
++    VPPContext *vpp= ctx->priv;
++
++    // input data
++    if (inlink->format == AV_PIX_FMT_YUV420P)
++        vpp->pVppParam->vpp.In.FourCC = MFX_FOURCC_YV12;
++    else if (inlink->format == AV_PIX_FMT_YUYV422)
++    vpp->pVppParam->vpp.In.FourCC = MFX_FOURCC_YUY2;
++    else if (inlink->format == AV_PIX_FMT_NV12)
++        vpp->pVppParam->vpp.In.FourCC = MFX_FOURCC_NV12;
++    else
++        vpp->pVppParam->vpp.In.FourCC = MFX_FOURCC_RGB4;
++
++    vpp->pVppParam->vpp.In.ChromaFormat = get_chroma_fourcc(vpp->pVppParam->vpp.In.FourCC);
++    vpp->pVppParam->vpp.In.CropX = 0;
++    vpp->pVppParam->vpp.In.CropY = 0;
++    vpp->pVppParam->vpp.In.CropW = inlink->w;
++    vpp->pVppParam->vpp.In.CropH = inlink->h;
++    vpp->pVppParam->vpp.In.PicStruct = avframe_id_to_mfx_pic_struct(pic);
++    vpp->pVppParam->vpp.In.FrameRateExtN = inlink->frame_rate.num;
++    vpp->pVppParam->vpp.In.FrameRateExtD = inlink->frame_rate.den;
++    vpp->pVppParam->vpp.In.BitDepthLuma   = 8;
++    vpp->pVppParam->vpp.In.BitDepthChroma = 8;
++
++    // width must be a multiple of 16
++    // height must be a multiple of 16 in case of frame picture and a multiple of 32 in case of field picture
++    vpp->pVppParam->vpp.In.Width = VPP_ALIGN16(inlink->w);
++    vpp->pVppParam->vpp.In.Height =
++        (MFX_PICSTRUCT_PROGRESSIVE == vpp->pVppParam->vpp.In.PicStruct) ?
++        VPP_ALIGN16(inlink->h) :
++        VPP_ALIGN32(inlink->h);
++
++    // output data
++    vpp->pVppParam->vpp.Out.FourCC = MFX_FOURCC_NV12;
++    vpp->pVppParam->vpp.Out.ChromaFormat = MFX_CHROMAFORMAT_YUV420;
++    vpp->pVppParam->vpp.Out.CropX = 0;
++    vpp->pVppParam->vpp.Out.CropY = 0;
++    vpp->pVppParam->vpp.Out.CropW = vpp->out_width == 0 ? inlink->w : vpp->out_width;
++    vpp->pVppParam->vpp.Out.CropH = vpp->out_height == 0 ? inlink->h : vpp->out_height;
++    vpp->pVppParam->vpp.Out.PicStruct = option_id_to_mfx_pic_struct(vpp->dpic);
++    vpp->pVppParam->vpp.Out.FrameRateExtN = vpp->framerate.num;
++    vpp->pVppParam->vpp.Out.FrameRateExtD = vpp->framerate.den;
++    vpp->pVppParam->vpp.Out.BitDepthLuma   = 8;
++    vpp->pVppParam->vpp.Out.BitDepthChroma = 8;
++
++    if ((vpp->pVppParam->vpp.In.FrameRateExtN / vpp->pVppParam->vpp.In.FrameRateExtD) !=
++        (vpp->pVppParam->vpp.Out.FrameRateExtN / vpp->pVppParam->vpp.Out.FrameRateExtD))
++       vpp->use_frc = 1;
++    else
++        vpp->use_frc = 0;
++
++    // width must be a multiple of 16
++    // height must be a multiple of 16 in case of frame picture and a multiple of 32 in case of field picture
++    vpp->pVppParam->vpp.Out.Width = VPP_ALIGN16(vpp->pVppParam->vpp.Out.CropW);
++    vpp->pVppParam->vpp.Out.Height =
++        (MFX_PICSTRUCT_PROGRESSIVE == vpp->pVppParam->vpp.Out.PicStruct) ?
++        VPP_ALIGN16(vpp->pVppParam->vpp.Out.CropH) :
++        VPP_ALIGN32(vpp->pVppParam->vpp.Out.CropH);
++
++    vpp->pVppParam->IOPattern =
++        MFX_IOPATTERN_IN_SYSTEM_MEMORY | MFX_IOPATTERN_OUT_SYSTEM_MEMORY;
++
++    av_log(ctx, AV_LOG_INFO, "In %dx%d %d fps\t Out %dx%d %d fps\n",
++           VPP_ALIGN32(vpp->pVppParam->vpp.In.Width),
++           VPP_ALIGN32(vpp->pVppParam->vpp.In.Height),
++           vpp->pVppParam->vpp.In.FrameRateExtN / vpp->pVppParam->vpp.In.FrameRateExtD,
++           VPP_ALIGN32(vpp->pVppParam->vpp.Out.Width),
++           VPP_ALIGN32(vpp->pVppParam->vpp.Out.Height),
++           vpp->pVppParam->vpp.Out.FrameRateExtN / vpp->pVppParam->vpp.Out.FrameRateExtD);
++
++    if (vpp->use_frc == 1)
++        av_log(ctx, AV_LOG_INFO, "Framerate conversion enabled\n");
++
++    return 0;
++}
++
++static void init_surface(AVFilterLink *inlink)
++{
++    AVFilterContext *ctx = inlink->dst;
++    VPPContext *vpp= ctx->priv;
++
++    unsigned int width = 0;
++    unsigned int height = 0;
++    unsigned int bits_per_pixel = get_bpp(vpp->pVppParam->vpp.In.FourCC);
++    unsigned int surface_size = 0;
++
++    vpp->num_surfaces_in  = FFMAX(vpp->req[0].NumFrameSuggested, vpp->async_depth + vpp->max_b_frames + 1);
++    vpp->num_surfaces_out = FFMAX(vpp->req[1].NumFrameSuggested, 1);
++
++    width = (unsigned int) VPP_ALIGN32(vpp->pVppParam->vpp.In.Width);
++    height = (unsigned int) VPP_ALIGN32(vpp->pVppParam->vpp.In.Height);
++    surface_size = width * height * bits_per_pixel / 8;
++
++    vpp->in_surface = av_mallocz(sizeof(mfxFrameSurface1) * vpp->num_surfaces_in);
++    VPP_CHECK_POINTER(vpp->in_surface);
++    for (int i = 0; i < vpp->num_surfaces_in; i++) {
++        vpp->in_surface[i] = av_mallocz(sizeof(mfxFrameSurface1));
++        VPP_CHECK_POINTER(vpp->in_surface[i]);
++        memset(vpp->in_surface[i], 0, sizeof(mfxFrameSurface1));
++        memcpy(&(vpp->in_surface[i]->Info), &(vpp->pVppParam->vpp.In), sizeof(mfxFrameInfo));
++    }
++
++    bits_per_pixel = 12;
++    width = (unsigned int) VPP_ALIGN32(vpp->pVppParam->vpp.Out.Width);
++    height = (unsigned int) VPP_ALIGN32(vpp->pVppParam->vpp.Out.Height);
++    surface_size = width * height * bits_per_pixel / 8;
++    vpp->surface_buffers_out = (mfxU8*) av_mallocz(surface_size * vpp->num_surfaces_out);
++    VPP_CHECK_POINTER(vpp->surface_buffers_out);
++
++    vpp->out_surface = av_mallocz(sizeof(mfxFrameSurface1) * vpp->num_surfaces_out);
++    VPP_CHECK_POINTER(vpp->out_surface);
++    for (int i = 0; i < vpp->num_surfaces_out; i++) {
++            vpp->out_surface[i] = av_mallocz(sizeof(mfxFrameSurface1));
++            VPP_CHECK_POINTER(vpp->out_surface[i]);
++            memset(vpp->out_surface[i], 0, sizeof(mfxFrameSurface1));
++            memcpy(&(vpp->out_surface[i]->Info), &(vpp->pVppParam->vpp.Out), sizeof(mfxFrameInfo));
++            vpp->out_surface[i]->Data.Y = &vpp->surface_buffers_out[surface_size * i];
++            vpp->out_surface[i]->Data.U = vpp->out_surface[i]->Data.Y + width * height;
++            vpp->out_surface[i]->Data.V = vpp->out_surface[i]->Data.U + 1;
++            vpp->out_surface[i]->Data.Pitch = width;
++    }
++}
++
++static int config_vpp(AVFilterLink *inlink, AVFrame * pic)
++{
++    AVFilterContext *ctx = inlink->dst;
++    VPPContext *vpp= ctx->priv;
++
++    int ret = 0;
++
++    mfxVideoParam mfxParamsVideo;
++
++    VPP_ZERO_MEMORY(mfxParamsVideo);
++    vpp->pVppParam = &mfxParamsVideo;
++
++    init_vpp_param(inlink, pic);
++
++    vpp->pVppParam->NumExtParam = 0;
++    vpp->frame_number = 0;
++    vpp->cur_out_idx  = 0;
++    vpp->pVppParam->ExtParam = (mfxExtBuffer**)vpp->pExtBuf;
++
++    if (vpp->deinterlace) {
++        memset(&vpp->deinterlace_conf, 0, sizeof(mfxExtVPPDeinterlacing));
++        vpp->deinterlace_conf.Header.BufferId = MFX_EXTBUFF_VPP_DEINTERLACING;
++        vpp->deinterlace_conf.Header.BufferSz = sizeof(mfxExtVPPDeinterlacing);
++        vpp->deinterlace_conf.Mode            = vpp->deinterlace == 1 ? MFX_DEINTERLACING_BOB : MFX_DEINTERLACING_ADVANCED;
++
++        vpp->pVppParam->ExtParam[vpp->pVppParam->NumExtParam++] = (mfxExtBuffer*)&(vpp->deinterlace_conf);
++    }
++
++    if (vpp->use_frc) {
++        memset(&vpp->frc_conf, 0, sizeof(mfxExtVPPFrameRateConversion));
++        vpp->frc_conf.Header.BufferId = MFX_EXTBUFF_VPP_FRAME_RATE_CONVERSION;
++        vpp->frc_conf.Header.BufferSz = sizeof(mfxExtVPPFrameRateConversion);
++        vpp->frc_conf.Algorithm       = MFX_FRCALGM_PRESERVE_TIMESTAMP; // make optional
++
++        vpp->pVppParam->ExtParam[vpp->pVppParam->NumExtParam++] = (mfxExtBuffer*)&(vpp->frc_conf);
++    }
++
++    if (vpp->denoise) {
++        memset(&vpp->denoise_conf, 0, sizeof(mfxExtVPPDenoise));
++        vpp->denoise_conf.Header.BufferId = MFX_EXTBUFF_VPP_DENOISE;
++        vpp->denoise_conf.Header.BufferSz = sizeof(mfxExtVPPDenoise);
++        vpp->denoise_conf.DenoiseFactor   = vpp->denoise;
++
++        vpp->pVppParam->ExtParam[vpp->pVppParam->NumExtParam++] = (mfxExtBuffer*)&(vpp->denoise_conf);
++    }
++
++    if (vpp->detail) {
++        memset(&vpp->detail_conf, 0, sizeof(mfxExtVPPDetail));
++        vpp->detail_conf.Header.BufferId  = MFX_EXTBUFF_VPP_DETAIL;
++        vpp->detail_conf.Header.BufferSz  = sizeof(mfxExtVPPDetail);
++        vpp->detail_conf.DetailFactor     = vpp->detail;
++
++        vpp->pVppParam->ExtParam[vpp->pVppParam->NumExtParam++] = (mfxExtBuffer*)&(vpp->detail_conf);
++    }
++
++    ret = MFXVideoVPP_Query(vpp->session, vpp->pVppParam, vpp->pVppParam);
++
++    if (ret >= MFX_ERR_NONE) {
++        av_log(ctx, AV_LOG_INFO, "MFXVideoVPP_Query returned %d \n", ret);
++    } else {
++        av_log(ctx, AV_LOG_ERROR, "Error %d querying the VPP parameters\n", ret);
++        return ff_qsv_error(ret);
++    }
++
++    memset(&vpp->req, 0, sizeof(mfxFrameAllocRequest) * 2);
++    ret = MFXVideoVPP_QueryIOSurf(vpp->session, vpp->pVppParam, &vpp->req[0]);
++
++   if (ret < 0) {
++        av_log(ctx, AV_LOG_ERROR, "Error querying the VPP IO surface\n");
++        return ff_qsv_error(ret);
++    }
++
++   init_surface(inlink);
++
++   ret = MFXVideoVPP_Init(vpp->session, vpp->pVppParam);
++
++   if (MFX_WRN_PARTIAL_ACCELERATION == ret) {
++        av_log(ctx, AV_LOG_WARNING, "VPP will work with partial HW acceleration\n");
++    } else if (ret < 0) {
++        av_log(ctx, AV_LOG_ERROR, "Error initializing the VPP\n");
++        return ff_qsv_error(ret);
++    }
++
++    return 0;
++}
++
++static void free_surface(AVFilterLink *inlink)
++{
++    AVFilterContext *ctx = inlink->dst;
++    VPPContext *vpp= ctx->priv;
++
++    for (unsigned int i = 0; i < vpp->num_surfaces_in; i++)
++       av_free(vpp->in_surface[i]);
++
++    av_free(vpp->in_surface);
++
++    for (unsigned int i = 0; i < vpp->num_surfaces_out; i++)
++         av_free(vpp->out_surface[i]);
++
++    av_free(vpp->out_surface);
++
++    av_free(vpp->surface_buffers_out);
++
++    vpp->num_surfaces_in  = 0;
++    vpp->num_surfaces_out = 0;
++}
++
++static int config_input(AVFilterLink *inlink)
++{
++    AVFilterLink *outlink = inlink->dst->outputs[0];
++    AVFilterContext *ctx = inlink->dst;
++    VPPContext *vpp= ctx->priv;
++
++    vpp->out_width = VPP_ALIGN16(vpp->out_width);
++    vpp->out_height = (vpp->dpic == 2) ?
++        VPP_ALIGN16(vpp->out_height) :
++        VPP_ALIGN32(vpp->out_height); // force 32 if unkown
++
++    outlink->w = vpp->out_width;
++    outlink->h = vpp->out_height;
++
++    outlink->frame_rate    = vpp->framerate;
++    outlink->time_base     = av_inv_q(vpp->framerate);
++    outlink->time_base.den = outlink->time_base.den * 1000;
++
++    outlink->format = AV_PIX_FMT_NV12;
++
++    return 0;
++}
++
++static int get_free_surface_index_in(AVFilterContext *ctx, mfxFrameSurface1 ** surface_pool, int pool_size)
++{
++    if (surface_pool) {
++        for (mfxU16 i = 0; i < pool_size; i++) {
++            if (0 == surface_pool[i]->Data.Locked)
++                return i;
++        }
++    }
++
++    av_log(ctx, AV_LOG_ERROR, "Error getting a free surface, pool size is %d\n", pool_size);
++    return MFX_ERR_NOT_FOUND;
++}
++
++static int get_free_surface_index_out(AVFilterContext *ctx, mfxFrameSurface1 ** surface_pool, int pool_size)
++{
++    VPPContext *vpp = ctx->priv;
++
++    if (surface_pool) {
++        for (mfxU16 i = 0; i < pool_size; i++) {
++            if (0 == surface_pool[i]->Data.Locked) {
++                if (i == vpp->cur_out_idx) {
++                   if (vpp->cur_out_idx == pool_size - 1)
++                       vpp->cur_out_idx = 0;
++                   else
++                       vpp->cur_out_idx ++;
++
++                   return i;
++                }
++            }
++        }
++    }
++
++    av_log(ctx, AV_LOG_ERROR, "Error getting a free surface, pool size is %d\n", pool_size);
++    return MFX_ERR_NOT_FOUND;
++}
++
++static int filter_frame(AVFilterLink *inlink, AVFrame *picref)
++{
++    AVFilterContext *ctx = inlink->dst;
++    VPPContext *vpp = ctx->priv;
++
++    mfxSyncPoint sync = NULL;
++    int ret = 0;
++    int filter_frame_ret = 0;
++
++    AVFilterLink *outlink = inlink->dst->outputs[0];
++
++    AVFrame *out;
++
++    int in_idx = 0;
++    int out_idx = 0;
++
++    if (vpp->frame_number == 0)
++        config_vpp(inlink, picref);
++
++    do {
++        in_idx = get_free_surface_index_in(ctx, vpp->in_surface, vpp->num_surfaces_in);
++        out_idx = get_free_surface_index_out(ctx, vpp->out_surface, vpp->num_surfaces_out);
++
++        av_assert0(in_idx != MFX_ERR_NOT_FOUND);
++        av_assert0(out_idx != MFX_ERR_NOT_FOUND);
++
++        out = ff_get_video_buffer(outlink,
++                                  vpp->out_surface[out_idx]->Info.Width,
++                                  vpp->out_surface[out_idx]->Info.Height);
++        if (!out) {
++            av_frame_free(&picref);
++            return AVERROR(ENOMEM);
++        }
++
++        av_frame_copy_props(out, picref);
++
++        // init in surface
++        if (inlink->format == AV_PIX_FMT_NV12) {
++            vpp->in_surface[in_idx]->Data.Y = picref->data[0];
++            vpp->in_surface[in_idx]->Data.VU = picref->data[1];
++            vpp->in_surface[in_idx]->Data.Pitch = picref->linesize[0];
++        } else if (inlink->format == AV_PIX_FMT_YUV420P) {
++            vpp->in_surface[in_idx]->Data.Y = picref->data[0];
++            vpp->in_surface[in_idx]->Data.U = picref->data[1];
++            vpp->in_surface[in_idx]->Data.V = picref->data[2];
++            vpp->in_surface[in_idx]->Data.Pitch = picref->linesize[0];
++        } else if (inlink->format == AV_PIX_FMT_YUYV422 ) {
++         vpp->in_surface[in_idx]->Data.Y = picref->data[0];
++            vpp->in_surface[in_idx]->Data.U = picref->data[0] + 1;
++            vpp->in_surface[in_idx]->Data.V = picref->data[0] + 3;
++            vpp->in_surface[in_idx]->Data.Pitch = picref->linesize[0];
++        } else if (inlink->format == AV_PIX_FMT_RGB32) {
++            vpp->in_surface[in_idx]->Data.B = picref->data[0];
++            vpp->in_surface[in_idx]->Data.G = picref->data[0] + 1;
++            vpp->in_surface[in_idx]->Data.R = picref->data[0] + 2;
++            vpp->in_surface[in_idx]->Data.A = picref->data[0] + 3;
++            vpp->in_surface[in_idx]->Data.Pitch = picref->linesize[0];
++        }
++
++        do {
++            ret = MFXVideoVPP_RunFrameVPPAsync(vpp->session, vpp->in_surface[in_idx], vpp->out_surface[out_idx], NULL, &sync);
++
++            if (ret == MFX_ERR_MORE_SURFACE) {
++                break;
++            } else if (ret == MFX_WRN_DEVICE_BUSY) {
++                av_usleep(500);
++                continue;
++            } else if (ret == MFX_ERR_MORE_DATA) {
++                continue;
++            }
++            break;
++        } while ( 1 );
++
++
++        if (ret < 0 && ret != MFX_ERR_MORE_SURFACE) {
++            if (ret == MFX_ERR_MORE_DATA)
++                return 0;
++            av_log(ctx, AV_LOG_ERROR, "RunFrameVPPAsync %d\n", ret);
++            return ff_qsv_error(ret);
++        }
++
++        if (ret == MFX_WRN_INCOMPATIBLE_VIDEO_PARAM) {
++            av_log(ctx, AV_LOG_WARNING,
++                    "EncodeFrameAsync returned 'incompatible param' code\n");
++        }
++
++        MFXVideoCORE_SyncOperation(vpp->session, sync, 60000);
++
++        out->interlaced_frame = vpp->dpic == 1 || vpp->dpic == 3;
++        out->top_field_first  = vpp->dpic == 1;
++
++        out->data[0]     = vpp->out_surface[out_idx]->Data.Y;
++        out->data[1]     = vpp->out_surface[out_idx]->Data.VU;
++        out->linesize[0] = vpp->out_surface[out_idx]->Info.Width;
++        out->linesize[1] = vpp->out_surface[out_idx]->Info.Width;
++
++        out->pts = ((av_rescale_q(0, inlink->time_base,
++                                 outlink->time_base) + vpp->frame_number) * 1000);
++
++        filter_frame_ret = ff_filter_frame(inlink->dst->outputs[0], out);
++
++        if (filter_frame_ret < 0)
++            return ret;
++
++        vpp->frame_number++;
++
++    } while( ret == MFX_ERR_MORE_SURFACE);
++
++    av_frame_free(&picref);
++
++    return 0;
++}
++
++static av_cold int vpp_init(AVFilterContext *ctx)
++{
++    VPPContext *vpp= ctx->priv;
++
++    if (!vpp->session) {
++        int ret = ff_qsv_init_internal_session((AVCodecContext *)ctx, &vpp->internal_qs,
++                                               vpp->load_plugins);
++
++        if (ret < 0)
++            return ret;
++
++        vpp->session = vpp->internal_qs.session;
++    }
++
++    vpp->frame_number = 0;
++
++    return 0;
++}
++
++static av_cold void vpp_uninit(AVFilterContext *ctx)
++{
++    VPPContext *vpp= ctx->priv;
++
++    free_surface(ctx->inputs[0]);
++
++    ff_qsv_close_internal_session(&vpp->internal_qs);
++}
++
++static const AVFilterPad vpp_inputs[] = {
++    {
++        .name          = "default",
++        .type          = AVMEDIA_TYPE_VIDEO,
++        .config_props  = config_input,
++        .filter_frame  = filter_frame,
++
++    },
++    { NULL }
++};
++
++static const AVFilterPad vpp_outputs[] = {
++    {
++        .name          = "default",
++        .type          = AVMEDIA_TYPE_VIDEO,
++    },
++    { NULL }
++};
++
++AVFilter ff_vf_vpp = {
++    .name          = "vpp",
++    .description   = NULL_IF_CONFIG_SMALL("Quick Sync Video VPP."),
++    .priv_size     = sizeof(VPPContext),
++    .query_formats = query_formats,
++    .init          = vpp_init,
++    .uninit        = vpp_uninit,
++    .inputs        = vpp_inputs,
++    .outputs       = vpp_outputs,
++    .priv_class    = &vpp_class,
++};
