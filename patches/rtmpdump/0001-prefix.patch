@@ -1,5 +1,5 @@
---- a/librtmp/Makefile	2010-06-30 22:01:28.000000000 +0200
-+++ b/librtmp/Makefile	2011-07-21 19:32:54.031962047 +0200
+--- a/librtmp/Makefile
++++ b/librtmp/Makefile
 @@ -1,6 +1,6 @@
  VERSION=v2.4
 
@@ -9,8 +9,8 @@
  CC=$(CROSS_COMPILE)gcc
  LD=$(CROSS_COMPILE)ld
 
---- a/Makefile	2010-06-30 21:58:35.000000000 +0200
-+++ b/Makefile	2011-07-21 19:32:40.401962576 +0200
+--- a/Makefile
++++ b/Makefile
 @@ -1,6 +1,6 @@
  VERSION=v2.4
 
