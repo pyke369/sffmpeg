@@ -1,3 +1,9 @@
+sffmpeg (2.8.5) stable; urgency=medium
+
+  * upgrade to ffmpeg 2.8.5
+
+ -- Pierre-Yves Kerembellec <py.kerembellec@gmail.com>  Thu, 21 Jan 2016 20:57:29 +0100
+
 sffmpeg (2.8.3) stable; urgency=medium
 
   * upgrade to ffmpeg 2.8.3
