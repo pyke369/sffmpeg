@@ -1,3 +1,11 @@
+sffmpeg (3.0) stable; urgency=medium
+
+  * upgrade to ffmpeg 3.0
+  * upgrade dependencies if needed
+  * replace deprecated av_* function calls in frmxtract
+
+ -- Pierre-Yves Kerembellec <py.kerembellec@gmail.com>  Wed, 09 Mar 2016 18:17:15 +0100
+
 sffmpeg (2.8.5) stable; urgency=medium
 
   * upgrade to ffmpeg 2.8.5

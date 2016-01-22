@@ -45,15 +45,7 @@ EXTERNALPROJECT_ADD(
   BUILD_IN_SOURCE 1
 )
 EXTERNALPROJECT_ADD(
-  libaacplus
-  URL http://tipok.org.ua/downloads/media/aacplus/libaacplus/libaacplus-2.0.2.tar.gz
-  PATCH_COMMAND ${CMAKE_SOURCE_DIR}/patches/patch-manager.sh libaacplus
-  CONFIGURE_COMMAND ./autogen.sh && ./configure --prefix=${CMAKE_BINARY_DIR} --disable-shared
-  BUILD_IN_SOURCE 1
-)
-EXTERNALPROJECT_ADD(
   fdkaac
-  DEPENDS libaacplus
   URL http://downloads.sourceforge.net/project/opencore-amr/fdk-aac/fdk-aac-0.1.4.tar.gz
   PATCH_COMMAND ${CMAKE_SOURCE_DIR}/patches/patch-manager.sh fdkaac
   CONFIGURE_COMMAND ./configure --prefix=${CMAKE_BINARY_DIR} --disable-shared --enable-static
@@ -99,7 +91,7 @@ EXTERNALPROJECT_ADD(
 )
 EXTERNALPROJECT_ADD(
   opus
-  URL http://downloads.xiph.org/releases/opus/opus-1.1.1-rc.tar.gz
+  URL http://downloads.xiph.org/releases/opus/opus-1.1.2.tar.gz
   PATCH_COMMAND ${CMAKE_SOURCE_DIR}/patches/patch-manager.sh opus
   CONFIGURE_COMMAND ./configure --prefix=${CMAKE_BINARY_DIR} --disable-shared --disable-doc
   BUILD_IN_SOURCE 1
@@ -138,7 +130,7 @@ EXTERNALPROJECT_ADD(
 EXTERNALPROJECT_ADD(
   libvpx
   DEPENDS yasm
-  URL http://storage.googleapis.com/downloads.webmproject.org/releases/webm/libvpx-1.4.0.tar.bz2
+  URL http://storage.googleapis.com/downloads.webmproject.org/releases/webm/libvpx-1.5.0.tar.bz2
   PATCH_COMMAND ${CMAKE_SOURCE_DIR}/patches/patch-manager.sh libvpx
   CONFIGURE_COMMAND PATH=$ENV{PATH} ./configure --prefix=${CMAKE_BINARY_DIR} --disable-shared
   BUILD_COMMAND PATH=$ENV{PATH} make
@@ -157,7 +149,7 @@ EXTERNALPROJECT_ADD(
 )
 EXTERNALPROJECT_ADD(
   freetype
-  URL http://download.savannah.gnu.org/releases/freetype/freetype-2.6.1.tar.gz
+  URL http://download.savannah.gnu.org/releases/freetype/freetype-2.6.3.tar.gz
   PATCH_COMMAND ${CMAKE_SOURCE_DIR}/patches/patch-manager.sh freetype
   CONFIGURE_COMMAND ./configure --prefix=${CMAKE_BINARY_DIR} --disable-shared --enable-static --without-png
   INSTALL_COMMAND make install && ln -s ${CMAKE_BINARY_DIR}/include/freetype2 ${CMAKE_BINARY_DIR}/include/freetype2/freetype
@@ -188,7 +180,7 @@ EXTERNALPROJECT_ADD(
 EXTERNALPROJECT_ADD(
   libass
   DEPENDS yasm freetype fribidi fontconfig
-  URL https://github.com/libass/libass/releases/download/0.13.0/libass-0.13.0.tar.gz
+  URL https://github.com/libass/libass/releases/download/0.13.2/libass-0.13.2.tar.gz
   PATCH_COMMAND ${CMAKE_SOURCE_DIR}/patches/patch-manager.sh libass
   CONFIGURE_COMMAND PATH=$ENV{PATH} PKG_CONFIG_PATH=$ENV{PKG_CONFIG_PATH} ./configure --prefix=${CMAKE_BINARY_DIR} --disable-shared --enable-static
   BUILD_COMMAND PATH=$ENV{PATH} make
@@ -196,17 +188,17 @@ EXTERNALPROJECT_ADD(
 )
 EXTERNALPROJECT_ADD(
   ffmpeg
-  DEPENDS yasm opencore-amr faac libaacplus fdkaac lame libogg speex libvorbis libtheora opus xvidcore x264 x265 libvpx rtmpdump freetype libass
-  URL http://www.ffmpeg.org/releases/ffmpeg-2.8.5.tar.bz2
+  DEPENDS yasm opencore-amr faac fdkaac lame libogg speex libvorbis libtheora opus xvidcore x264 x265 libvpx rtmpdump freetype libass
+  URL http://www.ffmpeg.org/releases/ffmpeg-3.0.tar.bz2
   PATCH_COMMAND ${CMAKE_SOURCE_DIR}/patches/patch-manager.sh ffmpeg
-  CONFIGURE_COMMAND PATH=$ENV{PATH} PKG_CONFIG_PATH=$ENV{PKG_CONFIG_PATH} ./configure --prefix=${CMAKE_BINARY_DIR} --datadir=${CMAKE_BINARY_DIR}/etc --disable-shared --enable-static --enable-gpl --enable-version3 --enable-nonfree --disable-doc --disable-debug --disable-ffplay --disable-ffserver --disable-outdevs --enable-runtime-cpudetect --enable-memalign-hack --extra-cflags=-I${CMAKE_BINARY_DIR}/include\ --static --extra-ldflags=-L${CMAKE_BINARY_DIR}/lib --extra-libs=-lstdc++\ -lexpat\ -ldl --enable-libopencore-amrnb --enable-libopencore-amrwb --enable-libfaac --enable-libfdk-aac --enable-libaacplus --enable-libmp3lame --enable-libspeex --enable-libtheora --enable-libvorbis --enable-libx264 --enable-libx265 --enable-libxvid --enable-libvpx --enable-libopus --enable-librtmp --enable-libfreetype --enable-libass
+  CONFIGURE_COMMAND PATH=$ENV{PATH} PKG_CONFIG_PATH=$ENV{PKG_CONFIG_PATH} ./configure --prefix=${CMAKE_BINARY_DIR} --datadir=${CMAKE_BINARY_DIR}/etc --disable-shared --enable-static --enable-gpl --enable-version3 --enable-nonfree --disable-doc --disable-debug --disable-ffplay --disable-ffserver --disable-outdevs --enable-runtime-cpudetect --enable-memalign-hack --extra-cflags=-I${CMAKE_BINARY_DIR}/include\ --static --extra-ldflags=-L${CMAKE_BINARY_DIR}/lib --extra-libs=-lstdc++\ -lexpat\ -ldl --enable-libopencore-amrnb --enable-libopencore-amrwb --enable-libfaac --enable-libfdk-aac --enable-libmp3lame --enable-libspeex --enable-libtheora --enable-libvorbis --enable-libx264 --enable-libx265 --enable-libxvid --enable-libvpx --enable-libopus --enable-librtmp --enable-libfreetype --enable-libass
   BUILD_COMMAND PATH=$ENV{PATH} make
   BUILD_IN_SOURCE 1
 )
 EXTERNALPROJECT_ADD(
   libpng
   DEPENDS zlib
-  URL http://download.sourceforge.net/libpng/libpng-1.6.19.tar.gz
+  URL http://download.sourceforge.net/libpng/libpng-1.6.21.tar.gz
   PATCH_COMMAND ${CMAKE_SOURCE_DIR}/patches/patch-manager.sh libpng
   CONFIGURE_COMMAND CFLAGS=-I${CMAKE_BINARY_DIR}/include CPPFLAGS=-I${CMAKE_BINARY_DIR}/include LDFLAGS=-L${CMAKE_BINARY_DIR}/lib ./configure --prefix=${CMAKE_BINARY_DIR} --disable-shared --enable-static
   BUILD_IN_SOURCE 1
@@ -214,7 +206,7 @@ EXTERNALPROJECT_ADD(
 EXTERNALPROJECT_ADD(
   frmxtract
   DEPENDS ffmpeg libpng
-  URL ${CMAKE_SOURCE_DIR}/vendor/frmxtract-2.8.3.tar.gz
+  URL ${CMAKE_SOURCE_DIR}/vendor/frmxtract-3.0.tar.gz
   PATCH_COMMAND ${CMAKE_SOURCE_DIR}/patches/patch-manager.sh frmxtract
   CONFIGURE_COMMAND CC=${CMAKE_C_COMPILER} PKG_CONFIG_PATH=$ENV{PKG_CONFIG_PATH} ./configure --prefix=${CMAKE_BINARY_DIR}
   BUILD_IN_SOURCE 1
