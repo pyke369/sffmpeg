@@ -30,34 +30,35 @@ Then go grab a coffee (or maybe two). The helper will download and compile all F
 Once done, you should get a FFmpeg binary in the `build/bin` directory (with all dependencies statically linked-in).
 
 
-    $ ./build/bin/ffmpeg
-    ffmpeg version 2.8.3 Copyright (c) 2000-2015 the FFmpeg developers
-      libavutil      54. 31.100 / 54. 31.100
-      libavcodec     56. 60.100 / 56. 60.100
-      libavformat    56. 40.101 / 56. 40.101
-      libavdevice    56.  4.100 / 56.  4.100
-      libavfilter     5. 40.101 /  5. 40.101
-      libswscale      3.  1.101 /  3.  1.101
-      libswresample   1.  2.101 /  1.  2.101
-      libpostproc    53.  3.100 / 53.  3.100
+    ffmpeg version 3.0 Copyright (c) 2000-2016 the FFmpeg developers
+      libavutil      55. 17.103 / 55. 17.103
+      libavcodec     57. 24.102 / 57. 24.102
+      libavformat    57. 25.100 / 57. 25.100
+      libavdevice    57.  0.101 / 57.  0.101
+      libavfilter     6. 31.100 /  6. 31.100
+      libswscale      4.  0.100 /  4.  0.100
+      libswresample   2.  0.101 /  2.  0.101
+      libpostproc    54.  0.100 / 54.  0.100
     Hyper fast Audio and Video encoder
     usage: ffmpeg [options] [[infile options] -i infile]... {[outfile options] outfile}...
 
     Use -h to get full help or, even better, run 'man ffmpeg'
 
+
 From there, you may use the binary immediately or build a Debian package for later deployment (see below).
 
 ## Packaging
+
 (requires devscripts package)
 
 You may optionally build a Debian package by typing the following command at the shell prompt:
 
     $ make deb
 
-The `ffmpeg` and i`ffprobe` binaries will be installed by the package in the `/usr/bin` directory.
+The `ffmpeg`, `ffprobe` and `frmxtract` binaries will be installed by the package in the `/usr/bin` directory.
 
-    $ sudo dpkg -i sffmpeg_2.8.3_amd64.deb
+    $ sudo dpkg -i sffmpeg_3.0_amd64.deb
     Selecting previously unselected package sffmpeg.
-    Unpacking sffmpeg (from sffmpeg_2.8.3_amd64.deb) ...
-    Setting up sffmpeg (2.8.3) ...
+    Unpacking sffmpeg (from sffmpeg_3.0_amd64.deb) ...
+    Setting up sffmpeg (3.0) ...
 
