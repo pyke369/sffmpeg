@@ -1,3 +1,11 @@
+sffmpeg (3.0.2) stable; urgency=medium
+
+  * upgrade to ffmpeg 3.0.2
+  * upgrade dependencies if needed
+  * fix frmxtract last_decoded typo-bug
+
+ -- Pierre-Yves Kerembellec <py.kerembellec@gmail.com>  Wed, 04 May 2016 19:11:00 +0200
+
 sffmpeg (3.0) stable; urgency=medium
 
   * upgrade to ffmpeg 3.0
