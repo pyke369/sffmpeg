@@ -1,3 +1,9 @@
+qsv-sffmpeg (3.1.2) stable; urgency=medium
+
+  * upgrade to ffmpeg 3.1.2
+
+ -- Pierre-Yves Kerembellec <py.kerembellec@gmail.com>  Mon, 22 Aug 2016 15:56:16 +0200
+
 qsv-sffmpeg (3.0.2) stable; urgency=medium
 
   * upgrade to ffmpeg 3.0.2
@@ -6,7 +12,7 @@ qsv-sffmpeg (3.0.2) stable; urgency=medium
 
  -- Pierre-Yves Kerembellec <py.kerembellec@gmail.com>  Wed, 04 May 2016 19:11:00 +0200
 
-sffmpeg (3.0) stable; urgency=medium
+qsv-sffmpeg (3.0) stable; urgency=medium
 
   * upgrade to ffmpeg 3.0
   * upgrade dependencies if needed
