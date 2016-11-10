@@ -1,3 +1,9 @@
+sffmpeg (3.2.0) stable; urgency=medium
+
+  * upgrade to ffmpeg 3.2.0
+
+ -- Gilles Vieira <gilles.vieira@dailymotion.com>  Wed, 09 Nov 2016 18:09:19 +0100
+
 sffmpeg (3.1.2) stable; urgency=medium
 
   * upgrade to ffmpeg 3.1.2
