@@ -1,0 +1,32 @@
+diff --git a/libavcodec/qsvenc.c b/libavcodec/qsvenc.c
+index f56cb61..6c1b178 100644
+--- a/libavcodec/qsvenc.c
++++ b/libavcodec/qsvenc.c
+@@ -955,7 +955,7 @@ static int encode_frame(AVCodecContext *avctx, QSVEncContext *q,
+     bs->Data      = new_pkt.data;
+     bs->MaxLength = new_pkt.size;
+ 
+-    if (q->set_encode_ctrl_cb) {
++    if (q->set_encode_ctrl_cb && qsv_frame) {
+         q->set_encode_ctrl_cb(avctx, frame, &qsv_frame->enc_ctrl);
+     }
+ 
+diff --git a/libavcodec/qsvenc_h264.c b/libavcodec/qsvenc_h264.c
+index f5b01bb..e2d0d41 100644
+--- a/libavcodec/qsvenc_h264.c
++++ b/libavcodec/qsvenc_h264.c
+@@ -46,6 +46,14 @@ static int qsv_h264_set_encode_ctrl(AVCodecContext *avctx,
+     QSVH264EncContext *qh264 = avctx->priv_data;
+     QSVEncContext *q = &qh264->qsv;
+ 
++    if (enc_ctrl)
++    {
++        if (frame && frame->pict_type == AV_PICTURE_TYPE_I)
++            enc_ctrl->FrameType = MFX_FRAMETYPE_I | MFX_FRAMETYPE_IDR | MFX_FRAMETYPE_REF;
++        else
++            enc_ctrl->FrameType = 0;
++    }
++
+     if (q->a53_cc && frame) {
+         mfxPayload* payload;
+         mfxU8* sei_data;
