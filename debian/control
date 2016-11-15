@@ -2,7 +2,7 @@ Source: qsv-sffmpeg
 Priority: optional
 Section: video
 Maintainer: Pierre-Yves Kerembellec <py.kerembellec@gmail.com>
-Build-Depends: debhelper (>= 7), cmake (>= 2.8.8), pkg-config, autoconf, automake, libtool, git-core, mercurial, unzip, curl, intel-media-server-sdk
+Build-Depends: debhelper (>= 7), cmake (>= 2.8.8), pkg-config, autoconf, automake, libtool, git-core, mercurial, unzip, curl, intel-media-server-sdk-2017
 Standards-Version: 3.7.2
 
 Package: qsv-sffmpeg
@@ -11,4 +11,3 @@ Description: Static build of the latest FFmpeg binaries
 Provides: ffmpeg, frmxtract
 Conflicts: ffmpeg, frmxtract
 Replaces: ffmpeg, frmxtract
-Depends: intel-media-server-sdk

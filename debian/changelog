@@ -1,8 +1,16 @@
-qsv-sffmpeg (3.2.0) stable; urgency=medium
+qsv-sffmpeg (3.2p1) stable; urgency=medium
 
-  * upgrade to ffmpeg 3.2.0
+  * Added 0004-intel-qsv-add-force-key-frames-support.patch
+  * Added 0005-intel-qsv-fix-alignment.patch
+  * Added 0006-intel-vpp-no-frc-by-default.patch
 
- -- Gilles Vieira <gilles.vieira@dailymotion.com>  Wed, 09 Nov 2016 18:09:19 +0100
+ -- Gilles Vieira <gilles.vieira@dailymotio.com>  Tue, 15 Nov 2016 16:42:11 +0100
+
+qsv-sffmpeg (3.2) stable; urgency=medium
+
+  * upgrade to ffmpeg 3.2 built against MediaSDK 2017
+
+ -- Gilles Vieira <gilles.vieira@dailymotion.com>  Wed, 09 Nov 2016 19:39:47 +0100
 
 qsv-sffmpeg (3.1.2) stable; urgency=medium
 
@@ -10,7 +18,7 @@ qsv-sffmpeg (3.1.2) stable; urgency=medium
 
  -- Pierre-Yves Kerembellec <py.kerembellec@gmail.com>  Mon, 22 Aug 2016 15:56:16 +0200
 
-sffmpeg (3.0.2) stable; urgency=medium
+qsv-sffmpeg (3.0.2) stable; urgency=medium
 
   * upgrade to ffmpeg 3.0.2
   * upgrade dependencies if needed
@@ -18,7 +26,7 @@ sffmpeg (3.0.2) stable; urgency=medium
 
  -- Pierre-Yves Kerembellec <py.kerembellec@gmail.com>  Wed, 04 May 2016 19:11:00 +0200
 
-sffmpeg (3.0) stable; urgency=medium
+qsv-sffmpeg (3.0) stable; urgency=medium
 
   * upgrade to ffmpeg 3.0
   * upgrade dependencies if needed
