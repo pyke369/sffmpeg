@@ -1,0 +1,58 @@
+diff --git a/libavfilter/vf_vpp.c b/libavfilter/vf_vpp.c
+index 568951a..b8fe569 100644
+--- a/libavfilter/vf_vpp.c
++++ b/libavfilter/vf_vpp.c
+@@ -124,7 +124,7 @@ static const AVOption vpp_options[] = {
+     { "h",           "Output video height",                                    OFFSET(out_height),   AV_OPT_TYPE_INT, {.i64=0}, 0, 2304, .flags = FLAGS },
+     { "height",      "Output video height : ",                                 OFFSET(out_height),   AV_OPT_TYPE_INT, {.i64=0}, 0, 2304, .flags = FLAGS },
+     { "dpic",        "dest pic struct: 0=tff, 1=progressive [default], 2=bff", OFFSET(dpic),         AV_OPT_TYPE_INT, {.i64 = 1 }, 0, 2, .flags = FLAGS },
+-    { "fps",         "A string describing desired output framerate",           OFFSET(framerate),    AV_OPT_TYPE_VIDEO_RATE, { .str = "25" }, .flags = FLAGS },
++    { "fps",         "A string describing desired output framerate",           OFFSET(framerate),    AV_OPT_TYPE_VIDEO_RATE, { .str = "12345" }, 0, INT_MAX, .flags = FLAGS },
+     { "async_depth", "Maximum processing parallelism [default = 4]",           OFFSET(async_depth),  AV_OPT_TYPE_INT, { .i64 = ASYNC_DEPTH_DEFAULT }, 0, INT_MAX, .flags = FLAGS },
+     { "max_b_frames","Maximum number of b frames  [default = 3]",              OFFSET(max_b_frames), AV_OPT_TYPE_INT, { .i64 = 3 }, 0, INT_MAX, .flags = FLAGS },
+     { NULL }
+@@ -248,10 +248,16 @@ static int init_vpp_param(AVFilterLink *inlink , AVFrame * pic)
+ 
+     if ((vpp->pVppParam->vpp.In.FrameRateExtN / vpp->pVppParam->vpp.In.FrameRateExtD) !=
+         (vpp->pVppParam->vpp.Out.FrameRateExtN / vpp->pVppParam->vpp.Out.FrameRateExtD))
+-       vpp->use_frc = 1;
++        vpp->use_frc = 1;
+     else
+         vpp->use_frc = 0;
+ 
++    if (!vpp->use_frc)
++    {
++        av_log(ctx, AV_LOG_INFO, "Framerate conversion forced (bug in the QSV driver?)\n");
++        vpp->use_frc = 1;
++    }
++
+     // width must be a multiple of 16
+     // height must be a multiple of 16 in case of frame picture and a multiple of 32 in case of field picture
+     vpp->pVppParam->vpp.Out.Width = VPP_ALIGN16(vpp->pVppParam->vpp.Out.CropW);
+@@ -263,13 +269,13 @@ static int init_vpp_param(AVFilterLink *inlink , AVFrame * pic)
+     vpp->pVppParam->IOPattern =
+         MFX_IOPATTERN_IN_SYSTEM_MEMORY | MFX_IOPATTERN_OUT_SYSTEM_MEMORY;
+ 
+-    av_log(ctx, AV_LOG_INFO, "In %dx%d %d fps\t Out %dx%d %d fps\n",
++    av_log(ctx, AV_LOG_INFO, "In %dx%d %f fps\t Out %dx%d %f fps\n",
+            VPP_ALIGN32(vpp->pVppParam->vpp.In.Width),
+            VPP_ALIGN32(vpp->pVppParam->vpp.In.Height),
+-           vpp->pVppParam->vpp.In.FrameRateExtN / vpp->pVppParam->vpp.In.FrameRateExtD,
++           (double) vpp->pVppParam->vpp.In.FrameRateExtN / (double)vpp->pVppParam->vpp.In.FrameRateExtD,
+            VPP_ALIGN32(vpp->pVppParam->vpp.Out.Width),
+            VPP_ALIGN32(vpp->pVppParam->vpp.Out.Height),
+-           vpp->pVppParam->vpp.Out.FrameRateExtN / vpp->pVppParam->vpp.Out.FrameRateExtD);
++           (double) vpp->pVppParam->vpp.Out.FrameRateExtN / (double) vpp->pVppParam->vpp.Out.FrameRateExtD);
+ 
+     if (vpp->use_frc == 1)
+         av_log(ctx, AV_LOG_INFO, "Framerate conversion enabled\n");
+@@ -445,6 +451,9 @@ static int config_input(AVFilterLink *inlink)
+     outlink->w = vpp->out_width;
+     outlink->h = vpp->out_height;
+ 
++    if (av_q2d(vpp->framerate) == 12345.0)
++        vpp->framerate = inlink->frame_rate;
++
+     outlink->frame_rate    = vpp->framerate;
+     outlink->time_base     = av_inv_q(vpp->framerate);
+     outlink->time_base.den = outlink->time_base.den * 1000;
