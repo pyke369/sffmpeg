@@ -6,8 +6,8 @@
 -prefix=/usr/local
 +prefix=$(PREFIX)
 
- CC=$(CROSS_COMPILE)gcc
- LD=$(CROSS_COMPILE)ld
+ incdir=$(prefix)/include/librtmp
+ bindir=$(prefix)/bin
 
 --- a/Makefile
 +++ b/Makefile

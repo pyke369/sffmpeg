@@ -1,7 +1,7 @@
 sffmpeg:
 	@mkdir -p build && \
 	cd build && \
-	cmake -DCMAKE_BUILD_TYPE=Release .. && \
+	cmake -j`cat /proc/cpuinfo|grep ^processor|wc -l` -DCMAKE_BUILD_TYPE=Release .. && \
 	make
 
 distclean:

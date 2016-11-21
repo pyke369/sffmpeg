@@ -1,4 +1,7 @@
 sudo: required
-dist: trusty
-language: C
-script: make
+
+services:
+  - docker
+
+script:
+  - docker build -t sffmpeg .
