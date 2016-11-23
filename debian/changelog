@@ -1,3 +1,11 @@
+qsv-sffmpeg (3.2p1) stable; urgency=medium
+ 
+  * upgrade to ffmpeg 3.2.0
+  * added 0004-intel-qsv-add-force-key-frames-support.patch
+  * added 0005-intel-qsv-fix-alignment.patch
+  * added 0006-intel-vpp-no-frc-by-default.patch
+  * ahanged depends on MediaSDK 2017
+
 qsv-sffmpeg (3.2.0) stable; urgency=medium
 
   * upgrade to ffmpeg 3.2.0
