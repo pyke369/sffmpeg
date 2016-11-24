@@ -1,0 +1,13 @@
+diff -u a/configure b/configure
+--- a/configure 2016-11-24 18:30:14.708480616 +0100
++++ b/configure 2016-11-24 18:29:53.832370249 +0100
+@@ -6829,7 +6829,7 @@
+ EOF
+ }
+ 
+-pkgconfig_generate libavutil     "FFmpeg utility library"               "$LIBAVUTIL_VERSION"     "$LIBRT $LIBM"
++pkgconfig_generate libavutil     "FFmpeg utility library"               "$LIBAVUTIL_VERSION"     "$LIBRT $LIBM -lX11 -lva-x11"
+ pkgconfig_generate libavcodec    "FFmpeg codec library"                 "$LIBAVCODEC_VERSION"    "$extralibs"
+ pkgconfig_generate libavformat   "FFmpeg container format library"      "$LIBAVFORMAT_VERSION"   "$extralibs"
+ pkgconfig_generate libavdevice   "FFmpeg device handling library"       "$LIBAVDEVICE_VERSION"   "$extralibs"
+
