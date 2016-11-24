@@ -1,16 +1,30 @@
+qsv-sffmpeg (3.2p3) stable; urgency=medium
+
+  *  New patch 0007-add-x11-deps-to-libavutil-pc.patch
+
+ -- Gilles Vieira <gilles.vieira@dailymotio.com>  Thu, 24 Nov 2016 21:22:34 +0100
+
+qsv-sffmpeg (3.2p2) stable; urgency=medium
+
+  * Moved 0005-intel-qsv-fix-alignment.patch to 0005-intel-vpp-fix-alignment.patch
+  * The new patch outputs an aligned resolution, so for now an additional
+    vf_crop is needed (performances are improved though)
+
+ -- Gilles Vieira <gilles.vieira@dailymotio.com>  Wed, 16 Nov 2016 11:55:46 +0100
+
 qsv-sffmpeg (3.2p1) stable; urgency=medium
- 
-  * upgrade to ffmpeg 3.2.0
-  * added 0004-intel-qsv-add-force-key-frames-support.patch
-  * added 0005-intel-qsv-fix-alignment.patch
-  * added 0006-intel-vpp-no-frc-by-default.patch
-  * ahanged depends on MediaSDK 2017
 
-qsv-sffmpeg (3.2.0) stable; urgency=medium
+  * Added 0004-intel-qsv-add-force-key-frames-support.patch
+  * Added 0005-intel-qsv-fix-alignment.patch
+  * Added 0006-intel-vpp-no-frc-by-default.patch
 
-  * upgrade to ffmpeg 3.2.0
+ -- Gilles Vieira <gilles.vieira@dailymotio.com>  Tue, 15 Nov 2016 16:42:11 +0100
 
- -- Gilles Vieira <gilles.vieira@dailymotion.com>  Wed, 09 Nov 2016 18:09:19 +0100
+qsv-sffmpeg (3.2) stable; urgency=medium
+
+  * upgrade to ffmpeg 3.2 built against MediaSDK 2017
+
+ -- Gilles Vieira <gilles.vieira@dailymotion.com>  Wed, 09 Nov 2016 19:39:47 +0100
 
 qsv-sffmpeg (3.1.2) stable; urgency=medium
 
