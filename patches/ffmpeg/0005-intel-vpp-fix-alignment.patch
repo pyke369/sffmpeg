@@ -1,0 +1,89 @@
+diff --git a/libavfilter/vf_vpp.c b/libavfilter/vf_vpp.c
+index 568951a..0bcd51b 100644
+--- a/libavfilter/vf_vpp.c
++++ b/libavfilter/vf_vpp.c
+@@ -89,7 +89,9 @@ typedef struct {
+     mfxExtVPPDetail detail_conf;
+ 
+     int out_width;
++    int out_width_aligned;
+     int out_height;
++    int out_height_aligned;
+ 
+     int dpic;                   // destination picture structure
+                                 // -1 = unkown
+@@ -232,6 +234,8 @@ static int init_vpp_param(AVFilterLink *inlink , AVFrame * pic)
+         (MFX_PICSTRUCT_PROGRESSIVE == vpp->pVppParam->vpp.In.PicStruct) ?
+         VPP_ALIGN16(inlink->h) :
+         VPP_ALIGN32(inlink->h);
++    av_log(ctx, AV_LOG_DEBUG, "VPP frame size IN->%dx%d (%dx%d aligned)\n",
++        inlink->w, inlink->h, vpp->pVppParam->vpp.In.Width, vpp->pVppParam->vpp.In.Height);
+ 
+     // output data
+     vpp->pVppParam->vpp.Out.FourCC = MFX_FOURCC_NV12;
+@@ -254,11 +258,12 @@ static int init_vpp_param(AVFilterLink *inlink , AVFrame * pic)
+ 
+     // width must be a multiple of 16
+     // height must be a multiple of 16 in case of frame picture and a multiple of 32 in case of field picture
+-    vpp->pVppParam->vpp.Out.Width = VPP_ALIGN16(vpp->pVppParam->vpp.Out.CropW);
+-    vpp->pVppParam->vpp.Out.Height =
+-        (MFX_PICSTRUCT_PROGRESSIVE == vpp->pVppParam->vpp.Out.PicStruct) ?
+-        VPP_ALIGN16(vpp->pVppParam->vpp.Out.CropH) :
+-        VPP_ALIGN32(vpp->pVppParam->vpp.Out.CropH);
++    vpp->pVppParam->vpp.Out.Width = vpp->out_width_aligned;
++    vpp->pVppParam->vpp.Out.Height = vpp->out_height_aligned;
++
++    av_log(ctx, AV_LOG_DEBUG, "VPP frame size OUT->%dx%d (%dx%d aligned), FRC=%d\n",
++        vpp->pVppParam->vpp.Out.CropW, vpp->pVppParam->vpp.Out.CropH, vpp->pVppParam->vpp.Out.Width, vpp->pVppParam->vpp.Out.Height,vpp->use_frc);
++
+ 
+     vpp->pVppParam->IOPattern =
+         MFX_IOPATTERN_IN_SYSTEM_MEMORY | MFX_IOPATTERN_OUT_SYSTEM_MEMORY;
+@@ -290,8 +295,12 @@ static void init_surface(AVFilterLink *inlink)
+     vpp->num_surfaces_in  = FFMAX(vpp->req[0].NumFrameSuggested, vpp->async_depth + vpp->max_b_frames + 1);
+     vpp->num_surfaces_out = FFMAX(vpp->req[1].NumFrameSuggested, 1);
+ 
+-    width = (unsigned int) VPP_ALIGN32(vpp->pVppParam->vpp.In.Width);
+-    height = (unsigned int) VPP_ALIGN32(vpp->pVppParam->vpp.In.Height);
++    width = (unsigned int) VPP_ALIGN16(vpp->pVppParam->vpp.In.Width);
++    height = (MFX_PICSTRUCT_PROGRESSIVE == vpp->pVppParam->vpp.In.PicStruct) ?
++             (unsigned int) VPP_ALIGN16(vpp->pVppParam->vpp.In.Height):
++             (unsigned int) VPP_ALIGN32(vpp->pVppParam->vpp.In.Height);
++
++    av_log(ctx, AV_LOG_DEBUG, "VPP surface IN->%dx%d (%dx%d aligned)\n", vpp->pVppParam->vpp.In.Width, vpp->pVppParam->vpp.In.Height, width, height); 
+     surface_size = width * height * bits_per_pixel / 8;
+ 
+     vpp->in_surface = av_mallocz(sizeof(mfxFrameSurface1) * vpp->num_surfaces_in);
+@@ -304,8 +313,12 @@ static void init_surface(AVFilterLink *inlink)
+     }
+ 
+     bits_per_pixel = 12;
+-    width = (unsigned int) VPP_ALIGN32(vpp->pVppParam->vpp.Out.Width);
+-    height = (unsigned int) VPP_ALIGN32(vpp->pVppParam->vpp.Out.Height);
++    width = vpp->out_width_aligned;
++    height = vpp->out_height_aligned;
++
++    av_log(ctx, AV_LOG_DEBUG, "VPP surface OUT->%dx%d (%dx%d aligned)\n", vpp->pVppParam->vpp.Out.Width, vpp->pVppParam->vpp.Out.Height, width, height);
++
++
+     surface_size = width * height * bits_per_pixel / 8;
+     vpp->surface_buffers_out = (mfxU8*) av_mallocz(surface_size * vpp->num_surfaces_out);
+     VPP_CHECK_POINTER(vpp->surface_buffers_out);
+@@ -437,13 +450,13 @@ static int config_input(AVFilterLink *inlink)
+     AVFilterContext *ctx = inlink->dst;
+     VPPContext *vpp= ctx->priv;
+ 
+-    vpp->out_width = VPP_ALIGN16(vpp->out_width);
+-    vpp->out_height = (vpp->dpic == 2) ?
++    vpp->out_width_aligned = VPP_ALIGN16(vpp->out_width);
++    vpp->out_height_aligned = (vpp->dpic == 2) ?
+         VPP_ALIGN16(vpp->out_height) :
+         VPP_ALIGN32(vpp->out_height); // force 32 if unkown
+ 
+-    outlink->w = vpp->out_width;
+-    outlink->h = vpp->out_height;
++    outlink->w = vpp->out_width_aligned;
++    outlink->h = vpp->out_height_aligned;
+ 
+     outlink->frame_rate    = vpp->framerate;
+     outlink->time_base     = av_inv_q(vpp->framerate);
