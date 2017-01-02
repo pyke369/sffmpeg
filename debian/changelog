@@ -1,3 +1,10 @@
+sffmpeg (3.2.2) stable; urgency=medium
+
+  * upgrade to ffmpeg 3.2.2
+  * upgrade dependencies if needed
+
+ -- Pierre-Yves Kerembellec <py.kerembellec@gmail.com>  Mon, 02 Jan 2017 17:48:17 +0100
+
 sffmpeg (3.1.2) stable; urgency=medium
 
   * upgrade to ffmpeg 3.1.2
