@@ -116,7 +116,7 @@ EXTERNALPROJECT_ADD(
   DEPENDS yasm
   # GIT_REPOSITORY git://git.videolan.org/x264.git
   # UPDATE_COMMAND ""
-  URL ${CMAKE_SOURCE_DIR}/vendor/x264-git.tar.bz2
+  URL ${CMAKE_SOURCE_DIR}/vendor/x264-snapshot-20170716-2245-stable.tar.bz2
   PATCH_COMMAND ${CMAKE_SOURCE_DIR}/patches/patch-manager.sh x264
   CONFIGURE_COMMAND PATH=$ENV{PATH} ./configure --prefix=${CMAKE_BINARY_DIR} --enable-static
   BUILD_COMMAND PATH=$ENV{PATH} make
@@ -127,7 +127,7 @@ EXTERNALPROJECT_ADD(
   DEPENDS yasm
   # DOWNLOAD_COMMAND hg clone --insecure https://bitbucket.org/multicoreware/x265
   # UPDATE_COMMAND hg update -r stable
-  URL ${CMAKE_SOURCE_DIR}/vendor/x265-stable.tar.bz2
+  URL ${CMAKE_SOURCE_DIR}/vendor/x265_2.5.tar.gz
   PATCH_COMMAND ${CMAKE_SOURCE_DIR}/patches/patch-manager.sh x265
   CONFIGURE_COMMAND cd build/linux && PATH=$ENV{PATH} cmake -G "Unix Makefiles" -D CMAKE_INSTALL_PREFIX:PATH=${CMAKE_BINARY_DIR} -D ENABLE_CLI:BOOL=OFF -D ENABLE_SHARED:BOOL=OFF ../../source
   BUILD_COMMAND cd build/linux && PATH=$ENV{PATH} make
@@ -202,8 +202,8 @@ EXTERNALPROJECT_ADD(
 EXTERNALPROJECT_ADD(
   ffmpeg
   DEPENDS yasm opencore-amr fdkaac lame libogg speex libvorbis libtheora opus xvidcore x264 x265 libvpx rtmpdump freetype libass
-  # URL http://www.ffmpeg.org/releases/ffmpeg-3.3.tar.bz2
-  URL ${CMAKE_SOURCE_DIR}/vendor/ffmpeg-3.3.tar.bz2
+  # URL http://www.ffmpeg.org/releases/ffmpeg-3.3.2.tar.bz2
+  URL ${CMAKE_SOURCE_DIR}/vendor/ffmpeg-3.3.2.tar.bz2
   PATCH_COMMAND ${CMAKE_SOURCE_DIR}/patches/patch-manager.sh ffmpeg
   CONFIGURE_COMMAND PATH=$ENV{PATH} PKG_CONFIG_PATH=$ENV{PKG_CONFIG_PATH} ./configure --prefix=${CMAKE_BINARY_DIR} --datadir=${CMAKE_BINARY_DIR}/etc --disable-shared --enable-static --enable-gpl --enable-version3 --enable-nonfree --disable-doc --disable-debug --disable-ffplay --disable-ffserver --disable-outdevs --enable-runtime-cpudetect --extra-cflags=-I${CMAKE_BINARY_DIR}/include\ --static --extra-ldflags=-L${CMAKE_BINARY_DIR}/lib --extra-libs=-lstdc++\ -lexpat\ -ldl --enable-libopencore-amrnb --enable-libopencore-amrwb --enable-libfdk-aac --enable-libmp3lame --enable-libspeex --enable-libtheora --enable-libvorbis --enable-libx264 --enable-libx265 --enable-libxvid --enable-libvpx --enable-libopus --enable-librtmp --enable-libfreetype --enable-libass
   BUILD_COMMAND PATH=$ENV{PATH} make

@@ -1,3 +1,9 @@
+sffmpeg (3.3.2) stable; urgency=medium
+
+  * upgrade to ffmpeg 3.3.2
+
+ -- Pierre-Yves Kerembellec <py.kerembellec@gmail.com>  Thu, 07 Jul 2017 15:22:18 +0200
+
 sffmpeg (3.3p1) stable; urgency=medium
 
   * fix E-AC3 glitches
