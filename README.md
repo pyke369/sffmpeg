@@ -57,8 +57,20 @@ You may optionally build a Debian package by typing the following command at the
 
 The `ffmpeg`, `ffprobe` and `frmxtract` binaries will be installed by the package in the `/usr/bin` directory.
 
-    $ sudo dpkg -i sffmpeg_3.0_amd64.deb
+    $ sudo dpkg -i sffmpeg_3.3.3_amd64.deb
     Selecting previously unselected package sffmpeg.
-    Unpacking sffmpeg (from sffmpeg_3.0_amd64.deb) ...
-    Setting up sffmpeg (3.0) ...
+    Unpacking sffmpeg (from sffmpeg_3.3.3_amd64.deb) ...
+    Setting up sffmpeg (3.3.3) ...
 
+## Cross compiling
+
+You can cross-compile sffmpeg for ARMV7 (used by the Raspberry Pie 3 for instance).
+
+First, you need to get the right toolchain:
+    sudo git clone https://github.com/raspberrypi/tools.git /opt/tools
+
+Then, run:
+    make CROSS_ARCH=armv7
+
+To build the debian package, run:
+    make deb-armv7

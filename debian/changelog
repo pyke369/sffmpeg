@@ -1,3 +1,9 @@
+sffmpeg (3.3.3p1) stable; urgency=medium
+
+  * now support cross-compiling
+
+ -- Gilles Vieira <gilles.vieira@dailymotion.com>  Thu, 21 Sep 2017 10:26:28 +0200
+
 sffmpeg (3.3.3) stable; urgency=medium
 
   * upgrade to ffmpeg 3.3.3
