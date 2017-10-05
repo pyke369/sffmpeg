@@ -222,7 +222,7 @@ EXTERNALPROJECT_ADD(
 EXTERNALPROJECT_ADD(
   frmxtract
   DEPENDS ffmpeg libpng
-  URL ${CMAKE_SOURCE_DIR}/vendor/frmxtract-3.0.2.tar.gz
+  URL ${CMAKE_SOURCE_DIR}/vendor/frmxtract-3.3.3.tar.gz
   PATCH_COMMAND ${CMAKE_SOURCE_DIR}/patches/patch-manager.sh frmxtract
   CONFIGURE_COMMAND CC=${CMAKE_C_COMPILER} PKG_CONFIG_PATH=$ENV{PKG_CONFIG_PATH} ./configure --prefix=${CMAKE_BINARY_DIR}
   BUILD_IN_SOURCE 1
