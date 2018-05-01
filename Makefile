@@ -6,6 +6,8 @@ sffmpeg:
 
 distclean:
 	@rm -rf build
+	@rm -rf debian/.debhelper
+	debian/rules clean
 
 clean:
 

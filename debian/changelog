@@ -1,3 +1,15 @@
+sffmpeg (4.0.0-1) stable; urgency=medium
+
+  * upgrade to FFmpeg 4.0.0
+
+ -- CMS <cms@showmax.com>  Thu, 26 Apr 2018 12:00:00 +0200
+
+sffmpeg (3.4.2-1) stable; urgency=medium
+
+  * upgrade to FFmpeg 3.4.2
+
+ -- CMS <cms@showmax.com>  Tue, 27 Mar 2018 18:27:35 +0200
+
 sffmpeg (3.3.3) stable; urgency=medium
 
   * upgrade to ffmpeg 3.3.3

@@ -2,3 +2,8 @@ sudo: required
 dist: trusty
 language: C
 script: make
+
+before_install:
+  - sudo apt-get -qq update
+  - sudo apt-get install -y devscripts equivs
+  - sudo mk-build-deps -t "apt-get --no-install-recommends -y" -r -i debian/control
