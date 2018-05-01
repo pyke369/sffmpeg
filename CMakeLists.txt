@@ -32,29 +32,11 @@ EXTERNALPROJECT_ADD(
   BUILD_IN_SOURCE 1
 )
 EXTERNALPROJECT_ADD(
-  openssl
-  # URL http://www.openssl.org/source/openssl-1.0.2o.tar.gz
-  URL ${CMAKE_SOURCE_DIR}/vendor/openssl-1.0.2o.tar.gz
-  PATCH_COMMAND ${CMAKE_SOURCE_DIR}/patches/patch-manager.sh openssl
-  CONFIGURE_COMMAND ./config no-shared no-idea no-mdc2 no-rc5 --prefix=${CMAKE_BINARY_DIR}
-  BUILD_COMMAND make depend && make
-  INSTALL_COMMAND make install_sw
-  BUILD_IN_SOURCE 1
-)
-EXTERNALPROJECT_ADD(
   opencore-amr
   # URL http://downloads.sourceforge.net/project/opencore-amr/opencore-amr/opencore-amr-0.1.5.tar.gz
   URL ${CMAKE_SOURCE_DIR}/vendor/opencore-amr-0.1.5.tar.gz
   PATCH_COMMAND ${CMAKE_SOURCE_DIR}/patches/patch-manager.sh opencore-amr
   CONFIGURE_COMMAND ./configure --prefix=${CMAKE_BINARY_DIR} --disable-shared
-  BUILD_IN_SOURCE 1
-)
-EXTERNALPROJECT_ADD(
-  fdkaac
-  # URL http://downloads.sourceforge.net/project/opencore-amr/fdk-aac/fdk-aac-0.1.6.tar.gz
-  URL ${CMAKE_SOURCE_DIR}/vendor/fdk-aac-0.1.6.tar.gz
-  PATCH_COMMAND ${CMAKE_SOURCE_DIR}/patches/patch-manager.sh fdkaac
-  CONFIGURE_COMMAND ./configure --prefix=${CMAKE_BINARY_DIR} --disable-shared --enable-static
   BUILD_IN_SOURCE 1
 )
 EXTERNALPROJECT_ADD(
@@ -110,17 +92,6 @@ EXTERNALPROJECT_ADD(
   BUILD_IN_SOURCE 1
 )
 EXTERNALPROJECT_ADD(
-  xvidcore
-  DEPENDS yasm
-  # URL http://downloads.xvid.org/downloads/xvidcore-1.3.5.tar.gz
-  URL ${CMAKE_SOURCE_DIR}/vendor/xvidcore-1.3.5.tar.gz
-  PATCH_COMMAND ${CMAKE_SOURCE_DIR}/patches/patch-manager.sh xvidcore
-  CONFIGURE_COMMAND cd build/generic && PATH=$ENV{PATH} ./configure --prefix=${CMAKE_BINARY_DIR}
-  BUILD_COMMAND cd build/generic && PATH=$ENV{PATH} make
-  INSTALL_COMMAND cd build/generic && make install
-  BUILD_IN_SOURCE 1
-)
-EXTERNALPROJECT_ADD(
   x264
   DEPENDS nasm
   # GIT_REPOSITORY git://git.videolan.org/x264.git
@@ -163,18 +134,6 @@ EXTERNALPROJECT_ADD(
   BUILD_COMMAND PATH=$ENV{PATH} make
   INSTALL_COMMAND PATH=$ENV{PATH} make install
   BUILD_IN_SOURCE 0
-)
-EXTERNALPROJECT_ADD(
-  rtmpdump
-  DEPENDS zlib openssl
-  # GIT_REPOSITORY git://git.ffmpeg.org/rtmpdump
-  # UPDATE_COMMAND ""
-  URL ${CMAKE_SOURCE_DIR}/vendor/rtmpdump-2.4.tar.gz
-  PATCH_COMMAND ${CMAKE_SOURCE_DIR}/patches/patch-manager.sh rtmpdump
-  CONFIGURE_COMMAND ""
-  BUILD_COMMAND make PREFIX=${CMAKE_BINARY_DIR} SHARED= XCFLAGS=-I${CMAKE_BINARY_DIR}/include XLDFLAGS=-L${CMAKE_BINARY_DIR}/lib XLIBS=-ldl
-  INSTALL_COMMAND make PREFIX=${CMAKE_BINARY_DIR} SHARED= install
-  BUILD_IN_SOURCE 1
 )
 EXTERNALPROJECT_ADD(
   freetype
@@ -222,11 +181,11 @@ EXTERNALPROJECT_ADD(
 )
 EXTERNALPROJECT_ADD(
   ffmpeg
-  DEPENDS yasm opencore-amr fdkaac lame libogg speex libvorbis libtheora opus xvidcore x264 x265 libvpx rtmpdump freetype libass openssl aom
+  DEPENDS yasm opencore-amr lame libogg speex libvorbis libtheora opus x264 x265 libvpx freetype libass aom
   # URL https://ffmpeg.org/releases/ffmpeg-4.0.tar.bz2
   URL ${CMAKE_SOURCE_DIR}/vendor/ffmpeg-4.0.tar.bz2
   PATCH_COMMAND ${CMAKE_SOURCE_DIR}/patches/patch-manager.sh ffmpeg
-  CONFIGURE_COMMAND PATH=$ENV{PATH} PKG_CONFIG_PATH=$ENV{PKG_CONFIG_PATH} ./configure --prefix=${CMAKE_BINARY_DIR} --datadir=${CMAKE_BINARY_DIR}/etc --disable-shared --enable-static --enable-pic --pkg-config-flags=--static --enable-gpl --enable-version3 --enable-nonfree --disable-doc --disable-debug --disable-ffplay --disable-outdevs --enable-runtime-cpudetect --extra-cflags=-I${CMAKE_BINARY_DIR}/include\ -static --extra-ldflags=-L${CMAKE_BINARY_DIR}/lib --extra-libs=-lstdc++\ -lexpat\ -ldl\ -lm\ -lpthread --enable-libopencore-amrnb --enable-libopencore-amrwb --enable-libaom --enable-libfdk-aac --enable-libmp3lame --enable-libspeex --enable-libtheora --enable-libvorbis --enable-libx264 --enable-libx265 --enable-libxvid --enable-libvpx --enable-libopus --enable-librtmp --enable-libfreetype --enable-libass --enable-openssl
+  CONFIGURE_COMMAND PATH=$ENV{PATH} PKG_CONFIG_PATH=$ENV{PKG_CONFIG_PATH} ./configure --prefix=${CMAKE_BINARY_DIR} --datadir=${CMAKE_BINARY_DIR}/etc --disable-shared --enable-static --enable-pic --pkg-config-flags=--static --enable-gpl --enable-version3 --disable-doc --disable-debug --disable-ffplay --disable-outdevs --enable-runtime-cpudetect --extra-cflags=-I${CMAKE_BINARY_DIR}/include\ -static --extra-ldflags=-L${CMAKE_BINARY_DIR}/lib --extra-libs=-lstdc++\ -lexpat\ -ldl\ -lm\ -lpthread --enable-libopencore-amrnb --enable-libopencore-amrwb --enable-libaom --enable-libfdk-aac --enable-libmp3lame --enable-libspeex --enable-libtheora --enable-libvorbis --enable-libx264 --enable-libx265 --enable-libvpx --enable-libopus --enable-libfreetype --enable-libass
   BUILD_COMMAND PATH=$ENV{PATH} make
   BUILD_IN_SOURCE 1
 )
