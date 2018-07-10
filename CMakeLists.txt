@@ -146,10 +146,10 @@ EXTERNALPROJECT_ADD(
 EXTERNALPROJECT_ADD(
   libvpx
   DEPENDS yasm
-  # URL https://github.com/webmproject/libvpx/archive/v1.7.0.tar.gz
-  URL ${CMAKE_SOURCE_DIR}/vendor/libvpx-1.7.0.tar.gz
+  # URL https://github.com/webmproject/libvpx/archive/master.tar.gz
+  URL ${CMAKE_SOURCE_DIR}/vendor/libvpx-snapshot-20180710.tar.bz2
   PATCH_COMMAND ${CMAKE_SOURCE_DIR}/patches/patch-manager.sh libvpx
-  CONFIGURE_COMMAND PATH=$ENV{PATH} ./configure --prefix=${CMAKE_BINARY_DIR} --disable-shared --size-limit=16384x16384 --enable-postproc --enable-multi-res-encoding --enable-temporal-denoising --disable-unit-tests --disable-install-docs --disable-examples
+  CONFIGURE_COMMAND PATH=$ENV{PATH} ./configure --prefix=${CMAKE_BINARY_DIR} --as=yasm --disable-docs --disable-examples --disable-shared --disable-tools --disable-unit-tests --enable-better-hw-compatibility --enable-multi-res-encoding  --enable-pic --enable-postproc --enable-runtime-cpu-detect --enable-vp9-highbitdepth --enable-vp9-temporal-denoising --enable-vp9-postproc --enable-webm-io --size-limit=16384x16384
   BUILD_COMMAND PATH=$ENV{PATH} make
   BUILD_IN_SOURCE 1
 )
@@ -158,8 +158,8 @@ EXTERNALPROJECT_ADD(
   DEPENDS yasm
   # DOWNLOAD_COMMAND git clone https://aomedia.googlesource.com/aom
   # UPDATE_COMMAND git pull
-  URL ${CMAKE_SOURCE_DIR}/vendor/aom_20180426.tar.bz2
-  CONFIGURE_COMMAND PATH=$ENV{PATH} cmake -D BUILD_SHARED_LIBS=0 -D CMAKE_INSTALL_PREFIX:PATH=${CMAKE_BINARY_DIR} -D CONFIG_UNIT_TESTS=0 -D ENABLE_DOCS:BOOL=OFF -D ENABLE_EXAMPLES:BOOL=OFF -D ENABLE_TOOLS:BOOL=OFF -D INCLUDE_INSTALL_DIR:PATH=${CMAKE_BINARY_DIR}/include -D LIB_INSTALL_DIR:PATH=${CMAKE_BINARY_DIR}/lib ../aom
+  URL ${CMAKE_SOURCE_DIR}/vendor/aom-snapshot-20180710.tar.bz2
+  CONFIGURE_COMMAND PATH=$ENV{PATH} cmake -D BUILD_SHARED_LIBS=0 -D CMAKE_INSTALL_PREFIX:PATH=${CMAKE_BINARY_DIR} -D ENABLE_DOCS:BOOL=OFF -D ENABLE_EXAMPLES:BOOL=OFF -D ENABLE_TESTS:BOOL=OFF -D ENABLE_TOOLS:BOOL=OFF -D INCLUDE_INSTALL_DIR:PATH=${CMAKE_BINARY_DIR}/include -D LIB_INSTALL_DIR:PATH=${CMAKE_BINARY_DIR}/lib ../aom
   BUILD_COMMAND PATH=$ENV{PATH} make
   INSTALL_COMMAND PATH=$ENV{PATH} make install
   BUILD_IN_SOURCE 0

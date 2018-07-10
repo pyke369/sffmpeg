@@ -1,3 +1,9 @@
+sffmpeg (4.0.1-2) stable; urgency=medium
+
+  * Bump libvpx to the latest master snapshot. This gives ~10x encoding boost.
+
+ -- CMS <cms@showmax.com>  Fri, 29 Jun 2018 12:00:00 +0200
+
 sffmpeg (4.0.1-1) stable; urgency=medium
 
   * upgrade to FFmpeg 4.0.1
