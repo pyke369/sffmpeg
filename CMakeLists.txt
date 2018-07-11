@@ -59,11 +59,10 @@ EXTERNALPROJECT_ADD(
 )
 EXTERNALPROJECT_ADD(
   lame
-  DEPENDS nasm
   # URL http://downloads.sourceforge.net/project/lame/lame/3.100/lame-3.100.tar.gz
   URL ${CMAKE_SOURCE_DIR}/vendor/lame-3.100.tar.gz
   PATCH_COMMAND ${CMAKE_SOURCE_DIR}/patches/patch-manager.sh lame
-  CONFIGURE_COMMAND ./configure --prefix=${CMAKE_BINARY_DIR} --disable-shared --enable-nasm
+  CONFIGURE_COMMAND ./configure --prefix=${CMAKE_BINARY_DIR} --disable-shared
   BUILD_IN_SOURCE 1
 )
 EXTERNALPROJECT_ADD(
@@ -76,11 +75,10 @@ EXTERNALPROJECT_ADD(
 )
 EXTERNALPROJECT_ADD(
   speex
-  DEPENDS libogg
   # URL http://downloads.xiph.org/releases/speex/speex-1.2.0.tar.gz
   URL ${CMAKE_SOURCE_DIR}/vendor/speex-1.2.0.tar.gz
   PATCH_COMMAND ${CMAKE_SOURCE_DIR}/patches/patch-manager.sh speex
-  CONFIGURE_COMMAND ./configure --prefix=${CMAKE_BINARY_DIR} --disable-shared --enable-sse  --disable-oggtest --with-ogg=${CMAKE_BINARY_DIR}
+  CONFIGURE_COMMAND ./configure --prefix=${CMAKE_BINARY_DIR} --disable-shared --disable-binaries --enable-sse
   BUILD_IN_SOURCE 1
 )
 EXTERNALPROJECT_ADD(
@@ -133,7 +131,7 @@ EXTERNALPROJECT_ADD(
 )
 EXTERNALPROJECT_ADD(
   x265
-  DEPENDS yasm
+  DEPENDS nasm
   # DOWNLOAD_COMMAND hg clone --insecure https://bitbucket.org/multicoreware/x265
   # UPDATE_COMMAND hg update -r stable
   URL ${CMAKE_SOURCE_DIR}/vendor/x265_2.8.tar.gz
@@ -190,7 +188,7 @@ EXTERNALPROJECT_ADD(
   # URL http://fribidi.org/download/fribidi-1.0.4.tar.bz2
   URL ${CMAKE_SOURCE_DIR}/vendor/fribidi-1.0.4.tar.bz2
   PATCH_COMMAND ${CMAKE_SOURCE_DIR}/patches/patch-manager.sh fribidi
-  CONFIGURE_COMMAND ./configure --prefix=${CMAKE_BINARY_DIR} --disable-shared --enable-static --disable-docs
+  CONFIGURE_COMMAND ./configure --prefix=${CMAKE_BINARY_DIR} --disable-shared --enable-static
   BUILD_IN_SOURCE 1
 )
 EXTERNALPROJECT_ADD(
