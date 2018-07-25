@@ -231,8 +231,8 @@ EXTERNALPROJECT_ADD(
 EXTERNALPROJECT_ADD(
   libpng
   DEPENDS zlib
-  # URL http://download.sourceforge.net/libpng/libpng-1.6.34.tar.gz
-  URL ${CMAKE_SOURCE_DIR}/vendor/libpng-1.6.34.tar.gz
+  # URL http://download.sourceforge.net/libpng/libpng-1.6.35.tar.gz
+  URL ${CMAKE_SOURCE_DIR}/vendor/libpng-1.6.35.tar.gz
   PATCH_COMMAND ${CMAKE_SOURCE_DIR}/patches/patch-manager.sh libpng
   CONFIGURE_COMMAND CFLAGS=-I${CMAKE_BINARY_DIR}/include CPPFLAGS=-I${CMAKE_BINARY_DIR}/include LDFLAGS=-L${CMAKE_BINARY_DIR}/lib ./configure --prefix=${CMAKE_BINARY_DIR} --disable-shared --enable-static
   BUILD_IN_SOURCE 1
