@@ -219,12 +219,59 @@ EXTERNALPROJECT_ADD(
   BUILD_IN_SOURCE 1
 )
 EXTERNALPROJECT_ADD(
+  libpciaccess
+  # URL https://www.x.org/archive/individual/lib/libpciaccess-0.14.tar.bz2
+  URL ${CMAKE_SOURCE_DIR}/vendor/libpciaccess-0.14.tar.bz2
+  PATCH_COMMAND ${CMAKE_SOURCE_DIR}/patches/patch-manager.sh libpciaccess
+  CONFIGURE_COMMAND PATH=$ENV{PATH}:${CMAKE_BINARY_DIR}/bin PKG_CONFIG_PATH=$ENV{PKG_CONFIG_PATH} ./configure --prefix=${CMAKE_BINARY_DIR} --disable-shared --enable-static
+  BUILD_COMMAND PATH=$ENV{PATH} make
+  BUILD_IN_SOURCE 1
+)
+EXTERNALPROJECT_ADD(
+  libdrm
+  DEPENDS libpciaccess
+  # URL https://dri.freedesktop.org/libdrm/libdrm-2.4.93.tar.bz2
+  URL ${CMAKE_SOURCE_DIR}/vendor/libdrm-2.4.93.tar.bz2
+  PATCH_COMMAND ${CMAKE_SOURCE_DIR}/patches/patch-manager.sh libdrm
+  CONFIGURE_COMMAND PATH=$ENV{PATH}:${CMAKE_BINARY_DIR}/bin PKG_CONFIG_PATH=$ENV{PKG_CONFIG_PATH} ./configure --prefix=${CMAKE_BINARY_DIR} --disable-shared --enable-static
+  BUILD_COMMAND PATH=$ENV{PATH} make
+  BUILD_IN_SOURCE 1
+)
+EXTERNALPROJECT_ADD(
+  libva
+  DEPENDS libdrm
+  # URL https://github.com/intel/libva/releases/download/2.2.0/libva-2.2.0.tar.bz2
+  URL ${CMAKE_SOURCE_DIR}/vendor/libva-2.2.0.tar.bz2
+  PATCH_COMMAND ${CMAKE_SOURCE_DIR}/patches/patch-manager.sh libva
+  CONFIGURE_COMMAND PATH=$ENV{PATH}:${CMAKE_BINARY_DIR}/bin PKG_CONFIG_PATH=$ENV{PKG_CONFIG_PATH} ./configure --prefix=${CMAKE_BINARY_DIR} --disable-shared --enable-static --enable-drm
+  BUILD_COMMAND PATH=$ENV{PATH} make
+  BUILD_IN_SOURCE 1
+)
+EXTERNALPROJECT_ADD(
+  intel-vaapi-driver
+  DEPENDS libva
+  # URL https://github.com/intel/intel-vaapi-driver/releases/download/2.2.0/intel-vaapi-driver-2.2.0.tar.bz2
+  URL ${CMAKE_SOURCE_DIR}/vendor/intel-vaapi-driver-2.2.0.tar.bz2
+  PATCH_COMMAND ${CMAKE_SOURCE_DIR}/patches/patch-manager.sh intel-vaapi-driver
+  CONFIGURE_COMMAND PATH=$ENV{PATH}:${CMAKE_BINARY_DIR}/bin PKG_CONFIG_PATH=$ENV{PKG_CONFIG_PATH} ./configure --prefix=${CMAKE_BINARY_DIR} --disable-shared --enable-static
+  BUILD_COMMAND PATH=$ENV{PATH} make
+  BUILD_IN_SOURCE 1
+)
+EXTERNALPROJECT_ADD(
+  nv-codec-headers
+  # URL https://github.com/FFmpeg/nv-codec-headers/releases/download/n8.1.24.2/nv-codec-headers-8.1.24.2.tar.gz
+  URL ${CMAKE_SOURCE_DIR}/vendor/nv-codec-headers-8.1.24.2.tar.gz
+  PATCH_COMMAND ${CMAKE_SOURCE_DIR}/patches/patch-manager.sh nv-codec-headers
+  BUILD_COMMAND PATH=$ENV{PATH} make PREFIX=${CMAKE_BINARY_DIR}
+  BUILD_IN_SOURCE 1
+)
+EXTERNALPROJECT_ADD(
   ffmpeg
-  DEPENDS yasm opencore-amr fdkaac lame libogg speex libvorbis libtheora opus xvidcore x264 x265 libvpx rtmpdump freetype libass openssl aom
+  DEPENDS yasm opencore-amr fdkaac lame libogg speex libvorbis libtheora opus xvidcore x264 x265 libvpx rtmpdump freetype libass openssl aom intel-vaapi-driver nv-codec-headers
   # URL https://ffmpeg.org/releases/ffmpeg-4.0.2.tar.bz2
   URL ${CMAKE_SOURCE_DIR}/vendor/ffmpeg-4.0.2.tar.bz2
   PATCH_COMMAND ${CMAKE_SOURCE_DIR}/patches/patch-manager.sh ffmpeg
-  CONFIGURE_COMMAND PATH=$ENV{PATH} PKG_CONFIG_PATH=$ENV{PKG_CONFIG_PATH} ./configure --prefix=${CMAKE_BINARY_DIR} --datadir=${CMAKE_BINARY_DIR}/etc --disable-shared --enable-static --enable-pic --pkg-config-flags=--static --enable-gpl --enable-version3 --enable-nonfree --disable-doc --disable-debug --disable-ffplay --disable-outdevs --enable-runtime-cpudetect --extra-cflags=-I${CMAKE_BINARY_DIR}/include\ -static --extra-ldflags=-L${CMAKE_BINARY_DIR}/lib --extra-libs=-lstdc++\ -lexpat\ -ldl\ -lm\ -lpthread --enable-libopencore-amrnb --enable-libopencore-amrwb --enable-libaom --enable-libfdk-aac --enable-libmp3lame --enable-libspeex --enable-libtheora --enable-libvorbis --enable-libx264 --enable-libx265 --enable-libxvid --enable-libvpx --enable-libopus --enable-librtmp --enable-libfreetype --enable-libass --enable-openssl
+  CONFIGURE_COMMAND PATH=$ENV{PATH} PKG_CONFIG_PATH=$ENV{PKG_CONFIG_PATH} ./configure --prefix=${CMAKE_BINARY_DIR} --datadir=${CMAKE_BINARY_DIR}/etc --disable-shared --enable-static --enable-pic --pkg-config-flags=--static --enable-gpl --enable-version3 --enable-nonfree --disable-doc --disable-debug --disable-ffplay --disable-outdevs --enable-runtime-cpudetect --extra-cflags=-I${CMAKE_BINARY_DIR}/include\ -static --extra-ldflags=-L${CMAKE_BINARY_DIR}/lib --extra-libs=-lstdc++\ -lexpat\ -ldl\ -lm\ -lpthread --enable-libopencore-amrnb --enable-libopencore-amrwb --enable-libaom --enable-libfdk-aac --enable-libmp3lame --enable-libspeex --enable-libtheora --enable-libvorbis --enable-libx264 --enable-libx265 --enable-libxvid --enable-libvpx --enable-libopus --enable-librtmp --enable-libfreetype --enable-libass --enable-openssl --enable-vaapi
   BUILD_COMMAND PATH=$ENV{PATH} make
   BUILD_IN_SOURCE 1
 )
