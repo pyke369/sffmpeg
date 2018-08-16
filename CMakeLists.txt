@@ -262,7 +262,8 @@ EXTERNALPROJECT_ADD(
   # URL https://github.com/FFmpeg/nv-codec-headers/releases/download/n8.1.24.2/nv-codec-headers-8.1.24.2.tar.gz
   URL ${CMAKE_SOURCE_DIR}/vendor/nv-codec-headers-8.1.24.2.tar.gz
   PATCH_COMMAND ${CMAKE_SOURCE_DIR}/patches/patch-manager.sh nv-codec-headers
-  BUILD_COMMAND PATH=$ENV{PATH} make PREFIX=${CMAKE_BINARY_DIR}
+  CONFIGURE_COMMAND true
+  INSTALL_COMMAND PATH=$ENV{PATH} make PREFIX=${CMAKE_BINARY_DIR} install
   BUILD_IN_SOURCE 1
 )
 EXTERNALPROJECT_ADD(
