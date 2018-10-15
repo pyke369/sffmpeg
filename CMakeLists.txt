@@ -134,7 +134,7 @@ EXTERNALPROJECT_ADD(
   DEPENDS nasm
   # DOWNLOAD_COMMAND hg clone --insecure https://bitbucket.org/multicoreware/x265
   # UPDATE_COMMAND hg update -r stable
-  URL ${CMAKE_SOURCE_DIR}/vendor/x265_2.8.tar.gz
+  URL ${CMAKE_SOURCE_DIR}/vendor/x265_2.9.tar.gz
   PATCH_COMMAND ${CMAKE_SOURCE_DIR}/patches/patch-manager.sh x265
   CONFIGURE_COMMAND cd build/linux && PATH=$ENV{PATH} cmake -G "Unix Makefiles" -D CMAKE_INSTALL_PREFIX:PATH=${CMAKE_BINARY_DIR} -D ENABLE_CLI:BOOL=OFF -D ENABLE_SHARED:BOOL=OFF ../../source
   BUILD_COMMAND cd build/linux && PATH=$ENV{PATH} make

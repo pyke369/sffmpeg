@@ -1,3 +1,9 @@
+sffmpeg (4.0.2-4) stable; urgency=medium
+
+  * Bump x265 to 2.9.
+
+ -- CMS <cms@showmax.com>  Mon, 15 Oct 2018 12:00:00 +0200
+
 sffmpeg (4.0.2-3) stable; urgency=medium
 
   * Added Intel VA-API and nVidia NVENC support.
