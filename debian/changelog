@@ -1,3 +1,17 @@
+sffmpeg (4.0.2-5) stable; urgency=medium
+
+  * Bump AOM/AV1 to snapshot from 20181022
+  * Bump expat to 2.2.6
+  * Bump fribidi to 1.0.5
+  * Bump drm to 2.4.96
+  * Bump va to 2.3.0
+  * Bump vpx to snapshot from 20181022
+  * Bump nv-codec-headers to 8.1.24.2
+  * Bump openssl to 1.0.2p
+  * Bump opus to 1.3
+
+ -- CMS <cms@showmax.com>  Mon, 22 Oct 2018 12:00:00 +0200
+
 sffmpeg (4.0.2-4) stable; urgency=medium
 
   * Bump x265 to 2.9.
