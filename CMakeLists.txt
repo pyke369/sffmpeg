@@ -33,8 +33,8 @@ EXTERNALPROJECT_ADD(
 )
 EXTERNALPROJECT_ADD(
   openssl
-  # URL http://www.openssl.org/source/openssl-1.0.2o.tar.gz
-  URL ${CMAKE_SOURCE_DIR}/vendor/openssl-1.0.2o.tar.gz
+  # URL http://www.openssl.org/source/openssl-1.0.2p.tar.gz
+  URL ${CMAKE_SOURCE_DIR}/vendor/openssl-1.0.2p.tar.gz
   PATCH_COMMAND ${CMAKE_SOURCE_DIR}/patches/patch-manager.sh openssl
   CONFIGURE_COMMAND ./config no-shared no-idea no-mdc2 no-rc5 --prefix=${CMAKE_BINARY_DIR}
   BUILD_COMMAND make depend && make
@@ -101,8 +101,8 @@ EXTERNALPROJECT_ADD(
 )
 EXTERNALPROJECT_ADD(
   opus
-  # URL http://downloads.xiph.org/releases/opus/opus-1.2.1.tar.gz
-  URL ${CMAKE_SOURCE_DIR}/vendor/opus-1.2.1.tar.gz
+  # URL http://downloads.xiph.org/releases/opus/opus-1.3.0.tar.gz
+  URL ${CMAKE_SOURCE_DIR}/vendor/opus-1.3.0.tar.gz
   PATCH_COMMAND ${CMAKE_SOURCE_DIR}/patches/patch-manager.sh opus
   CONFIGURE_COMMAND ./configure --prefix=${CMAKE_BINARY_DIR} --disable-shared --disable-doc
   BUILD_IN_SOURCE 1
@@ -145,7 +145,7 @@ EXTERNALPROJECT_ADD(
   libvpx
   DEPENDS yasm
   # URL https://github.com/webmproject/libvpx/archive/master.tar.gz
-  URL ${CMAKE_SOURCE_DIR}/vendor/libvpx-snapshot-20180710.tar.bz2
+  URL ${CMAKE_SOURCE_DIR}/vendor/libvpx-snapshot-20181022.tar.bz2
   PATCH_COMMAND ${CMAKE_SOURCE_DIR}/patches/patch-manager.sh libvpx
   CONFIGURE_COMMAND PATH=$ENV{PATH} ./configure --prefix=${CMAKE_BINARY_DIR} --as=yasm --disable-docs --disable-examples --disable-shared --disable-tools --disable-unit-tests --enable-better-hw-compatibility --enable-multi-res-encoding  --enable-pic --enable-postproc --enable-runtime-cpu-detect --enable-vp9-highbitdepth --enable-vp9-temporal-denoising --enable-vp9-postproc --enable-webm-io --size-limit=16384x16384
   BUILD_COMMAND PATH=$ENV{PATH} make
@@ -156,7 +156,7 @@ EXTERNALPROJECT_ADD(
   DEPENDS yasm
   # DOWNLOAD_COMMAND git clone https://aomedia.googlesource.com/aom
   # UPDATE_COMMAND git pull
-  URL ${CMAKE_SOURCE_DIR}/vendor/aom-snapshot-20180710.tar.bz2
+  URL ${CMAKE_SOURCE_DIR}/vendor/aom-snapshot-20181022.tar.bz2
   CONFIGURE_COMMAND PATH=$ENV{PATH} cmake -D BUILD_SHARED_LIBS=0 -D CMAKE_INSTALL_PREFIX:PATH=${CMAKE_BINARY_DIR} -D ENABLE_DOCS:BOOL=OFF -D ENABLE_EXAMPLES:BOOL=OFF -D ENABLE_TESTS:BOOL=OFF -D ENABLE_TOOLS:BOOL=OFF -D INCLUDE_INSTALL_DIR:PATH=${CMAKE_BINARY_DIR}/include -D LIB_INSTALL_DIR:PATH=${CMAKE_BINARY_DIR}/lib ../aom
   BUILD_COMMAND PATH=$ENV{PATH} make
   INSTALL_COMMAND PATH=$ENV{PATH} make install
@@ -185,16 +185,16 @@ EXTERNALPROJECT_ADD(
 )
 EXTERNALPROJECT_ADD(
   fribidi
-  # URL http://fribidi.org/download/fribidi-1.0.4.tar.bz2
-  URL ${CMAKE_SOURCE_DIR}/vendor/fribidi-1.0.4.tar.bz2
+  # URL http://fribidi.org/download/fribidi-1.0.5.tar.bz2
+  URL ${CMAKE_SOURCE_DIR}/vendor/fribidi-1.0.5.tar.bz2
   PATCH_COMMAND ${CMAKE_SOURCE_DIR}/patches/patch-manager.sh fribidi
   CONFIGURE_COMMAND ./configure --prefix=${CMAKE_BINARY_DIR} --disable-shared --enable-static
   BUILD_IN_SOURCE 1
 )
 EXTERNALPROJECT_ADD(
   expat
-  # URL http://downloads.sourceforge.net/project/expat/expat/2.2.5/expat-2.2.5.tar.bz2
-  URL ${CMAKE_SOURCE_DIR}/vendor/expat-2.2.5.tar.bz2
+  # URL http://downloads.sourceforge.net/project/expat/expat/2.2.5/expat-2.2.6.tar.bz2
+  URL ${CMAKE_SOURCE_DIR}/vendor/expat-2.2.6.tar.bz2
   PATCH_COMMAND ${CMAKE_SOURCE_DIR}/patches/patch-manager.sh expat
   CONFIGURE_COMMAND PKG_CONFIG_PATH=$ENV{PKG_CONFIG_PATH} ./configure --prefix=${CMAKE_BINARY_DIR} --disable-shared --enable-static
   BUILD_IN_SOURCE 1
@@ -230,8 +230,8 @@ EXTERNALPROJECT_ADD(
 EXTERNALPROJECT_ADD(
   libdrm
   DEPENDS libpciaccess
-  # URL https://dri.freedesktop.org/libdrm/libdrm-2.4.93.tar.bz2
-  URL ${CMAKE_SOURCE_DIR}/vendor/libdrm-2.4.93.tar.bz2
+  # URL https://dri.freedesktop.org/libdrm/libdrm-2.4.96.tar.bz2
+  URL ${CMAKE_SOURCE_DIR}/vendor/libdrm-2.4.96.tar.bz2
   PATCH_COMMAND ${CMAKE_SOURCE_DIR}/patches/patch-manager.sh libdrm
   CONFIGURE_COMMAND PATH=$ENV{PATH}:${CMAKE_BINARY_DIR}/bin PKG_CONFIG_PATH=$ENV{PKG_CONFIG_PATH} ./configure --prefix=${CMAKE_BINARY_DIR} --disable-shared --enable-static
   BUILD_COMMAND PATH=$ENV{PATH} make
@@ -240,8 +240,8 @@ EXTERNALPROJECT_ADD(
 EXTERNALPROJECT_ADD(
   libva
   DEPENDS libdrm
-  # URL https://github.com/intel/libva/releases/download/2.2.0/libva-2.2.0.tar.bz2
-  URL ${CMAKE_SOURCE_DIR}/vendor/libva-2.2.0.tar.bz2
+  # URL https://github.com/intel/libva/releases/download/2.2.0/libva-2.3.0.tar.bz2
+  URL ${CMAKE_SOURCE_DIR}/vendor/libva-2.3.0.tar.bz2
   PATCH_COMMAND ${CMAKE_SOURCE_DIR}/patches/patch-manager.sh libva
   CONFIGURE_COMMAND PATH=$ENV{PATH}:${CMAKE_BINARY_DIR}/bin PKG_CONFIG_PATH=$ENV{PKG_CONFIG_PATH} ./configure --prefix=${CMAKE_BINARY_DIR} --disable-shared --enable-static --enable-drm
   BUILD_COMMAND PATH=$ENV{PATH} make
@@ -259,8 +259,8 @@ EXTERNALPROJECT_ADD(
 )
 EXTERNALPROJECT_ADD(
   nv-codec-headers
-  # URL https://github.com/FFmpeg/nv-codec-headers/releases/download/n8.1.24.2/nv-codec-headers-8.1.24.2.tar.gz
-  URL ${CMAKE_SOURCE_DIR}/vendor/nv-codec-headers-8.1.24.2.tar.gz
+  # URL https://github.com/FFmpeg/nv-codec-headers/releases/download/n8.2.15.4/nv-codec-headers-8.2.15.4.tar.gz
+  URL ${CMAKE_SOURCE_DIR}/vendor/nv-codec-headers-8.2.15.4.tar.gz
   PATCH_COMMAND ${CMAKE_SOURCE_DIR}/patches/patch-manager.sh nv-codec-headers
   CONFIGURE_COMMAND true
   INSTALL_COMMAND PATH=$ENV{PATH} make PREFIX=${CMAKE_BINARY_DIR} install
