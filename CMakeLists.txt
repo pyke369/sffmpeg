@@ -241,7 +241,7 @@ EXTERNALPROJECT_ADD(
   libva
   DEPENDS libdrm
   # URL https://github.com/intel/libva/releases/download/2.2.0/libva-2.3.0.tar.gz
-  URL ${CMAKE_SOURCE_DIR}/vendor/libva-2.3.0.tar.bz2
+  URL ${CMAKE_SOURCE_DIR}/vendor/libva-2.3.0.tar.gz
   PATCH_COMMAND ${CMAKE_SOURCE_DIR}/patches/patch-manager.sh libva
   CONFIGURE_COMMAND PATH=$ENV{PATH}:${CMAKE_BINARY_DIR}/bin PKG_CONFIG_PATH=$ENV{PKG_CONFIG_PATH} ./configure --prefix=${CMAKE_BINARY_DIR} --disable-shared --enable-static --enable-drm
   BUILD_COMMAND PATH=$ENV{PATH} make
