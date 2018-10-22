@@ -101,8 +101,8 @@ EXTERNALPROJECT_ADD(
 )
 EXTERNALPROJECT_ADD(
   opus
-  # URL http://downloads.xiph.org/releases/opus/opus-1.3.0.tar.gz
-  URL ${CMAKE_SOURCE_DIR}/vendor/opus-1.3.0.tar.gz
+  # URL http://downloads.xiph.org/releases/opus/opus-1.3.tar.gz
+  URL ${CMAKE_SOURCE_DIR}/vendor/opus-1.3.tar.gz
   PATCH_COMMAND ${CMAKE_SOURCE_DIR}/patches/patch-manager.sh opus
   CONFIGURE_COMMAND ./configure --prefix=${CMAKE_BINARY_DIR} --disable-shared --disable-doc
   BUILD_IN_SOURCE 1
