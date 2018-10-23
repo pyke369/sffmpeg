@@ -1,6 +1,5 @@
 sffmpeg (4.0.2-5) stable; urgency=medium
 
-  * Bump AOM/AV1 to snapshot from 20181022
   * Bump expat to 2.2.6
   * Bump fribidi to 1.0.5
   * Bump drm to 2.4.96
