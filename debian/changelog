@@ -1,3 +1,9 @@
+sffmpeg (4.1.0-2) stable; urgency=medium
+
+    * Respin
+
+ -- CMS <cms@showmax.com>  Tue, 29 Oct 2019 12:00:01 +0200
+
 sffmpeg (4.1.0-1) stable; urgency=medium
 
     Bump:
