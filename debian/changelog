@@ -1,3 +1,10 @@
+sffmpeg (4.1.0-3) stable; urgency=medium
+
+    * Bump:
+        * vpx to 20190208 snapshot
+
+ -- CMS <cms@showmax.com>  Fri, 08 Feb 2019 12:00:01 +0200
+
 sffmpeg (4.1.0-2) stable; urgency=medium
 
     * Respin
