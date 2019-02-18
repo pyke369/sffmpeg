@@ -1,8 +1,14 @@
+sffmpeg (4.1.0-5) stable; urgency=medium
+
+    * Added Intel SVT-VP9 codec.
+
+ -- CMS <cms@showmax.com>  Mon, 18 Feb 2019 12:00:01 +0200
+
 sffmpeg (4.1.0-4) stable; urgency=medium
 
-  * test
+    * No changes.
 
- -- Peter Lisák <peter.lisak@showmax.com>  Mon, 11 Feb 2019 14:52:26 +0000
+ -- CMS <cms@showmax.com>  Mon, 18 Feb 2019 12:00:01 +0200
 
 sffmpeg (4.1.0-3) stable; urgency=medium
 

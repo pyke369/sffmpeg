@@ -135,7 +135,7 @@ EXTERNALPROJECT_ADD(
   # URL https://bitbucket.org/multicoreware/x265/downloads/x265_3.0.tar.gz
   URL ${CMAKE_SOURCE_DIR}/vendor/x265_3.0.tar.gz
   PATCH_COMMAND ${CMAKE_SOURCE_DIR}/patches/patch-manager.sh x265
-  CONFIGURE_COMMAND cd build/linux && PATH=$ENV{PATH} cmake -G "Unix Makefiles" -D CMAKE_INSTALL_PREFIX:PATH=${CMAKE_BINARY_DIR} -D ENABLE_CLI:BOOL=OFF -D ENABLE_SHARED:BOOL=OFF ../../source
+  CONFIGURE_COMMAND cd build/linux && PATH=$ENV{PATH} cmake -D CMAKE_INSTALL_PREFIX:PATH=${CMAKE_BINARY_DIR} -D ENABLE_CLI:BOOL=OFF -D ENABLE_SHARED:BOOL=OFF ../../source
   BUILD_COMMAND cd build/linux && PATH=$ENV{PATH} make
   INSTALL_COMMAND cd build/linux && PATH=$ENV{PATH} make install
   BUILD_IN_SOURCE 1
@@ -148,6 +148,17 @@ EXTERNALPROJECT_ADD(
   PATCH_COMMAND ${CMAKE_SOURCE_DIR}/patches/patch-manager.sh libvpx
   CONFIGURE_COMMAND PATH=$ENV{PATH} ./configure --prefix=${CMAKE_BINARY_DIR} --as=yasm --disable-docs --disable-examples --disable-shared --disable-tools --disable-unit-tests --enable-better-hw-compatibility --enable-multi-res-encoding  --enable-pic --enable-postproc --enable-runtime-cpu-detect --enable-vp9-temporal-denoising --enable-vp9-postproc --enable-webm-io --size-limit=16384x16384
   BUILD_COMMAND PATH=$ENV{PATH} make
+  BUILD_IN_SOURCE 1
+)
+EXTERNALPROJECT_ADD(
+  svt-vp9
+  DEPENDS yasm
+  # URL https://github.com/OpenVisualCloud/SVT-VP9/archive/master.zip
+  URL ${CMAKE_SOURCE_DIR}/vendor/svt-vp9-snapshot-20190218.tar.bz2
+  PATCH_COMMAND ${CMAKE_SOURCE_DIR}/patches/patch-manager.sh svt-vp9
+  CONFIGURE_COMMAND cd Build && PATH=$ENV{PATH} cmake -G "Unix Makefiles" -DCMAKE_INSTALL_PREFIX=${CMAKE_BINARY_DIR} ..
+  BUILD_COMMAND cd Build && PATH=$ENV{PATH} make
+  INSTALL_COMMAND cd Build && PATH=$ENV{PATH} make PREFIX=${CMAKE_BINARY_DIR} install
   BUILD_IN_SOURCE 1
 )
 EXTERNALPROJECT_ADD(
@@ -267,11 +278,11 @@ EXTERNALPROJECT_ADD(
 )
 EXTERNALPROJECT_ADD(
   ffmpeg
-  DEPENDS yasm opencore-amr fdkaac lame libogg speex libvorbis libtheora opus xvidcore x264 x265 libvpx rtmpdump freetype libass openssl aom intel-vaapi-driver nv-codec-headers
-  # URL https://ffmpeg.org/releases/ffmpeg-4.1.tar.bz2
-  URL ${CMAKE_SOURCE_DIR}/vendor/ffmpeg-4.1.tar.bz2
+  DEPENDS yasm opencore-amr fdkaac lame libogg speex libvorbis libtheora opus xvidcore x264 x265 libvpx svt-vp9 rtmpdump freetype libass openssl aom intel-vaapi-driver nv-codec-headers
+  # URL https://ffmpeg.org/releases/ffmpeg-4.1.1.tar.bz2
+  URL ${CMAKE_SOURCE_DIR}/vendor/ffmpeg-4.1.1.tar.bz2
   PATCH_COMMAND ${CMAKE_SOURCE_DIR}/patches/patch-manager.sh ffmpeg
-  CONFIGURE_COMMAND PATH=$ENV{PATH} PKG_CONFIG_PATH=$ENV{PKG_CONFIG_PATH} ./configure --prefix=${CMAKE_BINARY_DIR} --datadir=${CMAKE_BINARY_DIR}/etc --disable-shared --enable-static --enable-pic --pkg-config-flags=--static --enable-gpl --enable-version3 --enable-nonfree --disable-doc --disable-debug --disable-ffplay --disable-outdevs --enable-runtime-cpudetect --extra-cflags=-I${CMAKE_BINARY_DIR}/include\ -static --extra-ldflags=-L${CMAKE_BINARY_DIR}/lib --extra-libs=-lstdc++\ -lexpat\ -ldl\ -lm\ -lpthread --enable-libopencore-amrnb --enable-libopencore-amrwb --enable-libaom --enable-libfdk-aac --enable-libmp3lame --enable-libspeex --enable-libtheora --enable-libvorbis --enable-libx264 --enable-libx265 --enable-libxvid --enable-libvpx --enable-libopus --enable-librtmp --enable-libfreetype --enable-libass --enable-openssl --enable-vaapi
+  CONFIGURE_COMMAND PATH=$ENV{PATH} PKG_CONFIG_PATH=$ENV{PKG_CONFIG_PATH} ./configure --prefix=${CMAKE_BINARY_DIR} --datadir=${CMAKE_BINARY_DIR}/etc --disable-shared --enable-static --enable-pic --pkg-config-flags=--static --enable-gpl --enable-version3 --enable-nonfree --disable-doc --disable-debug --disable-ffplay --disable-outdevs --enable-runtime-cpudetect --extra-cflags=-I${CMAKE_BINARY_DIR}/include\ -static --extra-ldflags=-L${CMAKE_BINARY_DIR}/lib --extra-libs=-lstdc++\ -lexpat\ -ldl\ -lm\ -lpthread --enable-libopencore-amrnb --enable-libopencore-amrwb --enable-libaom --enable-libfdk-aac --enable-libmp3lame --enable-libspeex --enable-libtheora --enable-libvorbis --enable-libx264 --enable-libx265 --enable-libxvid --enable-libvpx --enable-libopus --enable-librtmp --enable-libfreetype --enable-libass --enable-openssl --enable-vaapi --enable-libsvtvp9
   BUILD_COMMAND PATH=$ENV{PATH} make
   BUILD_IN_SOURCE 1
 )
