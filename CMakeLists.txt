@@ -130,13 +130,24 @@ EXTERNALPROJECT_ADD(
   BUILD_IN_SOURCE 1
 )
 EXTERNALPROJECT_ADD(
+  svt-hevc
+  DEPENDS yasm
+  # URL https://github.com/intel/SVT-HEVC/archive/master.zip
+  URL ${CMAKE_SOURCE_DIR}/vendor/svt-hevc-snapshot-20190314.tar.bz2
+  PATCH_COMMAND ${CMAKE_SOURCE_DIR}/patches/patch-manager.sh svt-hevc
+  CONFIGURE_COMMAND cd Build && PATH=$ENV{PATH} cmake -G "Unix Makefiles" -DCMAKE_INSTALL_PREFIX=${CMAKE_BINARY_DIR} ..
+  BUILD_COMMAND cd Build && PATH=$ENV{PATH} make
+  INSTALL_COMMAND cd Build && PATH=$ENV{PATH} make PREFIX=${CMAKE_BINARY_DIR} install
+  BUILD_IN_SOURCE 1
+)
+EXTERNALPROJECT_ADD(
   x265
-  DEPENDS nasm
-  # URL https://bitbucket.org/multicoreware/x265/downloads/x265_3.0.tar.gz
-  URL ${CMAKE_SOURCE_DIR}/vendor/x265_3.0.tar.gz
+  DEPENDS nasm svt-hevc
+  # URL https://bitbucket.org/multicoreware/x265/get/c7e5878bdd31.zip
+  URL ${CMAKE_SOURCE_DIR}/vendor/x265-snapshot-20190314.tar.bz2
   PATCH_COMMAND ${CMAKE_SOURCE_DIR}/patches/patch-manager.sh x265
-  CONFIGURE_COMMAND cd build/linux && PATH=$ENV{PATH} cmake -D CMAKE_INSTALL_PREFIX:PATH=${CMAKE_BINARY_DIR} -D ENABLE_CLI:BOOL=OFF -D ENABLE_SHARED:BOOL=OFF ../../source
-  BUILD_COMMAND cd build/linux && PATH=$ENV{PATH} make
+  CONFIGURE_COMMAND cd build/linux && CXX_FLAGS=-fpermissive PATH=$ENV{PATH} SVT_HEVC_INCLUDE_DIR=${CMAKE_BINARY_DIR}/include/svt-hevc SVT_HEVC_LIBRARY_DIR=${CMAKE_BINARY_DIR}/lib cmake -D CMAKE_INSTALL_PREFIX:PATH=${CMAKE_BINARY_DIR} -D ENABLE_CLI:BOOL=OFF -D ENABLE_SHARED:BOOL=OFF -D ENABLE_SVT_HEVC:BOOL=ON ../../source
+  BUILD_COMMAND cd build/linux && PATH=$ENV{PATH} make CXX_FLAGS=-fpermissive
   INSTALL_COMMAND cd build/linux && PATH=$ENV{PATH} make install
   BUILD_IN_SOURCE 1
 )
@@ -278,11 +289,11 @@ EXTERNALPROJECT_ADD(
 )
 EXTERNALPROJECT_ADD(
   ffmpeg
-  DEPENDS yasm opencore-amr fdkaac lame libogg speex libvorbis libtheora opus xvidcore x264 x265 libvpx svt-vp9 rtmpdump freetype libass openssl aom intel-vaapi-driver nv-codec-headers
+  DEPENDS yasm opencore-amr fdkaac lame libogg speex libvorbis libtheora opus xvidcore x264 x265 libvpx svt-vp9 svt-hevc rtmpdump freetype libass openssl aom intel-vaapi-driver nv-codec-headers
   # URL https://ffmpeg.org/releases/ffmpeg-4.1.1.tar.bz2
   URL ${CMAKE_SOURCE_DIR}/vendor/ffmpeg-4.1.1.tar.bz2
   PATCH_COMMAND ${CMAKE_SOURCE_DIR}/patches/patch-manager.sh ffmpeg
-  CONFIGURE_COMMAND PATH=$ENV{PATH} PKG_CONFIG_PATH=$ENV{PKG_CONFIG_PATH} ./configure --prefix=${CMAKE_BINARY_DIR} --datadir=${CMAKE_BINARY_DIR}/etc --disable-shared --enable-static --enable-pic --pkg-config-flags=--static --enable-gpl --enable-version3 --enable-nonfree --disable-doc --disable-debug --disable-ffplay --disable-outdevs --enable-runtime-cpudetect --extra-cflags=-I${CMAKE_BINARY_DIR}/include\ -static --extra-ldflags=-L${CMAKE_BINARY_DIR}/lib --extra-libs=-lstdc++\ -lexpat\ -ldl\ -lm\ -lpthread --enable-libopencore-amrnb --enable-libopencore-amrwb --enable-libaom --enable-libfdk-aac --enable-libmp3lame --enable-libspeex --enable-libtheora --enable-libvorbis --enable-libx264 --enable-libx265 --enable-libxvid --enable-libvpx --enable-libopus --enable-librtmp --enable-libfreetype --enable-libass --enable-openssl --enable-vaapi --enable-libsvtvp9
+  CONFIGURE_COMMAND PATH=$ENV{PATH} PKG_CONFIG_PATH=$ENV{PKG_CONFIG_PATH} ./configure --prefix=${CMAKE_BINARY_DIR} --datadir=${CMAKE_BINARY_DIR}/etc --disable-shared --enable-static --enable-pic --pkg-config-flags=--static --enable-gpl --enable-version3 --enable-nonfree --disable-doc --disable-debug --disable-ffplay --disable-outdevs --enable-runtime-cpudetect --extra-cflags=-I${CMAKE_BINARY_DIR}/include\ -static --extra-ldflags=-L${CMAKE_BINARY_DIR}/lib --extra-libs=-lstdc++\ -lexpat\ -ldl\ -lm\ -lpthread --enable-libopencore-amrnb --enable-libopencore-amrwb --enable-libaom --enable-libfdk-aac --enable-libmp3lame --enable-libspeex --enable-libtheora --enable-libvorbis --enable-libx264 --enable-libx265 --enable-libxvid --enable-libvpx --enable-libopus --enable-librtmp --enable-libfreetype --enable-libass --enable-openssl --enable-vaapi --enable-libsvtvp9 --enable-libsvthevc
   BUILD_COMMAND PATH=$ENV{PATH} make
   BUILD_IN_SOURCE 1
 )

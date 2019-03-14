@@ -1,79 +1,60 @@
-From a859b3916f4c41ee068ee035c81fa88c8a679093 Mon Sep 17 00:00:00 2001
-From: hassene <hassene.tmar@intel.com>
-Date: Fri, 15 Feb 2019 17:43:54 -0800
-Subject: [PATCH] Add ability for ffmpeg to run svt vp9
-
----
- configure               |   4 +
- libavcodec/Makefile     |   1 +
- libavcodec/allcodecs.c  |   1 +
- libavcodec/libsvt_vp9.c | 458 ++++++++++++++++++++++++++++++++++++++++++++++++
- 4 files changed, 464 insertions(+)
- create mode 100644 libavcodec/libsvt_vp9.c
-
-diff --git a/configure b/configure
-index 7310b96..3834f9e 100755
---- a/configure
-+++ b/configure
-@@ -262,6 +262,7 @@ External library support:
-   --enable-libspeex        enable Speex de/encoding via libspeex [no]
+diff -up --new-file --recursive a/configure b/configure
+--- a/configure	2019-03-14 16:15:05.000000000 +0100
++++ b/configure	2019-03-14 16:19:46.154842798 +0100
+@@ -263,6 +263,7 @@ External library support:
    --enable-libsrt          enable Haivision SRT protocol via libsrt [no]
    --enable-libssh          enable SFTP protocol via libssh [no]
+   --enable-libsvthevc      enable HEVC encoding via svt [no]
 +  --enable-libsvtvp9       enable VP9 encoding via svt [no]
    --enable-libtensorflow   enable TensorFlow as a DNN module backend
                             for DNN based filters like sr [no]
    --enable-libtesseract    enable Tesseract, needed for ocr filter [no]
-@@ -1743,6 +1744,7 @@ EXTERNAL_LIBRARY_LIST="
-     libspeex
+@@ -1745,6 +1746,7 @@ EXTERNAL_LIBRARY_LIST="
      libsrt
      libssh
+     libsvthevc
 +    libsvtvp9
      libtensorflow
      libtesseract
      libtheora
-@@ -3125,6 +3127,7 @@ libshine_encoder_select="audio_frame_queue"
- libspeex_decoder_deps="libspeex"
+@@ -3128,6 +3130,7 @@ libspeex_decoder_deps="libspeex"
  libspeex_encoder_deps="libspeex"
  libspeex_encoder_select="audio_frame_queue"
+ libsvt_hevc_encoder_deps="libsvthevc"
 +libsvt_vp9_encoder_deps="libsvtvp9"
  libtheora_encoder_deps="libtheora"
  libtwolame_encoder_deps="libtwolame"
  libvo_amrwbenc_encoder_deps="libvo_amrwbenc"
-@@ -6135,6 +6138,7 @@ enabled libsoxr           && require libsoxr soxr.h soxr_create -lsoxr
- enabled libssh            && require_pkg_config libssh libssh libssh/sftp.h sftp_init
+@@ -6139,6 +6142,7 @@ enabled libssh            && require_pkg
  enabled libspeex          && require_pkg_config libspeex speex speex/speex.h speex_decoder_init
  enabled libsrt            && require_pkg_config libsrt "srt >= 1.3.0" srt/srt.h srt_socket
-+enabled libsvtvp9         && require_pkg_config libsvtvp9 SvtVp9Enc EbApi.h eb_svt_init_handle
+ enabled libsvthevc        && require_pkg_config libsvthevc SvtHevcEnc svt-hevc/EbApi.h EbInitHandle
++enabled libsvtvp9         && require_pkg_config libsvtvp9 SvtVp9Enc svt-vp9/EbApi.h eb_svt_init_handle
  enabled libtensorflow     && require libtensorflow tensorflow/c/c_api.h TF_Version -ltensorflow
  enabled libtesseract      && require_pkg_config libtesseract tesseract tesseract/capi.h TessBaseAPICreate
  enabled libtheora         && require libtheora theora/theoraenc.h th_info_init -ltheoraenc -ltheoradec -logg
-diff --git a/libavcodec/Makefile b/libavcodec/Makefile
-index 3e41497..fda9e3c 100644
---- a/libavcodec/Makefile
-+++ b/libavcodec/Makefile
-@@ -981,6 +981,7 @@ OBJS-$(CONFIG_LIBOPUS_ENCODER)            += libopusenc.o libopus.o     \
- OBJS-$(CONFIG_LIBSHINE_ENCODER)           += libshine.o
+diff -up --new-file --recursive a/libavcodec/Makefile b/libavcodec/Makefile
+--- a/libavcodec/Makefile	2019-03-14 16:15:05.000000000 +0100
++++ b/libavcodec/Makefile	2019-03-14 16:20:10.369886119 +0100
+@@ -982,6 +982,7 @@ OBJS-$(CONFIG_LIBSHINE_ENCODER)
  OBJS-$(CONFIG_LIBSPEEX_DECODER)           += libspeexdec.o
  OBJS-$(CONFIG_LIBSPEEX_ENCODER)           += libspeexenc.o
+ OBJS-$(CONFIG_LIBSVT_HEVC_ENCODER)        += libsvt_hevc.o
 +OBJS-$(CONFIG_LIBSVT_VP9_ENCODER)         += libsvt_vp9.o
  OBJS-$(CONFIG_LIBTHEORA_ENCODER)          += libtheoraenc.o
  OBJS-$(CONFIG_LIBTWOLAME_ENCODER)         += libtwolame.o
  OBJS-$(CONFIG_LIBVO_AMRWBENC_ENCODER)     += libvo-amrwbenc.o
-diff --git a/libavcodec/allcodecs.c b/libavcodec/allcodecs.c
-index 1b8144a..a74fc93 100644
---- a/libavcodec/allcodecs.c
-+++ b/libavcodec/allcodecs.c
-@@ -697,6 +697,7 @@ extern AVCodec ff_librsvg_decoder;
- extern AVCodec ff_libshine_encoder;
+diff -up --new-file --recursive a/libavcodec/allcodecs.c b/libavcodec/allcodecs.c
+--- a/libavcodec/allcodecs.c	2019-03-14 16:15:05.000000000 +0100
++++ b/libavcodec/allcodecs.c	2019-03-14 16:20:36.005135678 +0100
+@@ -698,6 +698,7 @@ extern AVCodec ff_libshine_encoder;
  extern AVCodec ff_libspeex_encoder;
  extern AVCodec ff_libspeex_decoder;
+ extern AVCodec ff_libsvt_hevc_encoder;
 +extern AVCodec ff_libsvt_vp9_encoder;
  extern AVCodec ff_libtheora_encoder;
  extern AVCodec ff_libtwolame_encoder;
  extern AVCodec ff_libvo_amrwbenc_encoder;
-diff --git a/libavcodec/libsvt_vp9.c b/libavcodec/libsvt_vp9.c
-new file mode 100644
-index 0000000..927d6ae
 --- /dev/null
 +++ b/libavcodec/libsvt_vp9.c
 @@ -0,0 +1,458 @@
@@ -100,9 +81,9 @@ index 0000000..927d6ae
 +*/
 +
 +#include <stdint.h>
-+#include "EbErrorCodes.h"
-+#include "EbTime.h"
-+#include "EbApi.h"
++#include "svt-vp9/EbErrorCodes.h"
++#include "svt-vp9/EbTime.h"
++#include "svt-vp9/EbApi.h"
 +
 +#include "libavutil/common.h"
 +#include "libavutil/frame.h"
@@ -535,6 +516,3 @@ index 0000000..927d6ae
 +    .caps_internal  = FF_CODEC_CAP_INIT_CLEANUP,
 +    .wrapper_name   = "libsvt_vp9",
 +};
--- 
-2.7.4
-

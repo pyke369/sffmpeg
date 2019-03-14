@@ -1,0 +1,11 @@
+diff -up --new-file --recursive x265-master.orig/source/x265.pc.in x265-master/source/x265.pc.in
+--- x265-master.orig/source/x265.pc.in	2019-03-14 17:47:20.427899620 +0100
++++ x265-master/source/x265.pc.in	2019-03-14 17:47:38.055883511 +0100
+@@ -6,6 +6,6 @@ includedir=${prefix}/include
+ Name: @CMAKE_PROJECT_NAME@
+ Description: H.265/HEVC video encoder
+ Version: @X265_LATEST_TAG@
+-Libs: -L${libdir} -lx265
++Libs: -L${libdir} -lx265 -lSvtHevcEnc
+ Libs.private: @PRIVATE_LIBS@
+ Cflags: -I${includedir}
