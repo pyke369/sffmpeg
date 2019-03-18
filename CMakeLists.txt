@@ -142,12 +142,12 @@ EXTERNALPROJECT_ADD(
 )
 EXTERNALPROJECT_ADD(
   x265
-  DEPENDS nasm svt-hevc
-  # URL https://bitbucket.org/multicoreware/x265/get/c7e5878bdd31.zip
-  URL ${CMAKE_SOURCE_DIR}/vendor/x265-snapshot-20190314.tar.bz2
+  DEPENDS nasm
+  # URL https://bitbucket.org/multicoreware/x265/downloads/x265_3.0.tar.gz
+  URL ${CMAKE_SOURCE_DIR}/vendor/x265_3.0.tar.gz
   PATCH_COMMAND ${CMAKE_SOURCE_DIR}/patches/patch-manager.sh x265
-  CONFIGURE_COMMAND cd build/linux && CXX_FLAGS=-fpermissive PATH=$ENV{PATH} SVT_HEVC_INCLUDE_DIR=${CMAKE_BINARY_DIR}/include/svt-hevc SVT_HEVC_LIBRARY_DIR=${CMAKE_BINARY_DIR}/lib cmake -D CMAKE_INSTALL_PREFIX:PATH=${CMAKE_BINARY_DIR} -D ENABLE_CLI:BOOL=OFF -D ENABLE_SHARED:BOOL=OFF -D ENABLE_SVT_HEVC:BOOL=ON ../../source
-  BUILD_COMMAND cd build/linux && PATH=$ENV{PATH} make CXX_FLAGS=-fpermissive
+  CONFIGURE_COMMAND cd build/linux && PATH=$ENV{PATH} cmake -D CMAKE_INSTALL_PREFIX:PATH=${CMAKE_BINARY_DIR} -D ENABLE_CLI:BOOL=OFF -D ENABLE_SHARED:BOOL=OFF -D ENABLE_SVT_HEVC:BOOL=ON ../../source
+  BUILD_COMMAND cd build/linux && PATH=$ENV{PATH} make
   INSTALL_COMMAND cd build/linux && PATH=$ENV{PATH} make install
   BUILD_IN_SOURCE 1
 )
@@ -155,7 +155,7 @@ EXTERNALPROJECT_ADD(
   libvpx
   DEPENDS yasm
   # URL https://github.com/webmproject/libvpx/archive/master.tar.gz
-  URL ${CMAKE_SOURCE_DIR}/vendor/libvpx-snapshot-20190208.tar.bz2
+  URL ${CMAKE_SOURCE_DIR}/vendor/libvpx-snapshot-20190318.tar.bz
   PATCH_COMMAND ${CMAKE_SOURCE_DIR}/patches/patch-manager.sh libvpx
   CONFIGURE_COMMAND PATH=$ENV{PATH} ./configure --prefix=${CMAKE_BINARY_DIR} --as=yasm --disable-docs --disable-examples --disable-shared --disable-tools --disable-unit-tests --enable-better-hw-compatibility --enable-multi-res-encoding  --enable-pic --enable-postproc --enable-runtime-cpu-detect --enable-vp9-temporal-denoising --enable-vp9-postproc --enable-webm-io --size-limit=16384x16384
   BUILD_COMMAND PATH=$ENV{PATH} make
