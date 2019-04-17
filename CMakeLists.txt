@@ -290,8 +290,8 @@ EXTERNALPROJECT_ADD(
 EXTERNALPROJECT_ADD(
   ffmpeg
   DEPENDS yasm opencore-amr fdkaac lame libogg speex libvorbis libtheora opus xvidcore x264 x265 libvpx svt-vp9 svt-hevc rtmpdump freetype libass openssl aom intel-vaapi-driver nv-codec-headers
-  # URL https://ffmpeg.org/releases/ffmpeg-4.1.1.tar.bz2
-  URL ${CMAKE_SOURCE_DIR}/vendor/ffmpeg-4.1.1.tar.bz2
+  # URL https://ffmpeg.org/releases/ffmpeg-4.1.3.tar.bz2
+  URL ${CMAKE_SOURCE_DIR}/vendor/ffmpeg-4.1.3.tar.bz2
   PATCH_COMMAND ${CMAKE_SOURCE_DIR}/patches/patch-manager.sh ffmpeg
   CONFIGURE_COMMAND PATH=$ENV{PATH} PKG_CONFIG_PATH=$ENV{PKG_CONFIG_PATH} ./configure --prefix=${CMAKE_BINARY_DIR} --datadir=${CMAKE_BINARY_DIR}/etc --disable-shared --enable-static --enable-pic --pkg-config-flags=--static --enable-gpl --enable-version3 --enable-nonfree --disable-doc --disable-debug --disable-ffplay --disable-outdevs --enable-runtime-cpudetect --extra-cflags=-I${CMAKE_BINARY_DIR}/include\ -static --extra-ldflags=-L${CMAKE_BINARY_DIR}/lib --extra-libs=-lstdc++\ -lexpat\ -ldl\ -lm\ -lpthread --enable-libopencore-amrnb --enable-libopencore-amrwb --enable-libaom --enable-libfdk-aac --enable-libmp3lame --enable-libspeex --enable-libtheora --enable-libvorbis --enable-libx264 --enable-libx265 --enable-libxvid --enable-libvpx --enable-libopus --enable-librtmp --enable-libfreetype --enable-libass --enable-openssl --enable-vaapi --enable-libsvtvp9 --enable-libsvthevc
   BUILD_COMMAND PATH=$ENV{PATH} make
