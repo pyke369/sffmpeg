@@ -29,7 +29,7 @@ diff -up --new-file --recursive a/configure b/configure
  enabled libspeex          && require_pkg_config libspeex speex speex/speex.h speex_decoder_init
  enabled libsrt            && require_pkg_config libsrt "srt >= 1.3.0" srt/srt.h srt_socket
  enabled libsvthevc        && require_pkg_config libsvthevc SvtHevcEnc svt-hevc/EbApi.h EbInitHandle
-+enabled libsvtvp9         && require_pkg_config libsvtvp9 SvtVp9Enc svt-vp9/EbApi.h eb_svt_init_handle
++enabled libsvtvp9         && require_pkg_config libsvtvp9 SvtVp9Enc EbSvtVp9Enc.h eb_vp9_svt_init_handle
  enabled libtensorflow     && require libtensorflow tensorflow/c/c_api.h TF_Version -ltensorflow
  enabled libtesseract      && require_pkg_config libtesseract tesseract tesseract/capi.h TessBaseAPICreate
  enabled libtheora         && require libtheora theora/theoraenc.h th_info_init -ltheoraenc -ltheoradec -logg
@@ -81,9 +81,9 @@ diff -up --new-file --recursive a/libavcodec/allcodecs.c b/libavcodec/allcodecs.
 +*/
 +
 +#include <stdint.h>
-+#include "svt-vp9/EbErrorCodes.h"
-+#include "svt-vp9/EbTime.h"
-+#include "svt-vp9/EbApi.h"
++#include "EbSvtVp9ErrorCodes.h"
++#include "EbSvtVp9Time.h"
++#include "EbSvtVp9Enc.h"
 +
 +#include "libavutil/common.h"
 +#include "libavutil/frame.h"
@@ -276,7 +276,7 @@ diff -up --new-file --recursive a/libavcodec/allcodecs.c b/libavcodec/allcodecs.
 +
 +    svt_enc->eos_flag = 0;
 +
-+    svt_ret = eb_svt_init_handle(&svt_enc->svt_handle, svt_enc, &svt_enc->enc_params);
++    svt_ret = eb_vp9_svt_init_handle(&svt_enc->svt_handle, svt_enc, &svt_enc->enc_params);
 +    if (svt_ret != EB_ErrorNone) {
 +        av_log(avctx, AV_LOG_ERROR, "Error init encoder handle\n");
 +        goto failed;
@@ -288,13 +288,13 @@ diff -up --new-file --recursive a/libavcodec/allcodecs.c b/libavcodec/allcodecs.
 +        goto failed_init_handle;
 +    }
 +
-+    svt_ret = eb_svt_enc_set_parameter(svt_enc->svt_handle, &svt_enc->enc_params);
++    svt_ret = eb_vp9_svt_enc_set_parameter(svt_enc->svt_handle, &svt_enc->enc_params);
 +    if (svt_ret != EB_ErrorNone) {
 +        av_log(avctx, AV_LOG_ERROR, "Error setting encoder parameters\n");
 +        goto failed_init_handle;
 +    }
 +
-+    svt_ret = eb_init_encoder(svt_enc->svt_handle);
++    svt_ret = eb_vp9_init_encoder(svt_enc->svt_handle);
 +    if (svt_ret != EB_ErrorNone) {
 +        av_log(avctx, AV_LOG_ERROR, "Error init encoder\n");
 +        goto failed_init_handle;
@@ -339,7 +339,7 @@ diff -up --new-file --recursive a/libavcodec/allcodecs.c b/libavcodec/allcodecs.
 +//failed_init_enc:
 +//    eb_deinit_encoder(svt_enc->svt_handle);
 +failed_init_handle:
-+    eb_deinit_handle(svt_enc->svt_handle);
++    eb_vp9_deinit_handle(svt_enc->svt_handle);
 +failed:
 +    free_buffer(svt_enc);
 +    return error_mapping(svt_ret);
@@ -359,7 +359,7 @@ diff -up --new-file --recursive a/libavcodec/allcodecs.c b/libavcodec/allcodecs.
 +        headerPtrLast.p_buffer     = NULL;
 +        headerPtrLast.flags      = EB_BUFFERFLAG_EOS;
 +
-+        eb_svt_enc_send_picture(svt_enc->svt_handle, &headerPtrLast);
++        eb_vp9_svt_enc_send_picture(svt_enc->svt_handle, &headerPtrLast);
 +        svt_enc->eos_flag = 1;
 +        av_log(avctx, AV_LOG_DEBUG, "Finish sending frames!!!\n");
 +        return 0;
@@ -384,7 +384,7 @@ diff -up --new-file --recursive a/libavcodec/allcodecs.c b/libavcodec/allcodecs.
 +        headerPtr->pic_type = EB_INVALID_PICTURE;
 +        break;
 +    }
-+    eb_svt_enc_send_picture(svt_enc->svt_handle, headerPtr);
++    eb_vp9_svt_enc_send_picture(svt_enc->svt_handle, headerPtr);
 +
 +    return 0;
 +}
@@ -396,7 +396,7 @@ diff -up --new-file --recursive a/libavcodec/allcodecs.c b/libavcodec/allcodecs.
 +    EbErrorType          svt_ret;
 +    int ret;
 +
-+    svt_ret = eb_svt_get_packet(svt_enc->svt_handle, &headerPtr, svt_enc->eos_flag);
++    svt_ret = eb_vp9_svt_get_packet(svt_enc->svt_handle, &headerPtr, svt_enc->eos_flag);
 +    if (svt_ret == EB_NoErrorEmptyQueue)
 +        return AVERROR(EAGAIN);
 +
@@ -416,7 +416,7 @@ diff -up --new-file --recursive a/libavcodec/allcodecs.c b/libavcodec/allcodecs.
 +
 +    ret = (headerPtr->flags & EB_BUFFERFLAG_EOS) ? AVERROR_EOF : 0;
 +
-+    eb_svt_release_out_buffer(&headerPtr);
++    eb_vp9_svt_release_out_buffer(&headerPtr);
 +
 +    return ret;
 +}
@@ -425,8 +425,8 @@ diff -up --new-file --recursive a/libavcodec/allcodecs.c b/libavcodec/allcodecs.
 +{
 +    SvtContext *svt_enc = avctx->priv_data;
 +
-+    eb_deinit_encoder(svt_enc->svt_handle);
-+    eb_deinit_handle(svt_enc->svt_handle);
++    eb_vp9_deinit_encoder(svt_enc->svt_handle);
++    eb_vp9_deinit_handle(svt_enc->svt_handle);
 +
 +    free_buffer(svt_enc);
 +
