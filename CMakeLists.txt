@@ -17,8 +17,8 @@ EXTERNALPROJECT_ADD(
 )
 EXTERNALPROJECT_ADD(
   nasm
-  # URL https://www.nasm.us/pub/nasm/releasebuilds/2.14/nasm-2.14.tar.gz
-  URL ${CMAKE_SOURCE_DIR}/vendor/nasm-2.14.tar.gz
+  # URL https://www.nasm.us/pub/nasm/releasebuilds/2.14/nasm-2.14.02.tar.gz
+  URL ${CMAKE_SOURCE_DIR}/vendor/nasm-2.14.02.tar.gz
   PATCH_COMMAND ${CMAKE_SOURCE_DIR}/patches/patch-manager.sh nasm
   CONFIGURE_COMMAND ./configure --prefix=${CMAKE_BINARY_DIR}
   BUILD_IN_SOURCE 1
@@ -33,8 +33,8 @@ EXTERNALPROJECT_ADD(
 )
 EXTERNALPROJECT_ADD(
   openssl
-  # URL http://www.openssl.org/source/openssl-1.0.2q.tar.gz
-  URL ${CMAKE_SOURCE_DIR}/vendor/openssl-1.0.2q.tar.gz
+  # URL http://www.openssl.org/source/openssl-1.0.2r.tar.gz
+  URL ${CMAKE_SOURCE_DIR}/vendor/openssl-1.0.2r.tar.gz
   PATCH_COMMAND ${CMAKE_SOURCE_DIR}/patches/patch-manager.sh openssl
   CONFIGURE_COMMAND ./config no-shared no-idea no-mdc2 no-rc5 --prefix=${CMAKE_BINARY_DIR}
   BUILD_COMMAND make depend && make
@@ -101,8 +101,8 @@ EXTERNALPROJECT_ADD(
 )
 EXTERNALPROJECT_ADD(
   opus
-  # URL http://downloads.xiph.org/releases/opus/opus-1.3.tar.gz
-  URL ${CMAKE_SOURCE_DIR}/vendor/opus-1.3.tar.gz
+  # URL http://downloads.xiph.org/releases/opus/opus-1.3.1.tar.gz
+  URL ${CMAKE_SOURCE_DIR}/vendor/opus-1.3.1.tar.gz
   PATCH_COMMAND ${CMAKE_SOURCE_DIR}/patches/patch-manager.sh opus
   CONFIGURE_COMMAND ./configure --prefix=${CMAKE_BINARY_DIR} --disable-shared --disable-doc
   BUILD_IN_SOURCE 1
@@ -165,7 +165,7 @@ EXTERNALPROJECT_ADD(
   svt-vp9
   DEPENDS yasm
   # URL https://github.com/OpenVisualCloud/SVT-VP9/archive/master.zip
-  URL ${CMAKE_SOURCE_DIR}/vendor/svt-vp9-snapshot-20190218.tar.bz2
+  URL ${CMAKE_SOURCE_DIR}/vendor/svp-vp9-snapshot-20190417.tar.bz2
   PATCH_COMMAND ${CMAKE_SOURCE_DIR}/patches/patch-manager.sh svt-vp9
   CONFIGURE_COMMAND cd Build && PATH=$ENV{PATH} cmake -G "Unix Makefiles" -DCMAKE_INSTALL_PREFIX=${CMAKE_BINARY_DIR} ..
   BUILD_COMMAND cd Build && PATH=$ENV{PATH} make
@@ -280,8 +280,8 @@ EXTERNALPROJECT_ADD(
 )
 EXTERNALPROJECT_ADD(
   nv-codec-headers
-  # URL https://github.com/FFmpeg/nv-codec-headers/releases/download/n8.2.15.6/nv-codec-headers-8.2.15.6.tar.gz
-  URL ${CMAKE_SOURCE_DIR}/vendor/nv-codec-headers-8.2.15.6.tar.gz
+  # URL https://github.com/FFmpeg/nv-codec-headers/releases/download/n9.0.18.1/nv-codec-headers-9.0.18.1.tar.gz
+  URL ${CMAKE_SOURCE_DIR}/vendor/nv-codec-headers-9.0.18.1.tar.gz
   PATCH_COMMAND ${CMAKE_SOURCE_DIR}/patches/patch-manager.sh nv-codec-headers
   CONFIGURE_COMMAND true
   INSTALL_COMMAND PATH=$ENV{PATH} make PREFIX=${CMAKE_BINARY_DIR} install
