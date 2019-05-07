@@ -133,7 +133,7 @@ EXTERNALPROJECT_ADD(
   svt-hevc
   DEPENDS yasm
   # URL https://github.com/intel/SVT-HEVC/archive/master.zip
-  URL ${CMAKE_SOURCE_DIR}/vendor/svt-hevc-snapshot-20190314.tar.bz2
+  URL ${CMAKE_SOURCE_DIR}/vendor/svt-hevc-snapshot-20190507.tar.bz2
   PATCH_COMMAND ${CMAKE_SOURCE_DIR}/patches/patch-manager.sh svt-hevc
   CONFIGURE_COMMAND cd Build && PATH=$ENV{PATH} cmake -G "Unix Makefiles" -DCMAKE_INSTALL_PREFIX=${CMAKE_BINARY_DIR} ..
   BUILD_COMMAND cd Build && PATH=$ENV{PATH} make
