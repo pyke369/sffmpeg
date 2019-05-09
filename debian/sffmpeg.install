@@ -1,5 +1,5 @@
 build/bin/ffmpeg /usr/bin
 build/bin/ffprobe /usr/bin
 build/bin/frmxtract /usr/bin
-build/lib/libSvtVp9Enc.so.1 /usr/lib
+build/lib/libSvtAv1Enc.so.1 /usr/lib
 build/lib/libSvtHevcEnc.so.1 /usr/lib
