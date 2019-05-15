@@ -1,4 +1,4 @@
 build/
 debian/.debhelper
 debian/files
-debian/sffmpeg*
+debian/sffmpeg/*

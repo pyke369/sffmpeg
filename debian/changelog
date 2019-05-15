@@ -1,3 +1,10 @@
+sffmpeg (4.1.3-4) stable; urgency=medium
+
+  * Updated SVT
+  * Re-added AOM
+
+ -- CMS <cms@showmax.com>  Wed, 15 May 2019 12:00:00 +0200
+
 sffmpeg (4.1.3-3) stable; urgency=medium
 
   * Dropped AOM AV1

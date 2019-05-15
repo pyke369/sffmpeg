@@ -133,7 +133,7 @@ EXTERNALPROJECT_ADD(
   svt-hevc
   DEPENDS yasm
   # URL https://github.com/intel/SVT-HEVC/archive/master.zip
-  URL ${CMAKE_SOURCE_DIR}/vendor/svt-hevc-snapshot-20190507.tar.bz2
+  URL ${CMAKE_SOURCE_DIR}/vendor/svt-hevc-snapshot-20190515.tar.bz2
   PATCH_COMMAND ${CMAKE_SOURCE_DIR}/patches/patch-manager.sh svt-hevc
   CONFIGURE_COMMAND cd Build && PATH=$ENV{PATH} cmake -G "Unix Makefiles" -DCMAKE_INSTALL_PREFIX=${CMAKE_BINARY_DIR} ..
   BUILD_COMMAND cd Build && PATH=$ENV{PATH} make
@@ -144,7 +144,7 @@ EXTERNALPROJECT_ADD(
   svt-av1
   DEPENDS yasm
   # URL https://github.com/intel/SVT-AV1/archive/master.zip
-  URL ${CMAKE_SOURCE_DIR}/vendor/svt-av1-snapshot-20190509.tar.bz2
+  URL ${CMAKE_SOURCE_DIR}/vendor/svt-av1-snapshot-20190515.tar.bz2
   PATCH_COMMAND ${CMAKE_SOURCE_DIR}/patches/patch-manager.sh svt-av1
   CONFIGURE_COMMAND cd Build && PATH=$ENV{PATH} cmake -G "Unix Makefiles" -DCMAKE_INSTALL_PREFIX=${CMAKE_BINARY_DIR} ..
   BUILD_COMMAND cd Build && PATH=$ENV{PATH} make
@@ -171,6 +171,17 @@ EXTERNALPROJECT_ADD(
   CONFIGURE_COMMAND PATH=$ENV{PATH} ./configure --prefix=${CMAKE_BINARY_DIR} --as=yasm --disable-docs --disable-examples --disable-shared --disable-tools --disable-unit-tests --enable-better-hw-compatibility --enable-multi-res-encoding  --enable-pic --enable-postproc --enable-runtime-cpu-detect --enable-vp9-temporal-denoising --enable-vp9-postproc --enable-webm-io --size-limit=16384x16384
   BUILD_COMMAND PATH=$ENV{PATH} make
   BUILD_IN_SOURCE 1
+)
+EXTERNALPROJECT_ADD(
+  aom
+  DEPENDS yasm
+  # DOWNLOAD_COMMAND git clone https://aomedia.googlesource.com/aom
+  # UPDATE_COMMAND git pull
+  URL ${CMAKE_SOURCE_DIR}/vendor/aom-snapshot-20190515.tar.bz2
+  CONFIGURE_COMMAND PATH=$ENV{PATH} cmake -D CMAKE_BUILD_TYPE=Release -D BUILD_SHARED_LIBS=0 -D CMAKE_INSTALL_PREFIX:PATH=${CMAKE_BINARY_DIR} -D ENABLE_DOCS:BOOL=OFF -D ENABLE_EXAMPLES:BOOL=OFF -D ENABLE_TESTS:BOOL=OFF -D ENABLE_TOOLS:BOOL=OFF -D INCLUDE_INSTALL_DIR:PATH=${CMAKE_BINARY_DIR}/include -D LIB_INSTALL_DIR:PATH=${CMAKE_BINARY_DIR}/lib ../aom
+  BUILD_COMMAND PATH=$ENV{PATH} make
+  INSTALL_COMMAND PATH=$ENV{PATH} make install
+  BUILD_IN_SOURCE 0
 )
 EXTERNALPROJECT_ADD(
   rtmpdump
@@ -278,11 +289,11 @@ EXTERNALPROJECT_ADD(
 )
 EXTERNALPROJECT_ADD(
   ffmpeg
-  DEPENDS yasm opencore-amr fdkaac lame libogg speex libvorbis libtheora opus xvidcore x264 x265 libvpx svt-av1 svt-hevc rtmpdump freetype libass openssl intel-vaapi-driver nv-codec-headers
+  DEPENDS yasm opencore-amr fdkaac lame libogg speex libvorbis libtheora opus xvidcore x264 x265 libvpx svt-av1 svt-hevc rtmpdump freetype libass openssl aom intel-vaapi-driver nv-codec-headers
   # URL https://ffmpeg.org/releases/ffmpeg-4.1.3.tar.bz2
   URL ${CMAKE_SOURCE_DIR}/vendor/ffmpeg-4.1.3.tar.bz2
   PATCH_COMMAND ${CMAKE_SOURCE_DIR}/patches/patch-manager.sh ffmpeg
-  CONFIGURE_COMMAND PATH=$ENV{PATH} PKG_CONFIG_PATH=$ENV{PKG_CONFIG_PATH} ./configure --prefix=${CMAKE_BINARY_DIR} --datadir=${CMAKE_BINARY_DIR}/etc --disable-shared --enable-static --enable-pic --pkg-config-flags=--static --enable-gpl --enable-version3 --enable-nonfree --disable-doc --disable-debug --disable-ffplay --disable-outdevs --enable-runtime-cpudetect --extra-cflags=-I${CMAKE_BINARY_DIR}/include\ -static --extra-ldflags=-L${CMAKE_BINARY_DIR}/lib --extra-libs=-lstdc++\ -lexpat\ -ldl\ -lm\ -lpthread --enable-libopencore-amrnb --enable-libopencore-amrwb --enable-libfdk-aac --enable-libmp3lame --enable-libspeex --enable-libtheora --enable-libvorbis --enable-libx264 --enable-libx265 --enable-libxvid --enable-libvpx --enable-libopus --enable-librtmp --enable-libfreetype --enable-libass --enable-openssl --enable-vaapi --enable-libsvthevc --enable-libsvtav1
+  CONFIGURE_COMMAND PATH=$ENV{PATH} PKG_CONFIG_PATH=$ENV{PKG_CONFIG_PATH} ./configure --prefix=${CMAKE_BINARY_DIR} --datadir=${CMAKE_BINARY_DIR}/etc --disable-shared --enable-static --enable-pic --pkg-config-flags=--static --enable-gpl --enable-version3 --enable-nonfree --disable-doc --disable-debug --disable-ffplay --disable-outdevs --enable-runtime-cpudetect --extra-cflags=-I${CMAKE_BINARY_DIR}/include\ -static --extra-ldflags=-L${CMAKE_BINARY_DIR}/lib --extra-libs=-lstdc++\ -lexpat\ -ldl\ -lm\ -lpthread --enable-libopencore-amrnb --enable-libopencore-amrwb --enable-libaom --enable-libfdk-aac --enable-libmp3lame --enable-libspeex --enable-libtheora --enable-libvorbis --enable-libx264 --enable-libx265 --enable-libxvid --enable-libvpx --enable-libopus --enable-librtmp --enable-libfreetype --enable-libass --enable-openssl --enable-vaapi --enable-libsvthevc --enable-libsvtav1
   BUILD_COMMAND PATH=$ENV{PATH} make
   BUILD_IN_SOURCE 1
 )
