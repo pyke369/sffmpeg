@@ -33,8 +33,8 @@ EXTERNALPROJECT_ADD(
 )
 EXTERNALPROJECT_ADD(
   openssl
-  # URL http://www.openssl.org/source/openssl-1.0.2r.tar.gz
-  URL ${CMAKE_SOURCE_DIR}/vendor/openssl-1.0.2r.tar.gz
+  # URL http://www.openssl.org/source/openssl-1.0.2s.tar.gz
+  URL ${CMAKE_SOURCE_DIR}/vendor/openssl-1.0.2s.tar.gz
   PATCH_COMMAND ${CMAKE_SOURCE_DIR}/patches/patch-manager.sh openssl
   CONFIGURE_COMMAND ./config no-shared no-idea no-mdc2 no-rc5 --prefix=${CMAKE_BINARY_DIR}
   BUILD_COMMAND make depend && make
@@ -132,8 +132,8 @@ EXTERNALPROJECT_ADD(
 EXTERNALPROJECT_ADD(
   svt-hevc
   DEPENDS yasm
-  # URL https://github.com/intel/SVT-HEVC/archive/master.zip
-  URL ${CMAKE_SOURCE_DIR}/vendor/svt-hevc-snapshot-20190515.tar.bz2
+  # URL https://github.com/intel/SVT-HEVC/archive/master.tar.gz
+  URL ${CMAKE_SOURCE_DIR}/vendor/svt-hevc-snapshot-20190704.tar.bz2
   PATCH_COMMAND ${CMAKE_SOURCE_DIR}/patches/patch-manager.sh svt-hevc
   CONFIGURE_COMMAND cd Build && PATH=$ENV{PATH} cmake -G "Unix Makefiles" -DCMAKE_INSTALL_PREFIX=${CMAKE_BINARY_DIR} ..
   BUILD_COMMAND cd Build && PATH=$ENV{PATH} make
@@ -143,8 +143,8 @@ EXTERNALPROJECT_ADD(
 EXTERNALPROJECT_ADD(
   svt-av1
   DEPENDS yasm
-  # URL https://github.com/intel/SVT-AV1/archive/master.zip
-  URL ${CMAKE_SOURCE_DIR}/vendor/svt-av1-snapshot-20190515.tar.bz2
+  # URL https://github.com/OpenVisualCloud/SVT-AV1/archive/master.tar.gz
+  URL ${CMAKE_SOURCE_DIR}/vendor/svt-av1-snapshot-20190704.tar.bz2
   PATCH_COMMAND ${CMAKE_SOURCE_DIR}/patches/patch-manager.sh svt-av1
   CONFIGURE_COMMAND cd Build && PATH=$ENV{PATH} cmake -G "Unix Makefiles" -DCMAKE_INSTALL_PREFIX=${CMAKE_BINARY_DIR} ..
   BUILD_COMMAND cd Build && PATH=$ENV{PATH} make
@@ -154,8 +154,8 @@ EXTERNALPROJECT_ADD(
 EXTERNALPROJECT_ADD(
   x265
   DEPENDS nasm
-  # URL https://bitbucket.org/multicoreware/x265/downloads/x265_3.0.tar.gz
-  URL ${CMAKE_SOURCE_DIR}/vendor/x265_3.0.tar.gz
+  # URL https://bitbucket.org/multicoreware/x265/downloads/x265_3.1.tar.gz
+  URL ${CMAKE_SOURCE_DIR}/vendor/x265_3.1.tar.gz
   PATCH_COMMAND ${CMAKE_SOURCE_DIR}/patches/patch-manager.sh x265
   CONFIGURE_COMMAND cd build/linux && PATH=$ENV{PATH} cmake -D CMAKE_INSTALL_PREFIX:PATH=${CMAKE_BINARY_DIR} -D ENABLE_CLI:BOOL=OFF -D ENABLE_SHARED:BOOL=OFF -D ENABLE_SVT_HEVC:BOOL=ON ../../source
   BUILD_COMMAND cd build/linux && PATH=$ENV{PATH} make
@@ -166,7 +166,7 @@ EXTERNALPROJECT_ADD(
   libvpx
   DEPENDS yasm
   # URL https://github.com/webmproject/libvpx/archive/master.tar.gz
-  URL ${CMAKE_SOURCE_DIR}/vendor/libvpx-snapshot-20190318.tar.bz2
+  URL ${CMAKE_SOURCE_DIR}/vendor/libvpx-snapshot-20190704.tar.bz2
   PATCH_COMMAND ${CMAKE_SOURCE_DIR}/patches/patch-manager.sh libvpx
   CONFIGURE_COMMAND PATH=$ENV{PATH} ./configure --prefix=${CMAKE_BINARY_DIR} --as=yasm --disable-docs --disable-examples --disable-shared --disable-tools --disable-unit-tests --enable-better-hw-compatibility --enable-multi-res-encoding  --enable-pic --enable-postproc --enable-runtime-cpu-detect --enable-vp9-temporal-denoising --enable-vp9-postproc --enable-webm-io --size-limit=16384x16384
   BUILD_COMMAND PATH=$ENV{PATH} make
@@ -177,7 +177,7 @@ EXTERNALPROJECT_ADD(
   DEPENDS yasm
   # DOWNLOAD_COMMAND git clone https://aomedia.googlesource.com/aom
   # UPDATE_COMMAND git pull
-  URL ${CMAKE_SOURCE_DIR}/vendor/aom-snapshot-20190515.tar.bz2
+  URL ${CMAKE_SOURCE_DIR}/vendor/aom-snapshot-20190704.tar.bz2
   CONFIGURE_COMMAND PATH=$ENV{PATH} cmake -D CMAKE_BUILD_TYPE=Release -D BUILD_SHARED_LIBS=0 -D CMAKE_INSTALL_PREFIX:PATH=${CMAKE_BINARY_DIR} -D ENABLE_DOCS:BOOL=OFF -D ENABLE_EXAMPLES:BOOL=OFF -D ENABLE_TESTS:BOOL=OFF -D ENABLE_TOOLS:BOOL=OFF -D INCLUDE_INSTALL_DIR:PATH=${CMAKE_BINARY_DIR}/include -D LIB_INSTALL_DIR:PATH=${CMAKE_BINARY_DIR}/lib ../aom
   BUILD_COMMAND PATH=$ENV{PATH} make
   INSTALL_COMMAND PATH=$ENV{PATH} make install
