@@ -1,3 +1,4 @@
 build/bin/ffmpeg /usr/bin
 build/bin/ffprobe /usr/bin
 build/lib/libSvtHevcEnc.so.1 /usr/lib
+build/share/model /usr/share
