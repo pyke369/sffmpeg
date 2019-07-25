@@ -273,7 +273,7 @@ EXTERNALPROJECT_ADD(
   DEPENDS yasm fdkaac lame libogg libvorbis opus x264 x265 libvpx svt-av1 svt-hevc rtmpdump freetype libass openssl dav1d intel-vaapi-driver nv-codec-headers vmaf
   # URL https://ffmpeg.org/releases/ffmpeg-4.1.3.tar.bz2
   # URL https://ffmpeg.org/releases/ffmpeg-snapshot.tar.bz2
-  URL ${CMAKE_SOURCE_DIR}/vendor/ffmpeg-snapshot-20190704.tar.bz2
+  URL ${CMAKE_SOURCE_DIR}/vendor/ffmpeg-snapshot-20190725.tar.bz2
   PATCH_COMMAND ${CMAKE_SOURCE_DIR}/patches/patch-manager.sh ffmpeg
   CONFIGURE_COMMAND PATH=$ENV{PATH} PKG_CONFIG_PATH=$ENV{PKG_CONFIG_PATH} ./configure --prefix=${CMAKE_BINARY_DIR} --datadir=${CMAKE_BINARY_DIR}/etc --disable-shared --enable-static --enable-pic --pkg-config-flags=--static --enable-gpl --enable-version3 --enable-nonfree --disable-doc --disable-debug --disable-ffplay --disable-outdevs --enable-runtime-cpudetect --extra-cflags=-I${CMAKE_BINARY_DIR}/include\ -static --extra-ldflags=-L${CMAKE_BINARY_DIR}/lib --extra-libs=-lstdc++\ -lexpat\ -ldl\ -lm\ -lpthread --enable-libdav1d --enable-libfdk-aac --enable-libmp3lame --enable-libvorbis --enable-libx264 --enable-libx265 --enable-libvpx --enable-libopus --enable-librtmp --enable-libfreetype --enable-libass --enable-openssl --enable-vaapi --enable-libsvthevc --enable-libsvtav1 --enable-libvmaf
   BUILD_COMMAND PATH=$ENV{PATH} make
