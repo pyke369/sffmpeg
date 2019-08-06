@@ -149,7 +149,7 @@ EXTERNALPROJECT_ADD(
   dav1d
   DEPENDS meson nasm
   # DOWNLOAD_COMMAND wget https://code.videolan.org/videolan/dav1d/-/archive/0.4.0/dav1d-0.4.0.tar.bz2
-  URL ${CMAKE_SOURCE_DIR}/vendor/dav1d-0.3.1.tar.bz2
+  URL ${CMAKE_SOURCE_DIR}/vendor/dav1d-0.4.0.tar.bz2
   CONFIGURE_COMMAND PATH=$ENV{PATH} python3 ../../../meson-prefix/src/meson/meson.py build --buildtype release -D build_tools=false -D build_tests=false -D default_library=static --prefix=${CMAKE_BINARY_DIR} --libdir lib
   BUILD_COMMAND PATH=$ENV{PATH} ninja -C build
   INSTALL_COMMAND PATH=$ENV{PATH} ninja -C build install

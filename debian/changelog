@@ -1,6 +1,6 @@
 sffmpeg (4.2.0-2) stable; urgency=medium
 
-  * Updated dav1d to 0.4.
+  * Updated dav1d to 0.4.0.
 
  -- CMS <cms@showmax.com>  Tue, 6 Aug 2019 12:00:01 +0200
 
