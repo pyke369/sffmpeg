@@ -1,0 +1,5 @@
+build
+debian/sffmpeg*
+debian/files
+debian/.debhelper
+_*

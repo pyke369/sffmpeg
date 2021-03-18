@@ -1,0 +1,60 @@
+--- a/libavformat/nut.h
++++ b/libavformat/nut.h
+@@ -108,6 +108,8 @@
+     struct AVTreeNode *syncpoints;
+     int sp_count;
+     int write_index;
++    int headers_interval;
++    int64_t last_headers;
+     int64_t max_pts;
+     AVRational *max_pts_tb;
+ #define NUT_BROADCAST 1 // use extended syncpoints
+
+--- a/libavformat/nutenc.c
++++ b/libavformat/nutenc.c
+@@ -684,7 +684,7 @@
+     }
+
+     nut->last_syncpoint_pos = INT_MIN;
+-    nut->header_count++;
++    // nut->header_count++;
+
+     ret = 0;
+ fail:
+@@ -762,6 +762,7 @@
+             nut->time_base_count++;
+     }
+
++    nut->last_headers = -1;
+     nut->max_distance = MAX_DISTANCE;
+     build_elision_headers(s);
+     build_frame_code(s);
+@@ -988,6 +989,20 @@
+         data_size += sm_size;
+     }
+
++    if (pkt->stream_index == 0 && key_frame) {
++        double time_base = av_q2d(s->streams[0]->time_base) * 1000;
++
++        if (nut->last_headers < 0) {
++            nut->last_headers = pkt->dts;
++        }
++        if (time_base * (pkt->dts - nut->last_headers) >= nut->headers_interval) {
++            av_log(s, AV_LOG_DEBUG, "write headers after %.0f msecs                                           \n",
++                   time_base * (pkt->dts - nut->last_headers));
++            nut->last_headers = pkt->dts;
++            write_headers(s, bc);
++        }
++    }
++
+     if (1LL << (20 + 3 * nut->header_count) <= avio_tell(bc))
+         write_headers(s, bc);
+
+@@ -1218,6 +1233,7 @@
+     { "none",        "Disable syncpoints, low overhead and unseekable", 0,             AV_OPT_TYPE_CONST, {.i64 = NUT_PIPE},      INT_MIN, INT_MAX, E, "syncpoints" },
+     { "timestamped", "Extend syncpoints with a wallclock timestamp",    0,             AV_OPT_TYPE_CONST, {.i64 = NUT_BROADCAST}, INT_MIN, INT_MAX, E, "syncpoints" },
+     { "write_index", "Write index",                               OFFSET(write_index), AV_OPT_TYPE_BOOL,  {.i64 = 1},                   0,       1, E, },
++    { "headers_interval", "Headers write interval (in ms)",  OFFSET(headers_interval), AV_OPT_TYPE_INT,   {.i64 = INT_MAX},          1000, INT_MAX, E, },
+     { NULL },
+ };
+

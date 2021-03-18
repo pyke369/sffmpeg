@@ -1,0 +1,29 @@
+--- a/samples/CMakeLists.txt
+--- b/samples/CMakeLists.txt
+@@ -18,16 +18,4 @@
+ # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ # SOFTWARE.
+
+-add_subdirectory(sample_common)
+-add_subdirectory(sample_decode)
+-add_subdirectory(sample_encode)
+-add_subdirectory(sample_fei)
+-add_subdirectory(sample_hevc_fei)
+-add_subdirectory(sample_hevc_fei_abr)
+-add_subdirectory(sample_vpp)
+-add_subdirectory(sample_multi_transcode)
+-add_subdirectory(sample_misc/wayland)
+-add_subdirectory(sample_plugins/rotate_cpu)
+-add_subdirectory(sample_plugins/rotate_opencl)
+-add_subdirectory(sample_plugins/vpp_plugin)
+ add_subdirectory(metrics_monitor)
+--- a/samples/metrics_monitor/CMakeLists.txt
+--- b/samples/metrics_monitor/CMakeLists.txt
+@@ -28,6 +28,7 @@
+     make_executable( metrics_monitor none )
+
+     install( TARGETS metrics_monitor RUNTIME DESTINATION ${MFX_SAMPLES_INSTALL_BIN_DIR} )
++    install( FILES ${CMAKE_CURRENT_SOURCE_DIR}/include/cttmetrics.h DESTINATION ${MFX_SAMPLES_INSTALL_BIN_DIR} )
+
+     # test_monitor
+

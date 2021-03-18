@@ -1,0 +1,46 @@
+--- a/libavcodec/qsvenc.c
++++ b/libavcodec/qsvenc.c
+@@ -188,6 +188,9 @@
+         av_log(avctx, AV_LOG_VERBOSE,
+                "TargetKbps: %"PRIu16"; LookAheadDepth: %"PRIu16"; BRCParamMultiplier: %"PRIu16"\n",
+                info->TargetKbps, co2->LookAheadDepth, info->BRCParamMultiplier);
++
++        av_log(avctx, AV_LOG_VERBOSE, "WinBRCMaxAvgKbps: %"PRIu16"; WinBRCSize: %"PRIu16"\n",
++               co3->WinBRCMaxAvgKbps, co3->WinBRCSize);
+     }
+ #endif
+ #if QSV_HAVE_ICQ
+@@ -641,6 +644,10 @@
+         q->param.mfx.TargetKbps  = target_bitrate_kbps / brc_param_multiplier;
+         q->extco2.LookAheadDepth = q->look_ahead_depth;
+         q->param.mfx.BRCParamMultiplier = brc_param_multiplier;
++        if((q->win_brc_size) && (q->winbrc_maxavg_kbps)) {
++            q->extco3.WinBRCMaxAvgKbps  = q->winbrc_maxavg_kbps;
++            q->extco3.WinBRCSize        = q->win_brc_size;
++        }
+         break;
+ #if QSV_HAVE_ICQ
+     case MFX_RATECONTROL_LA_ICQ:
+--- a/libavcodec/qsvenc.h
++++ b/libavcodec/qsvenc.h
+@@ -163,6 +163,8 @@
+     int look_ahead;
+     int look_ahead_depth;
+     int look_ahead_downsampling;
++    int winbrc_maxavg_kbps;
++    int win_brc_size;
+     int vcm;
+     int rdo;
+     int max_frame_size;
+--- a/libavcodec/qsvenc_h264.c
++++ b/libavcodec/qsvenc_h264.c
+@@ -114,6 +114,8 @@
+ #if QSV_HAVE_LA
+     { "look_ahead",       "Use VBR algorithm with look ahead",    OFFSET(qsv.look_ahead),       AV_OPT_TYPE_INT, { .i64 = 0 }, 0, 1, VE },
+     { "look_ahead_depth", "Depth of look ahead in number frames", OFFSET(qsv.look_ahead_depth), AV_OPT_TYPE_INT, { .i64 = 0 }, 0, 100, VE },
++    { "winmaxavg",         "Specifies the maximum bitrate averaged over a sliding window for MFX_RATECONTROL_LA/MFX_RATECONTROL_LA_HRD", OFFSET(qsv.winbrc_maxavg_kbps), AV_OPT_TYPE_INT, { .i64 = 0 }, 0, INT_MAX, VE },
++    { "winsize",           "Specifies sliding used for MFX_RATECONTROL_LA/MFX_RATECONTROL_LA_HRD window size in frames", OFFSET(qsv.win_brc_size), AV_OPT_TYPE_INT, { .i64 = 0 }, 0, INT_MAX, VE },
+ #endif
+ #if QSV_HAVE_LA_DS
+     { "look_ahead_downsampling", "Downscaling factor for the frames saved for the lookahead analysis", OFFSET(qsv.look_ahead_downsampling),
+

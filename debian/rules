@@ -1,0 +1,13 @@
+#!/usr/bin/make -f
+
+%:
+	dh $@
+
+override_dh_auto_clean:
+
+override_dh_shlibdeps:
+
+override_dh_strip:
+	dh_strip --no-automatic-dbgsym
+
+override_dh_usrlocal:

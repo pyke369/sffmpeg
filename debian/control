@@ -1,0 +1,10 @@
+Source: sffmpeg
+Priority: optional
+Section: video
+Maintainer: Pierre-Yves Kerembellec <py.kerembellec@gmail.com>
+Build-Depends: debhelper (>= 9), cmake (>= 3.6), pkg-config, autoconf, automake, libtool, xutils-dev
+Standards-Version: 3.7.2
+
+Package: sffmpeg
+Architecture: any
+Description: Static build of the latest FFmpeg binaries

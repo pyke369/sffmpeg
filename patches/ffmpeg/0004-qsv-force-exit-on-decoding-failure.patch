@@ -1,0 +1,16 @@
+--- a/fftools/ffmpeg.c
++++ b/fftools/ffmpeg.c
+@@ -2649,6 +2649,13 @@
+             }
+             if (!decode_failed || exit_on_error)
+                 exit_program(1);
++
++            // Always quit on qsv decoding error (fallback will take care of retrying in software more)
++            if (ist->dec_ctx->codec && strstr(ist->dec_ctx->codec->name, "qsv")) {
++                av_log(NULL, AV_LOG_FATAL, "QSV decoding failed, exiting...\n");
++                exit_program(1);
++            }
++
+             break;
+         }
+ 

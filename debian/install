@@ -1,0 +1,12 @@
+build/bin/ffmpeg /usr/local/bin
+build/bin/ffprobe /usr/local/bin
+build/bin/frmxtract /usr/local/bin
+build/bin/gputop /usr/local/bin
+build/samples/libcttmetrics.so /usr/local/lib
+build/lib/libmfx.so* /usr/local/lib
+build/lib/libigdgmm.so* /usr/local/lib
+build/lib/libigfxcmrt.so* /usr/local/lib
+build/lib/libmfxhw64.so* /usr/local/lib
+build/lib/dri/iHD_drv_video.so /usr/local/lib/dri
+build/lib/mfx/* /usr/local/lib/mfx
+build/share/mfx/plugins.cfg /usr/local/lib/mfx

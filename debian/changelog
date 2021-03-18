@@ -1,0 +1,38 @@
+sffmpeg (4.3.2) stable; urgency=medium
+
+  * upgrade to ffmpeg 4.3.2
+  * also upgrade vendor libraries if needed
+
+ -- Pierre-Yves Kerembellec <py.kerembellec@gmail.com>  Thu, 18 Mar 2021 09:20:08 +0100
+
+sffmpeg (4.2.3) stable; urgency=medium
+
+  * upgrade to ffmpeg 4.2.3
+  * add a missing patch for qsv
+
+ -- Pierre-Yves Kerembellec <py.kerembellec@gmail.com>  Tue, 02 Jun 2020 16:42:50 +0200
+
+sffmpeg (4.2.2p3) stable; urgency=medium
+
+  * add qsv support
+
+ -- Pierre-Yves Kerembellec <py.kerembellec@gmail.com>  Fri, 15 May 2020 17:36:02 +0200
+
+sffmpeg (4.2.2p2) stable; urgency=medium
+
+  * build fully static binaries
+
+ -- Pierre-Yves Kerembellec <py.kerembellec@gmail.com>  Tue, 12 May 2020 15:05:25 +0200
+
+sffmpeg (4.2.2p1) stable; urgency=medium
+
+  * repeat headers at given interval in NUT format
+
+ -- Pierre-Yves Kerembellec <py.kerembellec@gmail.com>  Sat, 09 May 2020 21:04:27 +0200
+
+sffmpeg (4.2.2) stable; urgency=medium
+
+  * upgrade to ffmpeg 4.2.2
+  * upgrade vendor libraries if needed
+
+ -- Pierre-Yves Kerembellec <py.kerembellec@gmail.com>  Wed, 01 Apr 2020 16:29:32 +0200
