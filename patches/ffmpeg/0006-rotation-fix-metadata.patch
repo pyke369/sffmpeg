@@ -1,15 +1,14 @@
 --- a/fftools/ffmpeg.c
 +++ b/fftools/ffmpeg.c
-@@ -3557,6 +3557,15 @@
+@@ -3657,6 +3657,14 @@
+         // copy estimated duration as a hint to the muxer
+         if (ost->st->duration <= 0 && ist && ist->st->duration > 0)
              ost->st->duration = av_rescale_q(ist->st->duration, ist->st->time_base, ost->st->time_base);
-
-         ost->st->codec->codec= ost->enc_ctx->codec;
 +
 +        // Also set the rotation override when transcoding
 +        if (ost->rotate_overridden) {
 +            uint8_t *sd = av_stream_new_side_data(ost->st, AV_PKT_DATA_DISPLAYMATRIX,
 +                                                  sizeof(int32_t) * 9);
-+
 +            if (sd)
 +                av_display_rotation_set((int32_t *)sd, -ost->rotate_override_value);
 +       }

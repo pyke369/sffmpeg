@@ -11,7 +11,7 @@
 
 --- a/_studio/mfx_lib/CMakeLists.txt
 --- b/_studio/mfx_lib/CMakeLists.txt
-@@ -224,7 +224,7 @@
+@@ -225,7 +225,7 @@
  set_target_properties(${mfxlibname} PROPERTIES   VERSION ${mfx_version_major}.${mfx_version_minor})
  set_target_properties(${mfxlibname} PROPERTIES SOVERSION ${mfx_version_major})
 
@@ -47,7 +47,7 @@
 +install( TARGETS ${plugin_name} LIBRARY DESTINATION ${CMAKE_INSTALL_FULL_LIBDIR}/mfx )
 --- a/_studio/mfx_lib/plugin/CMakeLists.txt
 --- b/_studio/mfx_lib/plugin/CMakeLists.txt
-@@ -190,7 +190,7 @@
+@@ -196,7 +196,7 @@
    set( defs "${defs} ${version_defs}" )
    gen_plugins_cfg("H264la_Encoder" ${H264LA_ENCODER_GUID} ${plugin_name} "04" "AVC")
    make_library( ${plugin_name} hw shared)
@@ -56,7 +56,7 @@
  endif()
 
  ###############################################################################
-@@ -229,7 +229,7 @@
+@@ -235,7 +235,7 @@
    set( defs "${defs} ${version_defs}" )
    gen_plugins_cfg("HEVC_Decoder_HW" ${HEVC_DECODER_HW_GUID} ${plugin_name} "01" "HEVC")
    make_library( ${plugin_name} hw shared)
@@ -65,7 +65,7 @@
  endif()
 
  ###############################################################################
-@@ -269,7 +269,7 @@
+@@ -275,7 +275,7 @@
    set( defs "${defs} ${version_defs}" )
    gen_plugins_cfg( "VP8_Decoder_HW" ${VP8_DECODER_HW_GUID} ${plugin_name} "01" "VP8" )
    make_library( ${plugin_name} hw shared)
@@ -74,7 +74,7 @@
  endif()
 
  # =============================================================================
-@@ -311,5 +311,5 @@
+@@ -317,5 +317,5 @@
    set( defs "${defs} ${version_defs}" )
    gen_plugins_cfg( "VP9_Decoder_HW" ${VP9_DECODER_HW_GUID} ${plugin_name} "01" "VP9" )
    make_library( ${plugin_name} hw shared)

@@ -34,7 +34,7 @@
      int max_frame_size;
 --- a/libavcodec/qsvenc_h264.c
 +++ b/libavcodec/qsvenc_h264.c
-@@ -114,6 +114,8 @@
+@@ -115,6 +115,8 @@
  #if QSV_HAVE_LA
      { "look_ahead",       "Use VBR algorithm with look ahead",    OFFSET(qsv.look_ahead),       AV_OPT_TYPE_INT, { .i64 = 0 }, 0, 1, VE },
      { "look_ahead_depth", "Depth of look ahead in number frames", OFFSET(qsv.look_ahead_depth), AV_OPT_TYPE_INT, { .i64 = 0 }, 0, 100, VE },

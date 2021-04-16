@@ -306,7 +306,8 @@ EXTERNALPROJECT_ADD(
 EXTERNALPROJECT_ADD(
   ffmpeg
   DEPENDS nasm opencore-amr fdkaac lame libogg opus speex libvorbis libtheora xvidcore x264 x265 aom libvpx srt freetype libass openssl intel-media-sdk
-  URL ${CMAKE_SOURCE_DIR}/vendor/ffmpeg-4.3.2.tar.bz2
+  # URL https://ffmpeg.org/releases/ffmpeg-4.4.tar.bz2
+  URL ${CMAKE_SOURCE_DIR}/vendor/ffmpeg-4.4.tar.bz2
   PATCH_COMMAND ${CMAKE_SOURCE_DIR}/patches/patch-manager.sh ffmpeg
   CONFIGURE_COMMAND PATH=$ENV{PATH} PKG_CONFIG_PATH=$ENV{PKG_CONFIG_PATH} ./configure --prefix=${CMAKE_BINARY_DIR} --datadir=${CMAKE_BINARY_DIR}/etc --disable-shared --enable-static --enable-gpl --enable-version3 --enable-nonfree --enable-runtime-cpudetect --disable-doc --disable-debug --disable-ffplay --disable-indevs --disable-outdevs --extra-cflags=-I${CMAKE_BINARY_DIR}/include\ --static --extra-ldflags=-L${CMAKE_BINARY_DIR}/lib --extra-libs=-lvorbis\ -logg\ -lcrypto\ -lexpat\ -lz\ -lpthread\ -lstdc++\ -ldrm\ -lm\ -ldl --enable-libopencore-amrnb --enable-libopencore-amrwb --enable-libfdk-aac --enable-libmp3lame --enable-libopus --enable-libspeex --enable-libtheora --enable-libvorbis --enable-libxvid --enable-libx264 --enable-libx265 --enable-libaom --enable-libvpx --enable-libsrt --enable-libfreetype --enable-libass --enable-openssl --enable-vaapi --enable-libmfx
   BUILD_COMMAND PATH=$ENV{PATH} make -j${CONCURRENCY}
@@ -325,7 +326,7 @@ EXTERNALPROJECT_ADD(
 EXTERNALPROJECT_ADD(
   frmxtract
   DEPENDS ffmpeg libpng
-  URL ${CMAKE_SOURCE_DIR}/vendor/frmxtract-4.3.2.tar.gz
+  URL ${CMAKE_SOURCE_DIR}/vendor/frmxtract-4.4.tar.gz
   PATCH_COMMAND ${CMAKE_SOURCE_DIR}/patches/patch-manager.sh frmxtract
   CONFIGURE_COMMAND CC=${CMAKE_C_COMPILER} PKG_CONFIG_PATH=$ENV{PKG_CONFIG_PATH} EXTRA_LIBS=libdrm ./configure --prefix=${CMAKE_BINARY_DIR}
   BUILD_COMMAND make -j${CONCURRENCY}

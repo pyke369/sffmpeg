@@ -1,6 +1,6 @@
 --- a/libavformat/avformat.h
 +++ b/libavformat/avformat.h
-@@ -1414,7 +1414,7 @@
+@@ -1311,7 +1311,7 @@
       * @deprecated Use url instead.
       */
      attribute_deprecated
