@@ -1,0 +1,52 @@
+#!/bin/bash
+
+declare -A missing
+
+cmake --version >/dev/null 2>&1
+if [ $? != 0 ]; then missing[cmake]=cmake; fi
+
+gcc --version >/dev/null 2>&1
+if [ $? != 0 ]; then missing[gcc]=build-essential; fi
+
+g++ --version >/dev/null 2>&1
+if [ $? != 0 ]; then missing[g++]=build-essential; fi
+
+autoconf --version >/dev/null 2>&1
+if [ $? != 0 ]; then missing[autoconf]=autoconf; fi
+
+automake --version >/dev/null 2>&1
+if [ $? != 0 ]; then missing[automake]=automake; fi
+
+libtoolize --version >/dev/null 2>&1
+if [ $? != 0 ]; then missing[libtool]=libtool; fi
+
+pkg-config --version >/dev/null 2>&1
+if [ $? != 0 ]; then missing[pkg-config]=pkg-config; fi
+
+gperf --version >/dev/null 2>&1
+if [ $? != 0 ]; then missing[gperf]=gperf; fi
+
+pkg-config xorg-macros >/dev/null 2>&1
+if [ $? != 0 ]; then missing[xorg-macros]=xutils-dev; fi
+
+if [ ${#missing[@]} -ne 0 ]; then
+    echo --------------------------------------------------------------------------------
+    echo some software is required for this build and currently missing from your system:
+    echo
+    declare -A packages
+    for name in "${!missing[@]}"; do
+        echo '  - '$name
+    packages[${missing[$name]}]=1
+    done
+    echo
+    echo on Ubuntu systems, you may fix this situation by issuing the following commands:
+    echo
+    echo '  apt-get update'
+    echo '  apt-get install '${!packages[@]}
+    echo
+    echo aborting
+    echo --------------------------------------------------------------------------------
+    exit 1
+fi
+
+exit 0

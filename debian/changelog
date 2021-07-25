@@ -1,5 +1,12 @@
 sffmpeg (4.4) stable; urgency=medium
 
+  * add zimg library support
+  * upgrade vendor libraries if needed
+
+ -- Pierre-Yves Kerembellec <py.kerembellec@gmail.com>  Fri, 23 Jul 2021 12:52:52 +0200
+
+sffmpeg (4.4) stable; urgency=medium
+
   * upgrade to ffmpeg 4.4
 
  -- Pierre-Yves Kerembellec <py.kerembellec@gmail.com>  Thu, 15 Apr 2021 10:42:01 +0200

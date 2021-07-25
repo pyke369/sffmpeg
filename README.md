@@ -1,18 +1,21 @@
 # Static FFmpeg Build
-`sffmpeg` is a simple cmake-based full-featured FFmpeg build helper.
+`sffmpeg` is a simple CMake-based full-featured FFmpeg build helper.
 
 It currently works on Linux and other POSIX systems (with a few tweaks). It has been tested the most heavily on Linux/x86_64
-(Ubuntu 18.04).  The helper will grab the latest versions of most FFmpeg dependencies, providing a way to effectively build,
-test and compare multiple builds of FFmpeg on the same host.
+(Ubuntu 18.04). This helper is regularly updated with the latest versions of the FFmpeg dependencies, and provides an effective
+way to build, test and compare multiple versions of FFmpeg on the same machine.
 
-## Requirements
-`sffmpeg` requires:
+## Build Dependencies
+`sffmpeg` requires the following software to be installed in order to build:
 
-- a POSIX-compliant system (virtually any system today)
-- a recent version of [gcc](http://gcc.gnu.org/)
 - a recent version of [cmake](http://www.cmake.org/) (3.6+)
-- the [autoconf](http://www.gnu.org/software/autoconf/) and [libtool](http://www.gnu.org/software/libtool/) utilities
-- the [pkg-config](http://www.freedesktop.org/wiki/Software/pkg-config) utility
+- a recent version of [gcc/g++](http://gcc.gnu.org/) (7.x+)
+- the [autoconf](http://www.gnu.org/software/autoconf/), [automake](http://www.gnu.org/software/automake/) and [libtool](http://www.gnu.org/software/libtool/) utilities
+- the [pkg-config](http://www.freedesktop.org/wiki/Software/pkg-config/) utility
+- the [gperf](https://www.gnu.org/software/gperf/) utility (needed for fontconfig support)
+- the [xorg-macros](https://github.com/freedesktop/xorg-macros/) bundle (needed for Intel Media SDK/QuickSync Video support)
+
+A dependencies check is automatically performed and the build is aborted if a dependency is missing.
 
 ## Usage
 Just type the following commands at the shell prompt:
@@ -40,7 +43,7 @@ usage: ffmpeg [options] [[infile options] -i infile]... {[outfile options] outfi
 From there, you may use the binary immediately or build a Debian package for later deployment (see below).
 
 ## Packaging
-(requires devscripts package)
+(requires the `devscripts` package)
 
 You may optionally build a Debian package by typing the following command at the shell prompt:
 ```
