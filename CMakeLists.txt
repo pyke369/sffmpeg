@@ -328,7 +328,7 @@ EXTERNALPROJECT_ADD(
   DEPENDS nasm
   # URL https://github.com/sekrit-twc/zimg/archive/refs/tags/release-3.0.2.tar.gz
   URL ${CMAKE_SOURCE_DIR}/vendor/zimg-3.0.2.tar.gz
-  CONFIGURE_COMMAND ./autogen.sh && ./configure --prefix=${CMAKE_BINARY_DIR}
+  CONFIGURE_COMMAND ./autogen.sh && ./configure --prefix=${CMAKE_BINARY_DIR} --enable-shared=no --enable-static=yes
   BUILD_IN_SOURCE 1
 )
 EXTERNALPROJECT_ADD(
@@ -337,7 +337,7 @@ EXTERNALPROJECT_ADD(
   # URL https://ffmpeg.org/releases/ffmpeg-4.4.tar.bz2
   URL ${CMAKE_SOURCE_DIR}/vendor/ffmpeg-4.4.tar.bz2
   PATCH_COMMAND ${CMAKE_SOURCE_DIR}/patches/patch-manager.sh ffmpeg
-  CONFIGURE_COMMAND PATH=$ENV{PATH} PKG_CONFIG_PATH=$ENV{PKG_CONFIG_PATH} ./configure --prefix=${CMAKE_BINARY_DIR} --datadir=${CMAKE_BINARY_DIR}/etc --disable-shared --enable-static --enable-gpl --enable-version3 --enable-nonfree --enable-runtime-cpudetect --disable-doc --disable-debug --disable-ffplay --disable-indevs --disable-outdevs --extra-cflags=-I${CMAKE_BINARY_DIR}/include\ --static --extra-ldflags=-L${CMAKE_BINARY_DIR}/lib --extra-libs=-lvorbis\ -logg\ -lcrypto\ -lz\ -lpthread\ -lstdc++\ -ldrm\ -lm\ -ldl\ -lfontconfig\ -lharfbuzz\ -lfreetype\ -lbz2\ -lfribidi\ -lexpat\ -lass --enable-libopencore-amrnb --enable-libopencore-amrwb --enable-libfdk-aac --enable-libmp3lame --enable-libopus --enable-libspeex --enable-libtheora --enable-libvorbis --enable-libxvid --enable-libx264 --enable-libx265 --enable-libaom --enable-libvpx --enable-libsrt --enable-libfreetype --enable-libass --enable-openssl --enable-vaapi --enable-libmfx --enable-libzimg
+  CONFIGURE_COMMAND PATH=$ENV{PATH} PKG_CONFIG_PATH=$ENV{PKG_CONFIG_PATH} ./configure --prefix=${CMAKE_BINARY_DIR} --datadir=${CMAKE_BINARY_DIR}/etc --disable-shared --enable-static --enable-gpl --enable-version3 --enable-nonfree --enable-runtime-cpudetect --disable-doc --disable-debug --disable-ffplay --disable-indevs --disable-outdevs --extra-cflags=-I${CMAKE_BINARY_DIR}/include\ --static --extra-ldflags=-L${CMAKE_BINARY_DIR}/lib --extra-libs=-lvorbis\ -logg\ -lcrypto\ -lz\ -lpthread\ -lstdc++\ -ldrm\ -lm\ -ldl\ -lfontconfig\ -lharfbuzz\ -lfreetype\ -lbz2\ -lfribidi\ -lexpat\ -lass\ -lzimg --enable-libopencore-amrnb --enable-libopencore-amrwb --enable-libfdk-aac --enable-libmp3lame --enable-libopus --enable-libspeex --enable-libtheora --enable-libvorbis --enable-libxvid --enable-libx264 --enable-libx265 --enable-libaom --enable-libvpx --enable-libsrt --enable-libfreetype --enable-libass --enable-openssl --enable-vaapi --enable-libmfx --enable-libzimg
   BUILD_COMMAND PATH=$ENV{PATH} make -j${CONCURRENCY}
   BUILD_IN_SOURCE 1
 )
