@@ -1,6 +1,7 @@
 CONCURRENCY=`cat /proc/cpuinfo |grep ^processor |wc -l`
 
 sffmpeg:
+	@./check-dependencies
 	@mkdir -p build && cd build && cmake -DCONCURRENCY=$(CONCURRENCY) .. && \
 	make -k -j$(CONCURRENCY) 2>&1 |tee build.log
 
