@@ -252,11 +252,12 @@ EXTERNALPROJECT_ADD(
 EXTERNALPROJECT_ADD(
   libdrm
   DEPENDS libpciaccess
-  # URL https://dri.freedesktop.org/libdrm/libdrm-2.4.100.tar.bz2
-  URL ${CMAKE_SOURCE_DIR}/vendor/libdrm-2.4.100.tar.bz2
+  # URL https://dri.freedesktop.org/libdrm/libdrm-2.4.107.tar.gz
+  URL ${CMAKE_SOURCE_DIR}/vendor/libdrm-2.4.107.tar.gz
   PATCH_COMMAND ${CMAKE_SOURCE_DIR}/patches/patch-manager.sh libdrm
-  CONFIGURE_COMMAND PKG_CONFIG_PATH=$ENV{PKG_CONFIG_PATH} CFLAGS=-fPIC ./configure --prefix=${CMAKE_BINARY_DIR} --disable-vmwgfx --disable-radeon --disable-amdgpu --disable-nouveau --disable-shared
-  BUILD_COMMAND make -j${CONCURRENCY}
+  CONFIGURE_COMMAND  meson setup build -Dvmwgfx=false -Dradeon=false -Damdgpu=false -Dnouveau=false -Ddefault_library=static -Dprefix=${CMAKE_BINARY_DIR} -Dlibdir=lib
+  BUILD_COMMAND cd build && ninja
+  INSTALL_COMMAND cd build && ninja install
   BUILD_IN_SOURCE 1
 )
 EXTERNALPROJECT_ADD(
