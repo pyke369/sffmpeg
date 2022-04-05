@@ -1,6 +1,6 @@
 --- a/fftools/ffmpeg.c
 +++ b/fftools/ffmpeg.c
-@@ -3657,6 +3657,14 @@
+@@ -3559,6 +3559,14 @@
          // copy estimated duration as a hint to the muxer
          if (ost->st->duration <= 0 && ist && ist->st->duration > 0)
              ost->st->duration = av_rescale_q(ist->st->duration, ist->st->time_base, ost->st->time_base);

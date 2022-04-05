@@ -1,6 +1,6 @@
 --- a/libavcodec/qsvdec.c
 +++ b/libavcodec/qsvdec.c
-@@ -262,6 +262,9 @@
+@@ -301,6 +301,9 @@
          return ret;
      }
 

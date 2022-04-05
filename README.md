@@ -10,10 +10,8 @@ way to build, test and compare multiple versions of FFmpeg on the same machine.
 
 - a recent version of [cmake](http://www.cmake.org/) (3.6+)
 - a recent version of [gcc/g++](http://gcc.gnu.org/) (7.x+)
-- the [autoconf](http://www.gnu.org/software/autoconf/), [automake](http://www.gnu.org/software/automake/) and [libtool](http://www.gnu.org/software/libtool/) utilities
+- the [autoconf](http://www.gnu.org/software/autoconf/) and [automake](http://www.gnu.org/software/automake/) utilities
 - the [pkg-config](http://www.freedesktop.org/wiki/Software/pkg-config/) utility
-- the [gperf](https://www.gnu.org/software/gperf/) utility (needed for fontconfig support)
-- the [xorg-macros](https://github.com/freedesktop/xorg-macros/) bundle (needed for Intel Media SDK/QuickSync Video support)
 
 A dependencies check is automatically performed and the build is aborted if a dependency is missing.
 
@@ -27,16 +25,15 @@ Just type the following commands at the shell prompt:
 Then go grab a coffee (or maybe ten). The helper will compile all FFmpeg dependencies for you. Once done, you should get an
 FFmpeg binary in the `build/bin` directory (with all dependencies statically linked-in).
 ```
-$ build/bin/ffmpeg
-ffmpeg version 4.4 Copyright (c) 2000-2021 the FFmpeg developers
-  libavutil      56. 70.100 / 56. 70.100
-  libavcodec     58.134.100 / 58.134.100
-  libavformat    58. 76.100 / 58. 76.100
-  libavdevice    58. 13.100 / 58. 13.100
-  libavfilter     7.110.100 /  7.110.100
-  libswscale      5.  9.100 /  5.  9.100
-  libswresample   3.  9.100 /  3.  9.100
-  libpostproc    55.  9.100 / 55.  9.100
+$ ffmpeg version 5.0.1 Copyright (c) 2000-2022 the FFmpeg developers
+  libavutil      57. 17.100 / 57. 17.100
+  libavcodec     59. 18.100 / 59. 18.100
+  libavformat    59. 16.100 / 59. 16.100
+  libavdevice    59.  4.100 / 59.  4.100
+  libavfilter     8. 24.100 /  8. 24.100
+  libswscale      6.  4.100 /  6.  4.100
+  libswresample   4.  3.100 /  4.  3.100
+  libpostproc    56.  3.100 / 56.  3.100
 Hyper fast Audio and Video encoder
 usage: ffmpeg [options] [[infile options] -i infile]... {[outfile options] outfile}...
 ```
@@ -52,8 +49,8 @@ $ make deb
 
 The `ffmpeg`, `ffprobe` and `frmxtract` binaries will be installed by the package in the `/usr/local/bin` directory.
 ```
-$ sudo dpkg -i ../sffmpeg_4.4_amd64.deb
+$ sudo dpkg -i ../sffmpeg_5.0.1_amd64.deb
 Selecting previously unselected package sffmpeg.
-Unpacking sffmpeg (4.4) ...
-Setting up sffmpeg (4.4) ...
+Unpacking sffmpeg (5.0.1) ...
+Setting up sffmpeg (5.0.1) ...
 ```

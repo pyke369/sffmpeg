@@ -1,6 +1,6 @@
 --- a/fftools/ffmpeg.c
 +++ b/fftools/ffmpeg.c
-@@ -2723,6 +2723,13 @@
+@@ -2684,6 +2684,13 @@
              }
              if (!decode_failed || exit_on_error)
                  exit_program(1);
@@ -13,4 +13,4 @@
 +
              break;
          }
- 
+

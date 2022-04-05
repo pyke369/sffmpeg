@@ -9,7 +9,6 @@
      int64_t max_pts;
      AVRational *max_pts_tb;
  #define NUT_BROADCAST 1 // use extended syncpoints
-
 --- a/libavformat/nutenc.c
 +++ b/libavformat/nutenc.c
 @@ -684,7 +684,7 @@
@@ -50,7 +49,7 @@
      if (1LL << (20 + 3 * nut->header_count) <= avio_tell(bc))
          write_headers(s, bc);
 
-@@ -1218,6 +1233,7 @@
+@@ -1219,6 +1234,7 @@
      { "none",        "Disable syncpoints, low overhead and unseekable", 0,             AV_OPT_TYPE_CONST, {.i64 = NUT_PIPE},      INT_MIN, INT_MAX, E, "syncpoints" },
      { "timestamped", "Extend syncpoints with a wallclock timestamp",    0,             AV_OPT_TYPE_CONST, {.i64 = NUT_BROADCAST}, INT_MIN, INT_MAX, E, "syncpoints" },
      { "write_index", "Write index",                               OFFSET(write_index), AV_OPT_TYPE_BOOL,  {.i64 = 1},                   0,       1, E, },

@@ -8,27 +8,9 @@ SET(ENV{PATH} ${CMAKE_BINARY_DIR}/bin:$ENV{PATH})
 SET(ENV{PKG_CONFIG_PATH} ${CMAKE_BINARY_DIR}/lib/pkgconfig)
 
 EXTERNALPROJECT_ADD(
-  nasm
-  # URL https://www.nasm.us/pub/nasm/releasebuilds/2.15.05/nasm-2.15.05.tar.gz
-  URL ${CMAKE_SOURCE_DIR}/vendor/nasm-2.15.05.tar.gz
-  PATCH_COMMAND ${CMAKE_SOURCE_DIR}/patches/patch-manager.sh nasm
-  CONFIGURE_COMMAND ./configure --prefix=${CMAKE_BINARY_DIR}
-  BUILD_COMMAND make -j${CONCURRENCY}
-  BUILD_IN_SOURCE 1
-)
-EXTERNALPROJECT_ADD(
-  zlib
-  # URL https://github.com/madler/zlib/archive/refs/tags/v1.2.11.tar.gz
-  URL ${CMAKE_SOURCE_DIR}/vendor/zlib-v1.2.11.tar.gz
-  PATCH_COMMAND ${CMAKE_SOURCE_DIR}/patches/patch-manager.sh zlib
-  CONFIGURE_COMMAND ./configure --prefix=${CMAKE_BINARY_DIR} --static
-  BUILD_COMMAND make -j${CONCURRENCY}
-  BUILD_IN_SOURCE 1
-)
-EXTERNALPROJECT_ADD(
   openssl
-  # URL https://www.openssl.org/source/openssl-1.1.1k.tar.gz
-  URL ${CMAKE_SOURCE_DIR}/vendor/openssl-1.1.1k.tar.gz
+  # URL https://www.openssl.org/source/openssl-1.1.1n.tar.gz
+  URL ${CMAKE_SOURCE_DIR}/vendor/openssl-1.1.1n.tar.gz
   PATCH_COMMAND ${CMAKE_SOURCE_DIR}/patches/patch-manager.sh openssl
   CONFIGURE_COMMAND ./config no-shared no-idea no-mdc2 no-rc5 --prefix=${CMAKE_BINARY_DIR}
   BUILD_COMMAND make depend && make -j${CONCURRENCY}
@@ -111,6 +93,15 @@ EXTERNALPROJECT_ADD(
   BUILD_IN_SOURCE 1
 )
 EXTERNALPROJECT_ADD(
+  nasm
+  # URL https://www.nasm.us/pub/nasm/releasebuilds/2.15.05/nasm-2.15.05.tar.gz
+  URL ${CMAKE_SOURCE_DIR}/vendor/nasm-2.15.05.tar.gz
+  PATCH_COMMAND ${CMAKE_SOURCE_DIR}/patches/patch-manager.sh nasm
+  CONFIGURE_COMMAND ./configure --prefix=${CMAKE_BINARY_DIR}
+  BUILD_COMMAND make -j${CONCURRENCY}
+  BUILD_IN_SOURCE 1
+)
+EXTERNALPROJECT_ADD(
   xvidcore
   DEPENDS nasm
   # URL https://downloads.xvid.com/downloads/xvidcore-1.3.7.tar.gz
@@ -146,7 +137,7 @@ EXTERNALPROJECT_ADD(
   aom
   DEPENDS nasm
   # GIT_REPOSITORY git://aomedia.googlesource.com/aom.git
-  URL ${CMAKE_SOURCE_DIR}/vendor/aom-v3.1.2.tgz
+  URL ${CMAKE_SOURCE_DIR}/vendor/aom-v3.3.0.tgz
   PATCH_COMMAND ${CMAKE_SOURCE_DIR}/patches/patch-manager.sh aom
   CONFIGURE_COMMAND cd build && PATH=$ENV{PATH} cmake .. -DENABLE_CCACHE=1 -DCMAKE_INSTALL_PREFIX=${CMAKE_BINARY_DIR}
   BUILD_COMMAND cd build && PATH=$ENV{PATH} make -j${CONCURRENCY}
@@ -156,8 +147,8 @@ EXTERNALPROJECT_ADD(
 EXTERNALPROJECT_ADD(
   libvpx
   DEPENDS nasm
-  # URL https://github.com/webmproject/libvpx/archive/refs/tags/v1.10.0.tar.gz
-  URL ${CMAKE_SOURCE_DIR}/vendor/libvpx-1.10.0.tar.gz
+  # URL https://github.com/webmproject/libvpx/archive/refs/tags/v1.11.0.tar.gz
+  URL ${CMAKE_SOURCE_DIR}/vendor/libvpx-1.11.0.tar.gz
   PATCH_COMMAND ${CMAKE_SOURCE_DIR}/patches/patch-manager.sh libvpx
   CONFIGURE_COMMAND PATH=$ENV{PATH} ./configure --prefix=${CMAKE_BINARY_DIR} --disable-shared
   BUILD_COMMAND PATH=$ENV{PATH} make -j${CONCURRENCY}
@@ -166,8 +157,8 @@ EXTERNALPROJECT_ADD(
 EXTERNALPROJECT_ADD(
   srt
   DEPENDS openssl
-  # URL https://github.com/Haivision/srt/archive/refs/tags/v1.4.3.tar.gz
-  URL ${CMAKE_SOURCE_DIR}/vendor/srt-v1.4.3.tar.gz
+  # URL https://github.com/Haivision/srt/archive/refs/tags/v1.4.4.tar.gz
+  URL ${CMAKE_SOURCE_DIR}/vendor/srt-v1.4.4.tar.gz
   PATCH_COMMAND ${CMAKE_SOURCE_DIR}/patches/patch-manager.sh srt
   CONFIGURE_COMMAND mkdir -p build && cd build && PATH=$ENV{PATH} PKG_CONFIG_PATH=$ENV{PKG_CONFIG_PATH} cmake -DENABLE_SHARED=0 -DENABLE_APPS=0 -DCMAKE_INSTALL_PREFIX=${CMAKE_BINARY_DIR} ..
   BUILD_COMMAND cd build && PATH=$ENV{PATH} make -j${CONCURRENCY}
@@ -175,150 +166,12 @@ EXTERNALPROJECT_ADD(
   BUILD_IN_SOURCE 1
 )
 EXTERNALPROJECT_ADD(
-  freetype
-  # URL https://download.savannah.gnu.org/releases/freetype/freetype-2.11.0.tar.gz
-  URL ${CMAKE_SOURCE_DIR}/vendor/freetype-2.11.0.tar.gz
-  PATCH_COMMAND ${CMAKE_SOURCE_DIR}/patches/patch-manager.sh freetype
-  CONFIGURE_COMMAND ./configure --prefix=${CMAKE_BINARY_DIR} --disable-shared --enable-static --without-png
+  zlib
+  # URL https://github.com/madler/zlib/archive/refs/tags/v1.2.12.tar.gz
+  URL ${CMAKE_SOURCE_DIR}/vendor/zlib-v1.2.12.tar.gz
+  PATCH_COMMAND ${CMAKE_SOURCE_DIR}/patches/patch-manager.sh zlib
+  CONFIGURE_COMMAND ./configure --prefix=${CMAKE_BINARY_DIR} --static
   BUILD_COMMAND make -j${CONCURRENCY}
-  INSTALL_COMMAND make install && ln -s ${CMAKE_BINARY_DIR}/include/freetype2 ${CMAKE_BINARY_DIR}/include/freetype2/freetype
-  BUILD_IN_SOURCE 1
-)
-EXTERNALPROJECT_ADD(
-  fribidi
-  # URL https://github.com/fribidi/fribidi/releases/download/v1.0.10/fribidi-1.0.10.tar.xz
-  URL ${CMAKE_SOURCE_DIR}/vendor/fribidi-1.0.10.tar.xz
-  PATCH_COMMAND ${CMAKE_SOURCE_DIR}/patches/patch-manager.sh fribidi
-  CONFIGURE_COMMAND ./configure --prefix=${CMAKE_BINARY_DIR} --disable-shared --enable-static
-  BUILD_COMMAND make -j${CONCURRENCY}
-  BUILD_IN_SOURCE 1
-)
-EXTERNALPROJECT_ADD(
-  expat
-  # URL https://github.com/libexpat/libexpat/releases/download/R_2_4_1/expat-2.4.1.tar.xz
-  URL ${CMAKE_SOURCE_DIR}/vendor/expat-2.4.1.tar.xz
-  PATCH_COMMAND ${CMAKE_SOURCE_DIR}/patches/patch-manager.sh expat
-  CONFIGURE_COMMAND PKG_CONFIG_PATH=$ENV{PKG_CONFIG_PATH} ./configure --prefix=${CMAKE_BINARY_DIR} --disable-shared --enable-static
-  BUILD_COMMAND make -j${CONCURRENCY}
-  BUILD_IN_SOURCE 1
-)
-EXTERNALPROJECT_ADD(
-  fontconfig
-  DEPENDS freetype expat
-  # URL https://www.freedesktop.org/software/fontconfig/release/fontconfig-2.13.94.tar.gz
-  URL ${CMAKE_SOURCE_DIR}/vendor/fontconfig-2.13.94.tar.gz
-  PATCH_COMMAND ${CMAKE_SOURCE_DIR}/patches/patch-manager.sh fontconfig
-  CONFIGURE_COMMAND PKG_CONFIG_PATH=$ENV{PKG_CONFIG_PATH} ./configure --prefix=${CMAKE_BINARY_DIR} --disable-shared --enable-static
-  BUILD_COMMAND make -j${CONCURRENCY}
-  BUILD_IN_SOURCE 1
-)
-EXTERNALPROJECT_ADD(
-  harfbuzz
-  DEPENDS freetype fontconfig
-  # URL https://github.com/harfbuzz/harfbuzz/releases/download/2.8.2/harfbuzz-2.8.2.tar.xz
-  URL ${CMAKE_SOURCE_DIR}/vendor/harfbuzz-2.8.2.tar.xz
-  PATCH_COMMAND ${CMAKE_SOURCE_DIR}/patches/patch-manager.sh harfbuzz
-  CONFIGURE_COMMAND PKG_CONFIG_PATH=$ENV{PKG_CONFIG_PATH} ./configure --prefix=${CMAKE_BINARY_DIR} --disable-shared --enable-static
-  BUILD_COMMAND make -j${CONCURRENCY}
-  BUILD_IN_SOURCE 1
-)
-EXTERNALPROJECT_ADD(
-  libass
-  DEPENDS nasm freetype fribidi fontconfig harfbuzz
-  # URL https://github.com/libass/libass/releases/download/0.15.1/libass-0.15.1.tar.xz
-  URL ${CMAKE_SOURCE_DIR}/vendor/libass-0.15.1.tar.xz
-  PATCH_COMMAND ${CMAKE_SOURCE_DIR}/patches/patch-manager.sh libass
-  CONFIGURE_COMMAND PATH=$ENV{PATH} PKG_CONFIG_PATH=$ENV{PKG_CONFIG_PATH} ./configure --prefix=${CMAKE_BINARY_DIR} --disable-shared --enable-static
-  BUILD_COMMAND PATH=$ENV{PATH} make -j${CONCURRENCY}
-  BUILD_IN_SOURCE 1
-)
-EXTERNALPROJECT_ADD(
-  zimg
-  DEPENDS nasm
-  # URL https://github.com/sekrit-twc/zimg/archive/refs/tags/release-3.0.2.tar.gz
-  URL ${CMAKE_SOURCE_DIR}/vendor/zimg-3.0.2.tar.gz
-  CONFIGURE_COMMAND ./autogen.sh && ./configure --prefix=${CMAKE_BINARY_DIR} --disable-shared --enable-static
-  BUILD_IN_SOURCE 1
-)
-EXTERNALPROJECT_ADD(
-  libpciaccess
-  # URL https://gitlab.freedesktop.org/xorg/lib/libpciaccess/-/archive/libpciaccess-0.16/libpciaccess-libpciaccess-0.16.tar.gz
-  URL ${CMAKE_SOURCE_DIR}/vendor/libpciaccess-0.16.tar.gz
-  PATCH_COMMAND ${CMAKE_SOURCE_DIR}/patches/patch-manager.sh libpciaccess
-  CONFIGURE_COMMAND ./autogen.sh && CFLAGS=-fPIC ./configure --prefix=${CMAKE_BINARY_DIR} --disable-shared
-  BUILD_COMMAND make -j${CONCURRENCY}
-  BUILD_IN_SOURCE 1
-)
-EXTERNALPROJECT_ADD(
-  libdrm
-  DEPENDS libpciaccess
-  # URL https://dri.freedesktop.org/libdrm/libdrm-2.4.100.tar.bz2
-  URL ${CMAKE_SOURCE_DIR}/vendor/libdrm-2.4.100.tar.bz2
-  PATCH_COMMAND ${CMAKE_SOURCE_DIR}/patches/patch-manager.sh libdrm
-  CONFIGURE_COMMAND PKG_CONFIG_PATH=$ENV{PKG_CONFIG_PATH} CFLAGS=-fPIC ./configure --prefix=${CMAKE_BINARY_DIR} --disable-vmwgfx --disable-radeon --disable-amdgpu --disable-nouveau --disable-shared
-  BUILD_COMMAND make -j${CONCURRENCY}
-  BUILD_IN_SOURCE 1
-)
-EXTERNALPROJECT_ADD(
-  libva
-  DEPENDS libdrm
-  # URL https://github.com/intel/libva/releases/download/2.12.0/libva-2.12.0.tar.bz2
-  URL ${CMAKE_SOURCE_DIR}/vendor/intel-libva-2.12.0.tar.bz2
-  PATCH_COMMAND ${CMAKE_SOURCE_DIR}/patches/patch-manager.sh libva
-  CONFIGURE_COMMAND PKG_CONFIG_PATH=$ENV{PKG_CONFIG_PATH} CFLAGS=-fPIC ./configure --prefix=${CMAKE_BINARY_DIR} --disable-shared --with-drivers-path=/usr/local/lib/dri
-  BUILD_COMMAND make -j${CONCURRENCY}
-  BUILD_IN_SOURCE 1
-)
-EXTERNALPROJECT_ADD(
-  gmmlib
-  DEPENDS libva
-  # URL https://github.com/intel/gmmlib/archive/refs/tags/intel-gmmlib-21.2.1.tar.gz
-  URL ${CMAKE_SOURCE_DIR}/vendor/intel-gmmlib-21.2.1.tar.gz
-  PATCH_COMMAND ${CMAKE_SOURCE_DIR}/patches/patch-manager.sh gmmlib
-  CONFIGURE_COMMAND mkdir -p build && cd build && PKG_CONFIG_PATH=$ENV{PKG_CONFIG_PATH} cmake -DCMAKE_INSTALL_INCLUDEDIR=${CMAKE_BINARY_DIR}/include -DCMAKE_INSTALL_LIBDIR=${CMAKE_BINARY_DIR}/lib ..
-  BUILD_COMMAND cd build && make -j${CONCURRENCY}
-  INSTALL_COMMAND cd build && make install
-  BUILD_IN_SOURCE 1
-)
-EXTERNALPROJECT_ADD(
-  intel-media-driver
-  DEPENDS libva gmmlib
-  # URL https://github.com/intel/media-driver/archive/refs/tags/intel-media-21.2.3.tar.gz
-  URL ${CMAKE_SOURCE_DIR}/vendor/intel-media-driver-21.2.3.tar.gz
-  PATCH_COMMAND ${CMAKE_SOURCE_DIR}/patches/patch-manager.sh intel-media-driver
-  CONFIGURE_COMMAND mkdir -p build && cd build && PKG_CONFIG_PATH=$ENV{PKG_CONFIG_PATH} cmake -DCMAKE_INSTALL_PREFIX=${CMAKE_BINARY_DIR} -DLIBVA_DRIVERS_PATH=${CMAKE_BINARY_DIR}/lib/dri -DMEDIA_RUN_TEST_SUITE=0 ..
-  BUILD_COMMAND cd build && make -j${CONCURRENCY}
-  INSTALL_COMMAND cd build && make install
-  BUILD_IN_SOURCE 1
-)
-EXTERNALPROJECT_ADD(
-  intel-media-sdk
-  DEPENDS libva intel-media-driver
-  # URL https://github.com/Intel-Media-SDK/MediaSDK/archive/refs/tags/intel-mediasdk-21.2.3.tar.gz
-  URL ${CMAKE_SOURCE_DIR}/vendor/intel-media-sdk-21.2.3.tar.gz
-  PATCH_COMMAND ${CMAKE_SOURCE_DIR}/patches/patch-manager.sh intel-media-sdk
-  CONFIGURE_COMMAND mkdir -p build && cd build && PKG_CONFIG_PATH=$ENV{PKG_CONFIG_PATH} cmake -DCMAKE_INSTALL_PREFIX=${CMAKE_BINARY_DIR} -DMFX_MODULES_DIR=/usr/local/lib -DMFX_PLUGINS_CONF_DIR=/usr/local/lib/mfx -DMFX_PLUGINS_DIR=/usr/local/lib/mfx -DMFX_APPS_DIR=${CMAKE_BINARY_DIR} -DBUILD_TUTORIALS=OFF ..
-  BUILD_COMMAND cd build && make -j${CONCURRENCY}
-  INSTALL_COMMAND cd build && make install
-  BUILD_IN_SOURCE 1
-)
-EXTERNALPROJECT_ADD(
-  gputop
-  DEPENDS intel-media-sdk
-  URL ${CMAKE_SOURCE_DIR}/vendor/gputop-4.4.tar.gz
-  PATCH_COMMAND ${CMAKE_SOURCE_DIR}/patches/patch-manager.sh gputop
-  CONFIGURE_COMMAND CFLAGS=-I${CMAKE_BINARY_DIR}/samples LDFLAGS=-L${CMAKE_BINARY_DIR}/samples ./configure --prefix=${CMAKE_BINARY_DIR}
-  BUILD_COMMAND make -j${CONCURRENCY}
-  BUILD_IN_SOURCE 1
-)
-EXTERNALPROJECT_ADD(
-  ffmpeg
-  DEPENDS nasm zlib openssl opencore-amr fdkaac lame libogg opus speex libvorbis libtheora xvidcore x264 x265 aom libvpx srt freetype libass zimg intel-media-sdk
-  # URL https://ffmpeg.org/releases/ffmpeg-4.4.tar.bz2
-  URL ${CMAKE_SOURCE_DIR}/vendor/ffmpeg-4.4.tar.bz2
-  PATCH_COMMAND ${CMAKE_SOURCE_DIR}/patches/patch-manager.sh ffmpeg
-  CONFIGURE_COMMAND PATH=$ENV{PATH} PKG_CONFIG_PATH=$ENV{PKG_CONFIG_PATH} ./configure --prefix=${CMAKE_BINARY_DIR} --datadir=${CMAKE_BINARY_DIR}/etc --disable-shared --enable-static --enable-gpl --enable-version3 --enable-nonfree --enable-runtime-cpudetect --disable-doc --disable-debug --disable-ffplay --disable-indevs --disable-outdevs --extra-cflags=-I${CMAKE_BINARY_DIR}/include\ --static --extra-ldflags=-L${CMAKE_BINARY_DIR}/lib --extra-libs=-lvorbis\ -logg\ -lcrypto\ -lexpat\ -lharfbuzz\ -lfribidi\ -ldrm\ -lz\ -lpthread\ -lstdc++\ -lm\ -ldl --enable-openssl --enable-libopencore-amrnb --enable-libopencore-amrwb --enable-libfdk-aac --enable-libmp3lame --enable-libopus --enable-libspeex --enable-libtheora --enable-libvorbis --enable-libxvid --enable-libx264 --enable-libx265 --enable-libaom --enable-libvpx --enable-libsrt --enable-libfontconfig --enable-libfreetype --enable-libass --enable-libzimg --enable-vaapi --enable-libmfx
-  BUILD_COMMAND PATH=$ENV{PATH} make -j${CONCURRENCY}
   BUILD_IN_SOURCE 1
 )
 EXTERNALPROJECT_ADD(
@@ -332,11 +185,187 @@ EXTERNALPROJECT_ADD(
   BUILD_IN_SOURCE 1
 )
 EXTERNALPROJECT_ADD(
+  freetype
+  DEPENDS libpng zlib
+  # URL https://download.savannah.gnu.org/releases/freetype/freetype-2.12.0.tar.gz
+  URL ${CMAKE_SOURCE_DIR}/vendor/freetype-2.12.0.tar.gz
+  PATCH_COMMAND ${CMAKE_SOURCE_DIR}/patches/patch-manager.sh freetype
+  CONFIGURE_COMMAND PKG_CONFIG_PATH=$ENV{PKG_CONFIG_PATH} ./configure --prefix=${CMAKE_BINARY_DIR} --disable-shared --enable-static --with-zlib
+  BUILD_COMMAND make -j${CONCURRENCY}
+  INSTALL_COMMAND make install && ln -s ${CMAKE_BINARY_DIR}/include/freetype2 ${CMAKE_BINARY_DIR}/include/freetype2/freetype
+  BUILD_IN_SOURCE 1
+)
+EXTERNALPROJECT_ADD(
+  fribidi
+  # URL https://github.com/fribidi/fribidi/releases/download/v1.0.11/fribidi-1.0.11.tar.xz
+  URL ${CMAKE_SOURCE_DIR}/vendor/fribidi-1.0.11.tar.xz
+  PATCH_COMMAND ${CMAKE_SOURCE_DIR}/patches/patch-manager.sh fribidi
+  CONFIGURE_COMMAND ./configure --prefix=${CMAKE_BINARY_DIR} --disable-shared --enable-static
+  BUILD_COMMAND make -j${CONCURRENCY}
+  BUILD_IN_SOURCE 1
+)
+EXTERNALPROJECT_ADD(
+  expat
+  # URL https://github.com/libexpat/libexpat/releases/download/R_2_4_8/expat-2.4.8.tar.xz
+  URL ${CMAKE_SOURCE_DIR}/vendor/expat-2.4.8.tar.xz
+  PATCH_COMMAND ${CMAKE_SOURCE_DIR}/patches/patch-manager.sh expat
+  CONFIGURE_COMMAND PKG_CONFIG_PATH=$ENV{PKG_CONFIG_PATH} ./configure --prefix=${CMAKE_BINARY_DIR} --disable-shared --enable-static
+  BUILD_COMMAND make -j${CONCURRENCY}
+  BUILD_IN_SOURCE 1
+)
+EXTERNALPROJECT_ADD(
+  gperf
+  # URL http://ftp.gnu.org/pub/gnu/gperf/gperf-3.1.tar.gz
+  URL ${CMAKE_SOURCE_DIR}/vendor/gperf-3.1.tar.gz
+  CONFIGURE_COMMAND ./configure --prefix=${CMAKE_BINARY_DIR} --disable-shared --enable-static
+  BUILD_COMMAND make -j${CONCURRENCY}
+  BUILD_IN_SOURCE 1
+)
+EXTERNALPROJECT_ADD(
+  fontconfig
+  DEPENDS freetype expat gperf
+  # URL https://www.freedesktop.org/software/fontconfig/release/fontconfig-2.14.0.tar.gz
+  URL ${CMAKE_SOURCE_DIR}/vendor/fontconfig-2.14.0.tar.gz
+  PATCH_COMMAND ${CMAKE_SOURCE_DIR}/patches/patch-manager.sh fontconfig
+  CONFIGURE_COMMAND PATH=$ENV{PATH} PKG_CONFIG_PATH=$ENV{PKG_CONFIG_PATH} ./configure --prefix=${CMAKE_BINARY_DIR} --disable-shared --enable-static
+  BUILD_COMMAND PATH=$ENV{PATH} make -j${CONCURRENCY}
+  BUILD_IN_SOURCE 1
+)
+EXTERNALPROJECT_ADD(
+  harfbuzz
+  DEPENDS fontconfig
+  # URL https://github.com/harfbuzz/harfbuzz/releases/download/4.2.0/harfbuzz-4.2.0.tar.xz
+  URL ${CMAKE_SOURCE_DIR}/vendor/harfbuzz-4.2.0.tar.xz
+  PATCH_COMMAND ${CMAKE_SOURCE_DIR}/patches/patch-manager.sh harfbuzz
+  CONFIGURE_COMMAND PKG_CONFIG_PATH=$ENV{PKG_CONFIG_PATH} ./configure --prefix=${CMAKE_BINARY_DIR} --disable-shared --enable-static
+  BUILD_COMMAND make -j${CONCURRENCY}
+  BUILD_IN_SOURCE 1
+)
+EXTERNALPROJECT_ADD(
+  libass
+  DEPENDS nasm fribidi harfbuzz
+  # URL https://github.com/libass/libass/releases/download/0.15.2/libass-0.15.2.tar.xz
+  URL ${CMAKE_SOURCE_DIR}/vendor/libass-0.15.2.tar.xz
+  PATCH_COMMAND ${CMAKE_SOURCE_DIR}/patches/patch-manager.sh libass
+  CONFIGURE_COMMAND PATH=$ENV{PATH} PKG_CONFIG_PATH=$ENV{PKG_CONFIG_PATH} ./configure --prefix=${CMAKE_BINARY_DIR} --disable-shared --enable-static
+  BUILD_COMMAND PATH=$ENV{PATH} make -j${CONCURRENCY}
+  BUILD_IN_SOURCE 1
+)
+EXTERNALPROJECT_ADD(
+  libtool
+  # URL https://ftpmirror.gnu.org/libtool/libtool-2.4.7.tar.gz
+  URL ${CMAKE_SOURCE_DIR}/vendor/libtool-2.4.7.tar.gz
+  CONFIGURE_COMMAND ./configure --prefix=${CMAKE_BINARY_DIR} --disable-shared --enable-static
+  BUILD_COMMAND make -j${CONCURRENCY}
+  BUILD_IN_SOURCE 1
+)
+EXTERNALPROJECT_ADD(
+  zimg
+  DEPENDS nasm libtool
+  # URL https://github.com/sekrit-twc/zimg/archive/refs/tags/release-3.0.3.tar.gz
+  URL ${CMAKE_SOURCE_DIR}/vendor/zimg-3.0.3.tar.gz
+  CONFIGURE_COMMAND PATH=$ENV{PATH} ACLOCAL_PATH=${CMAKE_BINARY_DIR}/share/aclocal ./autogen.sh && ./configure --prefix=${CMAKE_BINARY_DIR} --disable-shared --enable-static
+  BUILD_IN_SOURCE 1
+)
+EXTERNALPROJECT_ADD(
+  xorg-macros
+  # URL https://github.com/freedesktop/xorg-macros/archive/refs/tags/util-macros-1.19.1.tar.gz
+  URL ${CMAKE_SOURCE_DIR}/vendor/xorg-macros-1.19.1.tar.gz
+  CONFIGURE_COMMAND PATH=$ENV{PATH} ./autogen.sh && ./configure --prefix=${CMAKE_BINARY_DIR}
+  BUILD_IN_SOURCE 1
+)
+EXTERNALPROJECT_ADD(
+  libpciaccess
+  DEPENDS xorg-macros libtool
+  # URL https://gitlab.freedesktop.org/xorg/lib/libpciaccess/-/archive/libpciaccess-0.16/libpciaccess-libpciaccess-0.16.tar.gz
+  URL ${CMAKE_SOURCE_DIR}/vendor/libpciaccess-0.16.tar.gz
+  PATCH_COMMAND ${CMAKE_SOURCE_DIR}/patches/patch-manager.sh libpciaccess
+  CONFIGURE_COMMAND PATH=$ENV{PATH} ACLOCAL_PATH=${CMAKE_BINARY_DIR}/share/aclocal ./autogen.sh && CFLAGS=-fPIC ./configure --prefix=${CMAKE_BINARY_DIR} --disable-shared
+  BUILD_COMMAND make -j${CONCURRENCY}
+  BUILD_IN_SOURCE 1
+)
+EXTERNALPROJECT_ADD(
+  libdrm
+  DEPENDS libpciaccess
+  # URL https://dri.freedesktop.org/libdrm/libdrm-2.4.100.tar.bz2
+  # URL https://dri.freedesktop.org/libdrm/libdrm-2.4.110.tar.xz
+  URL ${CMAKE_SOURCE_DIR}/vendor/libdrm-2.4.100.tar.bz2
+  # URL ${CMAKE_SOURCE_DIR}/vendor/libdrm-2.4.110.tar.xz
+  PATCH_COMMAND ${CMAKE_SOURCE_DIR}/patches/patch-manager.sh libdrm
+  CONFIGURE_COMMAND PKG_CONFIG_PATH=$ENV{PKG_CONFIG_PATH} CFLAGS=-fPIC ./configure --prefix=${CMAKE_BINARY_DIR} --disable-vmwgfx --disable-radeon --disable-amdgpu --disable-nouveau --disable-shared
+  # CONFIGURE_COMMAND PKG_CONFIG_PATH=$ENV{PKG_CONFIG_PATH} meson --prefix=${CMAKE_BINARY_DIR} --libdir=lib build -Dvmwgfx=false -Dradeon=false -Damdgpu=false -Dnouveau=false -Dvalgrind=false -Dman-pages=false
+  BUILD_COMMAND make -j${CONCURRENCY}
+  # BUILD_COMMAND ninja -C build
+  # INSTALL_COMMAND ninja -C build install
+  BUILD_IN_SOURCE 1
+)
+EXTERNALPROJECT_ADD(
+  libva
+  DEPENDS libdrm
+  # URL https://github.com/intel/libva/releases/download/2.14.0/libva-2.14.0.tar.bz2
+  URL ${CMAKE_SOURCE_DIR}/vendor/intel-libva-2.14.0.tar.bz2
+  PATCH_COMMAND ${CMAKE_SOURCE_DIR}/patches/patch-manager.sh libva
+  CONFIGURE_COMMAND PKG_CONFIG_PATH=$ENV{PKG_CONFIG_PATH} CFLAGS=-fPIC ./configure --prefix=${CMAKE_BINARY_DIR} --disable-shared --with-drivers-path=/usr/local/lib/dri
+  BUILD_COMMAND make -j${CONCURRENCY}
+  BUILD_IN_SOURCE 1
+)
+EXTERNALPROJECT_ADD(
+  gmmlib
+  # URL https://github.com/intel/gmmlib/archive/refs/tags/intel-gmmlib-21.3.5.tar.gz
+  URL ${CMAKE_SOURCE_DIR}/vendor/intel-gmmlib-21.3.5.tar.gz
+  PATCH_COMMAND ${CMAKE_SOURCE_DIR}/patches/patch-manager.sh gmmlib
+  CONFIGURE_COMMAND mkdir -p build && cd build && PKG_CONFIG_PATH=$ENV{PKG_CONFIG_PATH} cmake -DCMAKE_INSTALL_INCLUDEDIR=${CMAKE_BINARY_DIR}/include -DCMAKE_INSTALL_LIBDIR=${CMAKE_BINARY_DIR}/lib ..
+  BUILD_COMMAND cd build && make -j${CONCURRENCY}
+  INSTALL_COMMAND cd build && make install
+  BUILD_IN_SOURCE 1
+)
+EXTERNALPROJECT_ADD(
+  intel-media-driver
+  DEPENDS libva gmmlib
+  # URL https://github.com/intel/media-driver/archive/refs/tags/intel-media-21.3.5.tar.gz
+  URL ${CMAKE_SOURCE_DIR}/vendor/intel-media-driver-21.3.5.tar.gz
+  PATCH_COMMAND ${CMAKE_SOURCE_DIR}/patches/patch-manager.sh intel-media-driver
+  CONFIGURE_COMMAND mkdir -p build && cd build && PKG_CONFIG_PATH=$ENV{PKG_CONFIG_PATH} cmake -DCMAKE_INSTALL_PREFIX=${CMAKE_BINARY_DIR} -DLIBVA_DRIVERS_PATH=${CMAKE_BINARY_DIR}/lib/dri -DMEDIA_RUN_TEST_SUITE=0 ..
+  BUILD_COMMAND cd build && make -j${CONCURRENCY}
+  INSTALL_COMMAND cd build && make install
+  BUILD_IN_SOURCE 1
+)
+EXTERNALPROJECT_ADD(
+  intel-media-sdk
+  DEPENDS intel-media-driver
+  # URL https://github.com/Intel-Media-SDK/MediaSDK/archive/refs/tags/intel-mediasdk-21.3.5.tar.gz
+  URL ${CMAKE_SOURCE_DIR}/vendor/intel-media-sdk-21.3.5.tar.gz
+  PATCH_COMMAND ${CMAKE_SOURCE_DIR}/patches/patch-manager.sh intel-media-sdk
+  CONFIGURE_COMMAND mkdir -p build && cd build && PKG_CONFIG_PATH=$ENV{PKG_CONFIG_PATH} cmake -DCMAKE_INSTALL_PREFIX=${CMAKE_BINARY_DIR} -DMFX_MODULES_DIR=/usr/local/lib -DMFX_PLUGINS_CONF_DIR=/usr/local/lib/mfx -DMFX_PLUGINS_DIR=/usr/local/lib/mfx -DMFX_APPS_DIR=${CMAKE_BINARY_DIR} -DBUILD_TUTORIALS=OFF ..
+  BUILD_COMMAND cd build && make -j${CONCURRENCY}
+  INSTALL_COMMAND cd build && make install
+  BUILD_IN_SOURCE 1
+)
+EXTERNALPROJECT_ADD(
+  gputop
+  DEPENDS intel-media-sdk
+  URL ${CMAKE_SOURCE_DIR}/vendor/gputop-21.3.5.tar.gz
+  PATCH_COMMAND ${CMAKE_SOURCE_DIR}/patches/patch-manager.sh gputop
+  CONFIGURE_COMMAND CFLAGS=-I${CMAKE_BINARY_DIR}/samples LDFLAGS=-L${CMAKE_BINARY_DIR}/samples ./configure --prefix=${CMAKE_BINARY_DIR}
+  BUILD_COMMAND make -j${CONCURRENCY}
+  BUILD_IN_SOURCE 1
+)
+EXTERNALPROJECT_ADD(
+  ffmpeg
+  DEPENDS nasm zlib openssl opencore-amr fdkaac lame libogg opus speex libvorbis libtheora xvidcore x264 x265 aom libvpx srt freetype libass zimg intel-media-sdk
+  # URL https://ffmpeg.org/releases/ffmpeg-5.0.1.tar.bz2
+  URL ${CMAKE_SOURCE_DIR}/vendor/ffmpeg-5.0.1.tar.bz2
+  PATCH_COMMAND ${CMAKE_SOURCE_DIR}/patches/patch-manager.sh ffmpeg
+  CONFIGURE_COMMAND PATH=$ENV{PATH} PKG_CONFIG_PATH=$ENV{PKG_CONFIG_PATH} ./configure --prefix=${CMAKE_BINARY_DIR} --datadir=${CMAKE_BINARY_DIR}/etc --disable-shared --enable-static --enable-gpl --enable-version3 --enable-nonfree --enable-runtime-cpudetect --disable-doc --disable-debug --disable-ffplay --disable-indevs --disable-outdevs --extra-cflags=-I${CMAKE_BINARY_DIR}/include\ --static --extra-ldflags=-L${CMAKE_BINARY_DIR}/lib --extra-libs=-lvorbis\ -logg\ -lcrypto\ -lexpat\ -lharfbuzz\ -lfribidi\ -lz\ -ldrm\ -lpthread\ -lstdc++\ -lm\ -ldl --enable-openssl --enable-libopencore-amrnb --enable-libopencore-amrwb --enable-libfdk-aac --enable-libmp3lame --enable-libopus --enable-libspeex --enable-libtheora --enable-libvorbis --enable-libxvid --enable-libx264 --enable-libx265 --enable-libaom --enable-libvpx --enable-libsrt --enable-libfontconfig --enable-libfreetype --enable-libass --enable-libzimg --enable-vaapi --enable-libmfx
+  BUILD_COMMAND PATH=$ENV{PATH} make -j${CONCURRENCY}
+  BUILD_IN_SOURCE 1
+)
+EXTERNALPROJECT_ADD(
   frmxtract
   DEPENDS ffmpeg libpng
-  URL ${CMAKE_SOURCE_DIR}/vendor/frmxtract-4.4.tar.gz
+  URL ${CMAKE_SOURCE_DIR}/vendor/frmxtract-5.0.1.tar.gz
   PATCH_COMMAND ${CMAKE_SOURCE_DIR}/patches/patch-manager.sh frmxtract
-  CONFIGURE_COMMAND CC=${CMAKE_C_COMPILER} PKG_CONFIG_PATH=$ENV{PKG_CONFIG_PATH} EXTRA_LIBS=libdrm ./configure --prefix=${CMAKE_BINARY_DIR}
+  CONFIGURE_COMMAND A=E CC=${CMAKE_C_COMPILER} PKG_CONFIG_PATH=$ENV{PKG_CONFIG_PATH} EXTRA_LIBS=libdrm ./configure --prefix=${CMAKE_BINARY_DIR}
   BUILD_COMMAND make -j${CONCURRENCY}
   BUILD_IN_SOURCE 1
 )

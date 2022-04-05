@@ -1,4 +1,4 @@
-CONCURRENCY=`cat /proc/cpuinfo |grep ^processor |wc -l`
+CONCURRENCY=`cat /proc/cpuinfo |grep ^processor |head |wc -l`
 
 sffmpeg:
 	@./check-dependencies

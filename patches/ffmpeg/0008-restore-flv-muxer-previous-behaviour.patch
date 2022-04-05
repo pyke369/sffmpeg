@@ -1,6 +1,6 @@
 --- a/libavformat/flvenc.c
 +++ b/libavformat/flvenc.c
-@@ -923,8 +923,8 @@
+@@ -876,8 +876,8 @@
      }
      if (par->codec_id == AV_CODEC_ID_H264 || par->codec_id == AV_CODEC_ID_MPEG4) {
          if (pkt->pts == AV_NOPTS_VALUE) {

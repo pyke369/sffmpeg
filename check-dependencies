@@ -17,17 +17,8 @@ if [ $? != 0 ]; then missing[autoconf]=autoconf; fi
 automake --version >/dev/null 2>&1
 if [ $? != 0 ]; then missing[automake]=automake; fi
 
-libtoolize --version >/dev/null 2>&1
-if [ $? != 0 ]; then missing[libtool]=libtool; fi
-
 pkg-config --version >/dev/null 2>&1
 if [ $? != 0 ]; then missing[pkg-config]=pkg-config; fi
-
-gperf --version >/dev/null 2>&1
-if [ $? != 0 ]; then missing[gperf]=gperf; fi
-
-pkg-config xorg-macros >/dev/null 2>&1
-if [ $? != 0 ]; then missing[xorg-macros]=xutils-dev; fi
 
 if [ ${#missing[@]} -ne 0 ]; then
     echo --------------------------------------------------------------------------------

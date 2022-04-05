@@ -19,7 +19,7 @@
  add_subdirectory(metrics_monitor)
 --- a/samples/metrics_monitor/CMakeLists.txt
 --- b/samples/metrics_monitor/CMakeLists.txt
-@@ -28,6 +28,7 @@
+@@ -27,6 +27,7 @@
      make_executable( metrics_monitor none )
 
      install( TARGETS metrics_monitor RUNTIME DESTINATION ${MFX_SAMPLES_INSTALL_BIN_DIR} )
