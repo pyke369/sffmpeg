@@ -1,16 +1,16 @@
 --- a/libavcodec/qsvenc.c
 +++ b/libavcodec/qsvenc.c
-@@ -235,6 +235,9 @@
+@@ -232,6 +232,9 @@
          av_log(avctx, AV_LOG_VERBOSE,
-                "TargetKbps: %"PRIu16"; LookAheadDepth: %"PRIu16"; BRCParamMultiplier: %"PRIu16"\n",
-                info->TargetKbps, co2->LookAheadDepth, info->BRCParamMultiplier);
+                "TargetKbps: %"PRIu16"; BRCParamMultiplier: %"PRIu16"\n",
+                info->TargetKbps, info->BRCParamMultiplier);
 +
 +        av_log(avctx, AV_LOG_VERBOSE, "WinBRCMaxAvgKbps: %"PRIu16"; WinBRCSize: %"PRIu16"\n",
 +               co3->WinBRCMaxAvgKbps, co3->WinBRCSize);
-     }
- #endif
- #if QSV_HAVE_ICQ
-@@ -789,6 +792,10 @@
+     } else if (info->RateControlMethod == MFX_RATECONTROL_ICQ ||
+                info->RateControlMethod == MFX_RATECONTROL_LA_ICQ)
+         av_log(avctx, AV_LOG_VERBOSE, "ICQQuality: %"PRIu16"\n", info->ICQQuality);
+@@ -752,6 +755,10 @@
          q->param.mfx.TargetKbps  = target_bitrate_kbps / brc_param_multiplier;
          q->extco2.LookAheadDepth = q->look_ahead_depth;
          q->param.mfx.BRCParamMultiplier = brc_param_multiplier;
@@ -19,11 +19,11 @@
 +            q->extco3.WinBRCSize        = q->win_brc_size;
 +        }
          break;
- #if QSV_HAVE_ICQ
      case MFX_RATECONTROL_LA_ICQ:
+         q->extco2.LookAheadDepth = q->look_ahead_depth;
 --- a/libavcodec/qsvenc.h
 +++ b/libavcodec/qsvenc.h
-@@ -165,6 +165,8 @@
+@@ -167,6 +167,8 @@
      int look_ahead;
      int look_ahead_depth;
      int look_ahead_downsampling;
@@ -34,12 +34,12 @@
      int max_frame_size;
 --- a/libavcodec/qsvenc_h264.c
 +++ b/libavcodec/qsvenc_h264.c
-@@ -115,6 +115,8 @@
- #if QSV_HAVE_LA
+@@ -127,6 +127,8 @@
+
      { "look_ahead",       "Use VBR algorithm with look ahead",    OFFSET(qsv.look_ahead),       AV_OPT_TYPE_BOOL, { .i64 = 0 }, 0, 1, VE },
      { "look_ahead_depth", "Depth of look ahead in number frames", OFFSET(qsv.look_ahead_depth), AV_OPT_TYPE_INT, { .i64 = 0 }, 0, 100, VE },
 +    { "winmaxavg",        "Specifies the maximum bitrate averaged over a sliding window for MFX_RATECONTROL_LA/MFX_RATECONTROL_LA_HRD", OFFSET(qsv.winbrc_maxavg_kbps), AV_OPT_TYPE_INT, { .i64 = 0 }, 0, INT_MAX, VE },
 +    { "winsize",          "Specifies sliding used for MFX_RATECONTROL_LA/MFX_RATECONTROL_LA_HRD window size in frames", OFFSET(qsv.win_brc_size), AV_OPT_TYPE_INT, { .i64 = 0 }, 0, INT_MAX, VE },
- #endif
- #if QSV_HAVE_LA_DS
      { "look_ahead_downsampling", "Downscaling factor for the frames saved for the lookahead analysis", OFFSET(qsv.look_ahead_downsampling),
+                                           AV_OPT_TYPE_INT,   { .i64 = MFX_LOOKAHEAD_DS_UNKNOWN }, MFX_LOOKAHEAD_DS_UNKNOWN, MFX_LOOKAHEAD_DS_4x, VE, "look_ahead_downsampling" },
+     { "unknown"                , NULL, 0, AV_OPT_TYPE_CONST, { .i64 = MFX_LOOKAHEAD_DS_UNKNOWN }, INT_MIN, INT_MAX,     VE, "look_ahead_downsampling" },

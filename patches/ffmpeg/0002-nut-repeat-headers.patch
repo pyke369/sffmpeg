@@ -11,7 +11,7 @@
  #define NUT_BROADCAST 1 // use extended syncpoints
 --- a/libavformat/nutenc.c
 +++ b/libavformat/nutenc.c
-@@ -684,7 +684,7 @@
+@@ -706,7 +706,7 @@
      }
 
      nut->last_syncpoint_pos = INT_MIN;
@@ -20,7 +20,7 @@
 
      ret = 0;
  fail:
-@@ -762,6 +762,7 @@
+@@ -784,6 +784,7 @@
              nut->time_base_count++;
      }
 
@@ -28,7 +28,7 @@
      nut->max_distance = MAX_DISTANCE;
      build_elision_headers(s);
      build_frame_code(s);
-@@ -988,6 +989,20 @@
+@@ -1012,6 +1013,20 @@
          data_size += sm_size;
      }
 
@@ -49,7 +49,7 @@
      if (1LL << (20 + 3 * nut->header_count) <= avio_tell(bc))
          write_headers(s, bc);
 
-@@ -1219,6 +1234,7 @@
+@@ -1243,6 +1258,7 @@
      { "none",        "Disable syncpoints, low overhead and unseekable", 0,             AV_OPT_TYPE_CONST, {.i64 = NUT_PIPE},      INT_MIN, INT_MAX, E, "syncpoints" },
      { "timestamped", "Extend syncpoints with a wallclock timestamp",    0,             AV_OPT_TYPE_CONST, {.i64 = NUT_BROADCAST}, INT_MIN, INT_MAX, E, "syncpoints" },
      { "write_index", "Write index",                               OFFSET(write_index), AV_OPT_TYPE_BOOL,  {.i64 = 1},                   0,       1, E, },

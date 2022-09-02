@@ -1,6 +1,6 @@
 --- a/libavutil/hwcontext_qsv.c
 +++ b/libavutil/hwcontext_qsv.c
-@@ -482,8 +482,9 @@
+@@ -515,8 +515,9 @@
      int i, ret = 0;
  
      if (ctx->initial_pool_size <= 0) {
