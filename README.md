@@ -25,15 +25,15 @@ Just type the following commands at the shell prompt:
 Then go grab a coffee (or maybe ten). The helper will compile all FFmpeg dependencies for you. Once done, you should get an
 FFmpeg binary in the `build/bin` directory (with all dependencies statically linked-in).
 ```
-$ ffmpeg version 5.0.1 Copyright (c) 2000-2022 the FFmpeg developers
-  libavutil      57. 17.100 / 57. 17.100
-  libavcodec     59. 18.100 / 59. 18.100
-  libavformat    59. 16.100 / 59. 16.100
-  libavdevice    59.  4.100 / 59.  4.100
-  libavfilter     8. 24.100 /  8. 24.100
-  libswscale      6.  4.100 /  6.  4.100
-  libswresample   4.  3.100 /  4.  3.100
-  libpostproc    56.  3.100 / 56.  3.100
+ffmpeg version 5.1.2 Copyright (c) 2000-2022 the FFmpeg developers
+  libavutil      57. 28.100 / 57. 28.100
+  libavcodec     59. 37.100 / 59. 37.100
+  libavformat    59. 27.100 / 59. 27.100
+  libavdevice    59.  7.100 / 59.  7.100
+  libavfilter     8. 44.100 /  8. 44.100
+  libswscale      6.  7.100 /  6.  7.100
+  libswresample   4.  7.100 /  4.  7.100
+  libpostproc    56.  6.100 / 56.  6.100
 Hyper fast Audio and Video encoder
 usage: ffmpeg [options] [[infile options] -i infile]... {[outfile options] outfile}...
 ```
@@ -49,8 +49,8 @@ $ make deb
 
 The `ffmpeg`, `ffprobe` and `frmxtract` binaries will be installed by the package in the `/usr/local/bin` directory.
 ```
-$ sudo dpkg -i ../sffmpeg_5.0.1_amd64.deb
+$ sudo dpkg -i ../sffmpeg_5.1.2_amd64.deb
 Selecting previously unselected package sffmpeg.
-Unpacking sffmpeg (5.0.1) ...
-Setting up sffmpeg (5.0.1) ...
+Unpacking sffmpeg (5.1.2) ...
+Setting up sffmpeg (5.1.2) ...
 ```

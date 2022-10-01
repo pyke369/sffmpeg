@@ -352,7 +352,7 @@ EXTERNALPROJECT_ADD(
 )
 EXTERNALPROJECT_ADD(
   libxcoder
-  URL ${CMAKE_SOURCE_DIR}/vendor/libxcoder-3.1.10-rc7.tar.gz
+  URL ${CMAKE_SOURCE_DIR}/vendor/libxcoder-4.0.0-rcb.tar.gz
   PATCH_COMMAND ${CMAKE_SOURCE_DIR}/patches/patch-manager.sh libxcoder
   CONFIGURE_COMMAND ./configure --prefix=${CMAKE_BINARY_DIR}
   BUILD_COMMAND make -j${CONCURRENCY}
@@ -361,8 +361,8 @@ EXTERNALPROJECT_ADD(
 EXTERNALPROJECT_ADD(
   ffmpeg
   DEPENDS nasm zlib openssl opencore-amr fdkaac lame libogg opus speex libvorbis libtheora xvidcore x264 x265 aom libvpx srt freetype libass zimg intel-media-sdk libxcoder
-  # URL https://ffmpeg.org/releases/ffmpeg-5.1.tar.bz2
-  URL ${CMAKE_SOURCE_DIR}/vendor/ffmpeg-5.1.tar.bz2
+  # URL https://ffmpeg.org/releases/ffmpeg-5.1.2.tar.bz2
+  URL ${CMAKE_SOURCE_DIR}/vendor/ffmpeg-5.1.2.tar.bz2
   PATCH_COMMAND ${CMAKE_SOURCE_DIR}/patches/patch-manager.sh ffmpeg
   CONFIGURE_COMMAND PATH=$ENV{PATH} PKG_CONFIG_PATH=$ENV{PKG_CONFIG_PATH} ./configure --prefix=${CMAKE_BINARY_DIR} --datadir=${CMAKE_BINARY_DIR}/etc --disable-shared --enable-static --enable-gpl --enable-version3 --enable-nonfree --enable-runtime-cpudetect --disable-doc --disable-debug --disable-ffplay --disable-indevs --disable-outdevs --extra-cflags=-I${CMAKE_BINARY_DIR}/include\ --static --extra-ldflags=-L${CMAKE_BINARY_DIR}/lib --extra-libs=-lvorbis\ -logg\ -lcrypto\ -lexpat\ -lharfbuzz\ -lfribidi\ -lz\ -ldrm\ -lpthread\ -lstdc++\ -lm\ -ldl --enable-openssl --enable-libopencore-amrnb --enable-libopencore-amrwb --enable-libfdk-aac --enable-libmp3lame --enable-libopus --enable-libspeex --enable-libtheora --enable-libvorbis --enable-libxvid --enable-libx264 --enable-libx265 --enable-libaom --enable-libvpx --enable-libsrt --enable-libfontconfig --enable-libfreetype --enable-libass --enable-libzimg --enable-vaapi --enable-libmfx
   BUILD_COMMAND PATH=$ENV{PATH} make -j${CONCURRENCY}

@@ -1,3 +1,9 @@
+sffmpeg (5.1.2) stable; urgency=high
+
+  * upgrade to ffmpeg 5.1.2
+
+ -- Pierre-Yves Kerembellec <py.kerembellec@gmail.com>  Fri, 30 Sep 2022 19:20:26 +0200
+
 sffmpeg (5.1) stable; urgency=medium
 
   * upgrade to ffmpeg 5.1
