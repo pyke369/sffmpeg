@@ -10,3 +10,7 @@ build/lib/libmfxhw64.so* /usr/local/lib
 build/lib/dri/iHD_drv_video.so /usr/local/lib/dri
 build/lib/mfx/* /usr/local/lib/mfx
 build/share/mfx/plugins.cfg /usr/local/lib/mfx
+build/bin/init_rsrc /usr/local/bin
+build/bin/ni_rsrc_list /usr/local/bin
+build/bin/ni_rsrc_mon /usr/local/bin
+build/bin/ni_rsrc_update /usr/local/bin

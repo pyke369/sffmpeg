@@ -288,15 +288,10 @@ EXTERNALPROJECT_ADD(
   libdrm
   DEPENDS libpciaccess
   # URL https://dri.freedesktop.org/libdrm/libdrm-2.4.100.tar.bz2
-  # URL https://dri.freedesktop.org/libdrm/libdrm-2.4.113.tar.xz
   URL ${CMAKE_SOURCE_DIR}/vendor/libdrm-2.4.100.tar.bz2
-  # URL ${CMAKE_SOURCE_DIR}/vendor/libdrm-2.4.113.tar.xz
   PATCH_COMMAND ${CMAKE_SOURCE_DIR}/patches/patch-manager.sh libdrm
   CONFIGURE_COMMAND PKG_CONFIG_PATH=$ENV{PKG_CONFIG_PATH} CFLAGS=-fPIC ./configure --prefix=${CMAKE_BINARY_DIR} --disable-vmwgfx --disable-radeon --disable-amdgpu --disable-nouveau --disable-shared
-  # CONFIGURE_COMMAND PKG_CONFIG_PATH=$ENV{PKG_CONFIG_PATH} meson --prefix=${CMAKE_BINARY_DIR} --libdir=lib build -Dvmwgfx=false -Dradeon=false -Damdgpu=false -Dnouveau=false -Dvalgrind=false -Dman-pages=false
   BUILD_COMMAND make -j${CONCURRENCY}
-  # BUILD_COMMAND ninja -C build
-  # INSTALL_COMMAND ninja -C build install
   BUILD_IN_SOURCE 1
 )
 EXTERNALPROJECT_ADD(
@@ -352,10 +347,11 @@ EXTERNALPROJECT_ADD(
 )
 EXTERNALPROJECT_ADD(
   libxcoder
-  URL ${CMAKE_SOURCE_DIR}/vendor/libxcoder-4.0.0-rcb.tar.gz
+  URL ${CMAKE_SOURCE_DIR}/vendor/libxcoder-4.1.0-rc4.tar.gz
   PATCH_COMMAND ${CMAKE_SOURCE_DIR}/patches/patch-manager.sh libxcoder
   CONFIGURE_COMMAND ./configure --prefix=${CMAKE_BINARY_DIR}
   BUILD_COMMAND make -j${CONCURRENCY}
+  INSTALL_COMMAND make install && rm ${CMAKE_BINARY_DIR}/lib/libxcoder.so
   BUILD_IN_SOURCE 1
 )
 EXTERNALPROJECT_ADD(
@@ -364,7 +360,7 @@ EXTERNALPROJECT_ADD(
   # URL https://ffmpeg.org/releases/ffmpeg-5.1.2.tar.bz2
   URL ${CMAKE_SOURCE_DIR}/vendor/ffmpeg-5.1.2.tar.bz2
   PATCH_COMMAND ${CMAKE_SOURCE_DIR}/patches/patch-manager.sh ffmpeg
-  CONFIGURE_COMMAND PATH=$ENV{PATH} PKG_CONFIG_PATH=$ENV{PKG_CONFIG_PATH} ./configure --prefix=${CMAKE_BINARY_DIR} --datadir=${CMAKE_BINARY_DIR}/etc --disable-shared --enable-static --enable-gpl --enable-version3 --enable-nonfree --enable-runtime-cpudetect --disable-doc --disable-debug --disable-ffplay --disable-indevs --disable-outdevs --extra-cflags=-I${CMAKE_BINARY_DIR}/include\ --static --extra-ldflags=-L${CMAKE_BINARY_DIR}/lib --extra-libs=-lvorbis\ -logg\ -lcrypto\ -lexpat\ -lharfbuzz\ -lfribidi\ -lz\ -ldrm\ -lpthread\ -lstdc++\ -lm\ -ldl --enable-openssl --enable-libopencore-amrnb --enable-libopencore-amrwb --enable-libfdk-aac --enable-libmp3lame --enable-libopus --enable-libspeex --enable-libtheora --enable-libvorbis --enable-libxvid --enable-libx264 --enable-libx265 --enable-libaom --enable-libvpx --enable-libsrt --enable-libfontconfig --enable-libfreetype --enable-libass --enable-libzimg --enable-vaapi --enable-libmfx
+  CONFIGURE_COMMAND PATH=$ENV{PATH} PKG_CONFIG_PATH=$ENV{PKG_CONFIG_PATH} ./configure --prefix=${CMAKE_BINARY_DIR} --datadir=${CMAKE_BINARY_DIR}/etc --pkg-config-flags=--static --disable-shared --enable-static --enable-gpl --enable-version3 --enable-nonfree --enable-runtime-cpudetect --disable-doc --disable-debug --disable-ffplay --disable-indevs --disable-outdevs --extra-cflags=-I${CMAKE_BINARY_DIR}/include\ --static --extra-ldflags=-L${CMAKE_BINARY_DIR}/lib --extra-libs=-lvorbis\ -logg\ -lcrypto\ -lexpat\ -lharfbuzz\ -lfribidi\ -lz\ -ldrm\ -lpthread\ -lstdc++\ -lm\ -ldl\ -lrt --enable-openssl --enable-libopencore-amrnb --enable-libopencore-amrwb --enable-libfdk-aac --enable-libmp3lame --enable-libopus --enable-libspeex --enable-libtheora --enable-libvorbis --enable-libxvid --enable-libx264 --enable-libx265 --enable-libaom --enable-libvpx --enable-libsrt --enable-libfontconfig --enable-libfreetype --enable-libass --enable-libzimg --enable-vaapi --enable-libmfx --enable-libxcoder --enable-ni_quadra --disable-filter=hwupload_ni_logan
   BUILD_COMMAND PATH=$ENV{PATH} make -j${CONCURRENCY}
   BUILD_IN_SOURCE 1
 )
